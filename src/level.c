@@ -172,6 +172,18 @@ bool level_selftest(const char *root) {
         else {
             ok=decode(data,n,level,error,sizeof error) && level->object_count==194 &&
                level->traffic_count==110 && !strcmp(level->background,"001");
+            /* The two retail fires are object names, independent of tree00. */
+            int burning=0,unlit=0;
+            for(int i=0;ok && i<level->object_count;i++) {
+                const LevelObject *o=&level->objects[i];
+                if(o->type!=102 || strcmp(o->params,"tree00"))continue;
+                if(o->id==1249 || o->id==1204) {
+                    ok=!strcmp(o->name,"fire");burning++;
+                } else {
+                    ok=!o->name[0];unlit++;
+                }
+            }
+            ok=ok && burning==2 && unlit==2;
             const size_t cuts[]={0,3,5,16,30,44,49,7913};
             for(size_t i=0;ok && i<sizeof cuts/sizeof cuts[0];i++)
                 if(cuts[i]<n && decode(data,cuts[i],level,error,sizeof error))ok=false;

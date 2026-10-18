@@ -43,9 +43,13 @@ void resources_destroy(void);
 Animation *animation_find(const char *name);
 int animation_count(void);
 bool draw_sprite(const char *name,float x,float y,double time,int frame,float alpha);
+bool draw_sprite_rotated(const char *name,float x,float y,double time,int frame,float alpha,float angle);
+bool draw_sprite_tinted(const char *name,float x,float y,double time,int frame,SDL_Color tint);
 bool draw_image(const char *relative,float x,float y,float w,float h,const char *alpha);
 /* Retail GUI UVs and rectangles both use bottom-left coordinates. */
 bool draw_atlas(const char *relative,SDL_FRect rect,SDL_FRect uv);
+/* Original fire atlas (32 frames) and smoke, centered in world coordinates. */
+bool draw_particle(bool smoke,int frame,float x,float y,float diameter,float angle,SDL_Color tint);
 void draw_font(const char *font,const char *text,float x,float y,int size,SDL_Color color);
 float text_width(const char *font,const char *text,int size);
 void draw_text(const char *text,float x,float y,int size,SDL_Color color);
@@ -60,6 +64,9 @@ bool level_load(const char *path,Level *level,char *error,size_t error_size);
 bool level_selftest(const char *root);
 /* Read a key from original semicolon/newline-separated object parameters. */
 bool level_param(const char *params,const char *key,char *out,size_t size);
+bool campaign_load(const char *root);
+int campaign_index(int number);
+int campaign_number(int index);
 
 bool game_init(int index);
 void game_update(double dt);

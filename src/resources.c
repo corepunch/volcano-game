@@ -295,12 +295,27 @@ static Texture *texture_load(const char *path,const char *alpha) {
     snprintf(t->path,sizeof(t->path),"%s",path);snprintf(t->alpha,sizeof(t->alpha),"%s",alpha);t->handle=handle;t->w=w;t->h=h;t->next=textures;textures=t;SDL_SetTextureBlendMode(handle,SDL_BLENDMODE_BLEND);return t;
 }
 bool draw_sprite(const char *name,float x,float y,double time,int frame,float alpha) {
+    return draw_sprite_rotated(name,x,y,time,frame,alpha,0);
+}
+static bool sprite_color(const char *name,float x,float y,double time,int frame,float alpha,float angle,SDL_Color tint) {
     Animation *a=animation_find(name);if(!a || !a->frame_count)return false;
     int index=frame>=0?frame:(int)(time*a->fps)%a->frame_count;if(index>=a->frame_count)index=a->frame_count-1;
     SpriteFrame *f=&a->frames[index];Texture *t=texture_load(a->texture,NULL);if(!t)return false;
     SDL_Rect src={(int)lroundf(f->u*t->w),(int)lroundf((1-f->v-f->cv)*t->h),(int)lroundf(f->cu*t->w),(int)lroundf(f->cv*t->h)};
     SDL_FRect dest={x-f->dx,GAME_HEIGHT-y-f->h+f->dy,f->w,f->h};SDL_SetTextureAlphaMod(t->handle,(Uint8)(fminf(1,fmaxf(0,alpha))*255));
-    if(SDL_RenderCopyF(renderer,t->handle,&src,&dest)){failure("Sprite render failed",SDL_GetError());return false;}return true;
+    /* Rotate about the authored anchor, so attached roof occupants share the
+     * house transform even when their trimmed animation frames change size. */
+    SDL_FPoint pivot={f->dx,f->h-f->dy};
+    SDL_SetTextureColorMod(t->handle,tint.r,tint.g,tint.b);
+    int result=angle?SDL_RenderCopyExF(renderer,t->handle,&src,&dest,angle,&pivot,SDL_FLIP_NONE):SDL_RenderCopyF(renderer,t->handle,&src,&dest);
+    SDL_SetTextureColorMod(t->handle,255,255,255);
+    if(result){failure("Sprite render failed",SDL_GetError());return false;}return true;
+}
+bool draw_sprite_rotated(const char *name,float x,float y,double time,int frame,float alpha,float angle) {
+    return sprite_color(name,x,y,time,frame,alpha,angle,(SDL_Color){255,255,255,255});
+}
+bool draw_sprite_tinted(const char *name,float x,float y,double time,int frame,SDL_Color tint) {
+    return sprite_color(name,x,y,time,frame,tint.a/255.f,0,tint);
 }
 bool draw_image(const char *relative,float x,float y,float w,float h,const char *alpha) {
     char path[PATH_CAPACITY],mask[PATH_CAPACITY]="";if(!join_path(path,sizeof(path),asset_root,relative))return false;
@@ -318,6 +333,19 @@ bool draw_atlas(const char *relative,SDL_FRect rect,SDL_FRect uv) {
     rect.y=GAME_HEIGHT-rect.y-rect.h;
     SDL_SetTextureAlphaMod(t->handle,255);SDL_SetTextureColorMod(t->handle,255,255,255);
     return SDL_RenderCopyF(renderer,t->handle,&src,&rect)==0;
+}
+bool draw_particle(bool smoke,int frame,float x,float y,float diameter,float angle,SDL_Color tint) {
+    char path[PATH_CAPACITY];
+    if(!join_path(path,sizeof path,asset_root,smoke?"texture/static/part_smoke.png":"texture/static/part_fire.png"))return false;
+    Texture *t=texture_load(path,NULL);if(!t)return false;
+    frame=frame<0?0:frame>31?31:frame;
+    SDL_Rect src=smoke?(SDL_Rect){0,0,t->w,t->h}:
+        (SDL_Rect){(frame%8)*(t->w/8),(frame/8)*(t->h/4),t->w/8,t->h/4};
+    SDL_FRect dest={x-diameter*.5f,GAME_HEIGHT-y-diameter*.5f,diameter,diameter};
+    SDL_SetTextureColorMod(t->handle,tint.r,tint.g,tint.b);SDL_SetTextureAlphaMod(t->handle,tint.a);
+    int result=SDL_RenderCopyExF(renderer,t->handle,&src,&dest,angle,NULL,SDL_FLIP_NONE);
+    SDL_SetTextureColorMod(t->handle,255,255,255);SDL_SetTextureAlphaMod(t->handle,255);
+    return result?failure("Particle render failed",SDL_GetError()):true;
 }
 static Font *font_find(const char *name) {
     for(int i=0;i<font_count;i++)if(!strcmp(fonts[i].name,name))return &fonts[i];return NULL;
