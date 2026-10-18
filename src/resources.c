@@ -1,0 +1,407 @@
+#include "volcano.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+#include <ctype.h>
+#include <dirent.h>
+#include <errno.h>
+#include <float.h>
+#include <limits.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* A data lexer, deliberately not a Lua interpreter. Only the original atlas
+ * declaration grammar is accepted: scalar assignments, records, known calls. */
+enum { TOKEN_END=256,TOKEN_WORD,TOKEN_STRING,TOKEN_NUMBER };
+typedef struct {
+    const char *source,*at,*end,*path;
+    int token,line;
+    char text[PATH_CAPACITY];
+    double number;
+    bool failed;
+} Lexer;
+typedef struct { uint32_t code; int x,y,w,h,bx,by,advance; } Glyph;
+typedef struct { char name[128],texture[PATH_CAPACITY]; int size; Glyph *glyphs; int count; } Font;
+typedef struct Texture { char path[PATH_CAPACITY],alpha[PATH_CAPACITY]; SDL_Texture *handle; int w,h; struct Texture *next; } Texture;
+static Animation *animations;
+static int animations_count;
+static Font fonts[16];
+static int font_count;
+static Texture *textures;
+
+static bool failure(const char *message,const char *path) {
+    snprintf(last_error,sizeof(last_error),"%s: %s",message,path);return false;
+}
+static void *grow(void *pointer,size_t bytes) {
+    void *result=realloc(pointer,bytes);
+    if(!result)snprintf(last_error,sizeof(last_error),"Out of memory allocating %zu bytes",bytes);
+    return result;
+}
+static bool join_path(char *out,size_t size,const char *a,const char *b) {
+    int n=snprintf(out,size,"%s/%s",a,b);
+    if(n<0 || (size_t)n>=size)return failure("Resource path too long",b);
+    return true;
+}
+static size_t utf8_write(char *out,uint32_t c) {
+    if(c<0x80){out[0]=(char)c;return 1;}
+    if(c<0x800){out[0]=(char)(0xC0|(c>>6));out[1]=(char)(0x80|(c&63));return 2;}
+    if(c<0x10000){out[0]=(char)(0xE0|(c>>12));out[1]=(char)(0x80|((c>>6)&63));out[2]=(char)(0x80|(c&63));return 3;}
+    out[0]=(char)(0xF0|(c>>18));out[1]=(char)(0x80|((c>>12)&63));out[2]=(char)(0x80|((c>>6)&63));out[3]=(char)(0x80|(c&63));return 4;
+}
+static uint32_t utf8_read(const char **text) {
+    const unsigned char *p=(const unsigned char*)*text; uint32_t c=*p++;
+    int extra=0;
+    if(c>=0xF0){c&=7;extra=3;}else if(c>=0xE0){c&=15;extra=2;}else if(c>=0xC0){c&=31;extra=1;}
+    while(extra-- && *p){if((*p&0xC0)!=0x80)break;c=(c<<6)|(*p++&63);}
+    *text=(const char*)p;return c;
+}
+char *read_resource_text(const char *path,size_t *length) {
+    FILE *f=fopen(path,"rb");if(!f){failure("Cannot open data file",path);return NULL;}
+    if(fseek(f,0,SEEK_END)){fclose(f);return NULL;}long size=ftell(f);rewind(f);
+    if(size<0 || size>32*1024*1024){fclose(f);failure("Invalid text resource size",path);return NULL;}
+    unsigned char *bytes=malloc((size_t)size+1);if(!bytes){fclose(f);return NULL;}
+    size_t got=fread(bytes,1,(size_t)size,f);fclose(f);bytes[got]=0;
+    if(got!=(size_t)size){free(bytes);failure("Truncated text resource",path);return NULL;}
+    if(got>=2 && ((bytes[0]==255 && bytes[1]==254)||(bytes[0]==254 && bytes[1]==255))){
+        bool little=bytes[0]==255;
+        if(got%2){free(bytes);failure("Odd UTF-16 resource length",path);return NULL;}
+        char *decoded=malloc(got*2+1);if(!decoded){free(bytes);return NULL;}size_t count=0;
+        for(size_t i=2;i<got;i+=2){
+            uint32_t c=little?(uint32_t)(bytes[i]|bytes[i+1]<<8):(uint32_t)(bytes[i]<<8|bytes[i+1]);
+            if(c>=0xD800 && c<=0xDBFF){
+                if(i+3>=got){free(decoded);free(bytes);failure("Truncated UTF-16 surrogate",path);return NULL;}
+                uint32_t low=little?(uint32_t)(bytes[i+2]|bytes[i+3]<<8):(uint32_t)(bytes[i+2]<<8|bytes[i+3]);
+                if(low<0xDC00 || low>0xDFFF){free(decoded);free(bytes);failure("Invalid UTF-16 surrogate",path);return NULL;}
+                c=0x10000+((c-0xD800)<<10)+low-0xDC00;i+=2;
+            }else if(c>=0xDC00 && c<=0xDFFF){free(decoded);free(bytes);failure("Invalid UTF-16 surrogate",path);return NULL;}
+            count+=utf8_write(decoded+count,c);
+        }
+        decoded[count]=0;free(bytes);if(length)*length=count;return decoded;
+    }
+    if(got>=3 && bytes[0]==0xEF && bytes[1]==0xBB && bytes[2]==0xBF){memmove(bytes,bytes+3,got-3);got-=3;bytes[got]=0;}
+    if(length)*length=got;return (char*)bytes;
+}
+static void lexer_error(Lexer *l,const char *message) {
+    if(!l->failed)snprintf(last_error,sizeof(last_error),"%s:%d: %s near '%s'",l->path,l->line,message,l->text);
+    l->failed=true;l->token=TOKEN_END;l->at=l->end;
+}
+static void next(Lexer *l) {
+    if(l->failed)return;
+    for(;;){
+        while(l->at<l->end && isspace((unsigned char)*l->at)){if(*l->at=='\n')l->line++;l->at++;}
+        if(l->end-l->at>=2 && l->at[0]=='-' && l->at[1]=='-'){
+            l->at+=2;
+            if(l->end-l->at>=2 && l->at[0]=='[' && l->at[1]=='['){
+                l->at+=2;while(l->end-l->at>=2 && !(l->at[0]==']' && l->at[1]==']')){if(*l->at=='\n')l->line++;l->at++;}
+                if(l->end-l->at<2){lexer_error(l,"Unterminated comment");return;}l->at+=2;
+            }else while(l->at<l->end && *l->at!='\n')l->at++;
+        }else break;
+    }
+    l->text[0]=0;
+    if(l->at>=l->end){l->token=TOKEN_END;return;}
+    unsigned char c=(unsigned char)*l->at++;
+    if(isalpha(c)||c=='_'){
+        const char *start=l->at-1;while(l->at<l->end && (isalnum((unsigned char)*l->at)||*l->at=='_'))l->at++;
+        size_t n=(size_t)(l->at-start);if(n>=sizeof(l->text)){lexer_error(l,"Identifier too long");return;}
+        memcpy(l->text,start,n);l->text[n]=0;l->token=TOKEN_WORD;return;
+    }
+    if(c=='\''||c=='"'){
+        size_t n=0;
+        while(l->at<l->end && (unsigned char)*l->at!=c){
+            unsigned char v=(unsigned char)*l->at++;
+            if(v=='\\'){
+                if(l->at==l->end){lexer_error(l,"Unterminated escape");return;}v=(unsigned char)*l->at++;
+                if(v=='n')v='\n';else if(v=='r')v='\r';else if(v=='t')v='\t';
+                else if(isdigit(v)){int number=v-'0';for(int i=0;i<2 && l->at<l->end && isdigit((unsigned char)*l->at);i++)number=number*10+(*l->at++-'0');v=(unsigned char)number;}
+            }
+            if(n+1>=sizeof(l->text)){lexer_error(l,"String too long");return;}l->text[n++]=(char)v;
+        }
+        if(l->at>=l->end){lexer_error(l,"Unterminated string");return;}l->at++;l->text[n]=0;l->token=TOKEN_STRING;return;
+    }
+    if(isdigit(c)||c=='.'||(c=='-' && l->at<l->end && (isdigit((unsigned char)*l->at)||*l->at=='.'))){
+        char *after;errno=0;l->number=strtod(l->at-1,&after);
+        if(after==l->at-1 || errno || !isfinite(l->number) || fabs(l->number)>FLT_MAX){lexer_error(l,"Invalid numeric data");return;}
+        l->at=after;l->token=TOKEN_NUMBER;return;
+    }
+    l->token=c;l->text[0]=(char)c;l->text[1]=0;
+}
+static bool take(Lexer *l,int token) {
+    if(l->token!=token){lexer_error(l,"Unexpected data syntax");return false;}next(l);return !l->failed;
+}
+static bool word(Lexer *l,const char *expected) {
+    if(l->token!=TOKEN_WORD || strcmp(l->text,expected)){lexer_error(l,"Unsupported executable syntax");return false;}next(l);return !l->failed;
+}
+static bool string_value(Lexer *l,char *out,size_t size) {
+    if(l->token!=TOKEN_STRING || strlen(l->text)>=size){lexer_error(l,"Expected bounded string");return false;}
+    strcpy(out,l->text);next(l);return !l->failed;
+}
+static bool number_value(Lexer *l,float *value) {
+    if(l->token!=TOKEN_NUMBER){lexer_error(l,"Expected numeric constant");return false;}
+    *value=(float)l->number;next(l);return !l->failed;
+}
+/* Retail Calibri metrics contain offsets such as 256 + 24 and 512-24.
+   Accept only bounded sums/differences of literals, never script evaluation. */
+static bool metric_value(Lexer *l,float *value) {
+    if(!number_value(l,value))return false;
+    while(l->token=='+' || l->token=='-' || (l->token==TOKEN_NUMBER && l->number<0)) {
+        int sign=1;
+        if(l->token=='+' || l->token=='-'){sign=l->token=='-'?-1:1;next(l);}
+        float term;if(!number_value(l,&term))return false;
+        double result=(double)*value+sign*(double)term;
+        if(!isfinite(result)||result<INT_MIN||result>INT_MAX){lexer_error(l,"Glyph metric exceeds integer range");return false;}
+        *value=(float)result;
+    }
+    return true;
+}
+static bool skip_data(Lexer *l,int depth) {
+    if(depth>32){lexer_error(l,"Data nesting exceeds limit");return false;}
+    if(l->token=='{'){
+        next(l);
+        while(l->token!='}' && !l->failed){
+            if(l->token==TOKEN_END){lexer_error(l,"Truncated data table");return false;}
+            if(l->token==','||l->token==';'||l->token=='='||l->token=='['||l->token==']'){next(l);continue;}
+            if(!skip_data(l,depth+1))return false;
+        }
+        return take(l,'}');
+    }
+    if(l->token==TOKEN_NUMBER||l->token==TOKEN_STRING||l->token==TOKEN_WORD){next(l);return !l->failed;}
+    lexer_error(l,"Expected constant data");return false;
+}
+static Animation *new_animation(const char *name) {
+    for(int i=0;i<animations_count;i++)if(!strcmp(animations[i].name,name)){failure("Duplicate sprite name",name);return NULL;}
+    Animation *grown=grow(animations,(size_t)(animations_count+1)*sizeof(*animations));if(!grown)return NULL;
+    animations=grown;Animation *a=&animations[animations_count++];memset(a,0,sizeof(*a));snprintf(a->name,sizeof(a->name),"%s",name);return a;
+}
+static bool frame_table(Lexer *l,Animation *a) {
+    if(!a){lexer_error(l,"Frames declared without an animation");return false;}
+    if(!take(l,'{'))return false;
+    while(l->token!='}' && !l->failed){
+        if(l->token==','||l->token==';'){next(l);continue;}
+        if(!take(l,'{'))return false;
+        SpriteFrame f={0};unsigned seen=0;
+        while(l->token!='}' && !l->failed){
+            if(l->token!=TOKEN_WORD){lexer_error(l,"Expected frame field");return false;}
+            const char *names[]={"dx","dy","u","v","cu","cv","w","h"};float *values[]={&f.dx,&f.dy,&f.u,&f.v,&f.cu,&f.cv,&f.w,&f.h};
+            int index=-1;for(int i=0;i<8;i++)if(!strcmp(l->text,names[i]))index=i;
+            if(index<0){lexer_error(l,"Unknown frame field");return false;}next(l);
+            if(!take(l,'=') || !number_value(l,values[index]))return false;seen|=1u<<index;
+            if(l->token==','||l->token==';')next(l);
+        }
+        if(!take(l,'}'))return false;
+        if(seen!=255||f.w<=0||f.h<=0||f.cu<=0||f.cv<=0||f.u<0||f.v<0||f.cu>1||f.cv>1||f.u+f.cu>1.00001f||f.v+f.cv>1.00001f){lexer_error(l,"Incomplete or invalid sprite frame");return false;}
+        SpriteFrame *frames=grow(a->frames,(size_t)(a->frame_count+1)*sizeof(f));if(!frames)return false;a->frames=frames;a->frames[a->frame_count++]=f;
+    }
+    return take(l,'}');
+}
+static bool glyph_table(Lexer *l,Font *font) {
+    if(!font){lexer_error(l,"Glyphs declared without font");return false;}
+    if(!take(l,'{'))return false;
+    while(l->token!='}'&&!l->failed){
+        if(l->token==','||l->token==';'){next(l);continue;}if(!take(l,'{'))return false;
+        Glyph g={0};bool has_code=false;
+        while(l->token!='}'&&!l->failed){
+            char field[32];if(l->token!=TOKEN_WORD||strlen(l->text)>=sizeof(field)){lexer_error(l,"Invalid font field");return false;}strcpy(field,l->text);next(l);if(!take(l,'='))return false;
+            if(!strcmp(field,"ch")){char ch[32];if(!string_value(l,ch,sizeof(ch)))return false;const char *p=ch;g.code=utf8_read(&p);has_code=true;}
+            else {float value;if(!metric_value(l,&value))return false;
+                if((double)value<INT_MIN || (double)value>INT_MAX){lexer_error(l,"Glyph metric exceeds integer range");return false;}
+                if(!strcmp(field,"x"))g.x=(int)value;else if(!strcmp(field,"y"))g.y=(int)value;else if(!strcmp(field,"w"))g.w=(int)value;else if(!strcmp(field,"h"))g.h=(int)value;
+                else if(!strcmp(field,"bX"))g.bx=(int)value;else if(!strcmp(field,"bY"))g.by=(int)value;else if(!strcmp(field,"aX"))g.advance=(int)value;else if(strcmp(field,"aY")){lexer_error(l,"Unknown glyph metric");return false;}}
+            if(l->token==','||l->token==';')next(l);
+        }
+        if(!take(l,'}')||!has_code)return false;
+        Glyph *glyphs=grow(font->glyphs,(size_t)(font->count+1)*sizeof(g));if(!glyphs)return false;font->glyphs=glyphs;font->glyphs[font->count++]=g;
+    }
+    return take(l,'}');
+}
+static bool parse_source(const char *source,size_t size,const char *path,bool font_file) {
+    Lexer l={.source=source,.at=source,.end=source+size,.path=path,.line=1};next(&l);
+    Animation *current=NULL;Font *font=NULL;bool ok=true;
+    while(l.token!=TOKEN_END&&!l.failed&&ok){
+        if(l.token==';'){next(&l);continue;}
+        if(l.token!=TOKEN_WORD){lexer_error(&l,"Expected data declaration");break;}
+        char symbol[128];if(strlen(l.text)>=sizeof(symbol)){lexer_error(&l,"Name too long");break;}strcpy(symbol,l.text);next(&l);
+        if(l.token=='='){
+            next(&l);
+            if(l.token==TOKEN_WORD&&!strcmp(l.text,"nil")){next(&l);if(!strcmp(symbol,"texinfo"))current=NULL;else if(!strcmp(symbol,"font"))font=NULL;continue;}
+            if(!strcmp(symbol,"texinfo")&&!font_file){
+                char name[128];ok=word(&l,"createTextureInfoEx")&&take(&l,'(')&&string_value(&l,name,sizeof(name))&&take(&l,')');
+                if(ok){current=new_animation(name);ok=current!=NULL;}
+            }else if(!strcmp(symbol,"frames")&&!font_file)ok=frame_table(&l,current);
+            else if(!strcmp(symbol,"font")&&font_file){
+                char name[128];ok=word(&l,"createFont")&&take(&l,'(')&&string_value(&l,name,sizeof(name))&&take(&l,')');
+                if(ok){if(font_count>=16){lexer_error(&l,"Too many fonts");break;}font=&fonts[font_count++];memset(font,0,sizeof(*font));strcpy(font->name,name);}
+            }else if(!strcmp(symbol,"chars")&&font_file)ok=glyph_table(&l,font);
+            else if(!strcmp(symbol,"bounds")||!strcmp(symbol,"points"))ok=skip_data(&l,0);
+            else {lexer_error(&l,"Unsupported assignment; scripts are never executed");break;}
+        }else if(!strcmp(symbol,"addTextureInfoExNodes")&&!font_file){
+            char texture[512];float fps;
+            ok=current&&take(&l,'(')&&word(&l,"texinfo")&&take(&l,',')&&string_value(&l,texture,sizeof(texture))&&take(&l,',')&&word(&l,"frames")&&take(&l,',')&&number_value(&l,&fps)&&take(&l,')');
+            if(ok && (fps<0 || fps>1000)){lexer_error(&l,"Invalid animation frame rate");ok=false;}
+            if(ok){char rel[640];snprintf(rel,sizeof(rel),"texture/lazy/%s.png",texture);ok=join_path(current->texture,sizeof(current->texture),asset_root,rel);current->fps=fps;}
+        }else if((!strcmp(symbol,"addBoundInfoExNodes")||!strcmp(symbol,"addPointsInfoExNodes"))&&!font_file){
+            ok=take(&l,'(')&&word(&l,"texinfo")&&take(&l,',')&&word(&l,!strcmp(symbol,"addBoundInfoExNodes")?"bounds":"points")&&take(&l,')');
+        }else if(!strcmp(symbol,"initFont")&&font_file){
+            char family[128],style[128];float value;
+            ok=font&&take(&l,'(')&&word(&l,"font")&&take(&l,',')&&string_value(&l,family,sizeof(family))&&take(&l,',')&&string_value(&l,style,sizeof(style))&&take(&l,',')&&number_value(&l,&value)&&take(&l,')');if(ok)font->size=(int)value;
+        }else if(!strcmp(symbol,"setFontTexture")&&font_file){
+            char texture[512];float width,height;
+            ok=font&&take(&l,'(')&&word(&l,"font")&&take(&l,',')&&string_value(&l,texture,sizeof(texture))&&take(&l,',')&&number_value(&l,&width)&&take(&l,',')&&number_value(&l,&height)&&take(&l,')');
+            if(ok){char rel[640];snprintf(rel,sizeof(rel),"font/en/%s.png",texture);ok=join_path(font->texture,sizeof(font->texture),asset_root,rel);}
+        }else if(!strcmp(symbol,"setFontTransform")&&font_file){
+            float x,y;ok=font&&take(&l,'(')&&word(&l,"font")&&take(&l,',')&&number_value(&l,&x)&&take(&l,',')&&number_value(&l,&y)&&take(&l,')');
+        }else if(!strcmp(symbol,"fillFont")&&font_file)ok=font&&take(&l,'(')&&word(&l,"font")&&take(&l,',')&&word(&l,"chars")&&take(&l,')');
+        else {lexer_error(&l,"Unsupported function; scripts are never executed");break;}
+    }
+    if(!ok&&!l.failed && !last_error[0])lexer_error(&l,"Incomplete resource declaration");
+    return ok&&!l.failed;
+}
+static bool parse_declarations(const char *path,bool font_file) {
+    size_t size;char *source=read_resource_text(path,&size);if(!source)return false;
+    bool result=parse_source(source,size,path,font_file);free(source);return result;
+}
+static int compare_names(const void *a,const void *b){return strcmp(*(char*const*)a,*(char*const*)b);}
+bool resources_init(void) {
+    char dir_path[PATH_CAPACITY];if(!join_path(dir_path,sizeof(dir_path),asset_root,"texture/lazy"))return false;
+    DIR *directory=opendir(dir_path);if(!directory)return failure("Missing original sprite folder",dir_path);
+    char **names=NULL;int count=0;struct dirent *entry;
+    while((entry=readdir(directory))){size_t n=strlen(entry->d_name);if(n<4||strcmp(entry->d_name+n-4,".lua"))continue;
+        char **grown=grow(names,(size_t)(count+1)*sizeof(char*));if(!grown){closedir(directory);return false;}names=grown;names[count++]=strdup(entry->d_name);}
+    closedir(directory);qsort(names,(size_t)count,sizeof(char*),compare_names);bool ok=true;
+    for(int i=0;i<count;i++){char path[PATH_CAPACITY];if(ok)ok=join_path(path,sizeof(path),dir_path,names[i])&&parse_declarations(path,false);free(names[i]);}free(names);
+    if(!ok)return false;
+    const char *font_files[]={"font/en/CambriaBold30W.lua","font/en/CambriaBold30B.lua"};
+    for(size_t i=0;i<sizeof font_files/sizeof *font_files;i++) {
+        char font_path[PATH_CAPACITY];
+        if(!join_path(font_path,sizeof font_path,asset_root,font_files[i])||!parse_declarations(font_path,true))return false;
+    }
+    printf("Parsed %d original animations and %d bitmap fonts as data (no scripting runtime).\n",animations_count,font_count);
+    return animation_find("worker_run0") && animation_find("water0");
+}
+Animation *animation_find(const char *name){for(int i=0;i<animations_count;i++)if(!strcmp(animations[i].name,name))return &animations[i];return NULL;}
+int animation_count(void){return animations_count;}
+static Texture *texture_load(const char *path,const char *alpha) {
+    if(!alpha)alpha="";
+    for(Texture *t=textures;t;t=t->next)if(!strcmp(path,t->path)&&!strcmp(alpha,t->alpha))return t;
+    int w,h,n;unsigned char *pixels=stbi_load(path,&w,&h,&n,4);if(!pixels){failure("Cannot decode original image",path);return NULL;}
+    if(*alpha){int aw,ah;unsigned char *mask=stbi_load(alpha,&aw,&ah,&n,1);
+        if(!mask||aw!=w||ah!=h){stbi_image_free(mask);stbi_image_free(pixels);failure("Invalid original JPEG alpha",alpha);return NULL;}
+        for(size_t i=0;i<(size_t)w*h;i++)pixels[i*4+3]=mask[i];stbi_image_free(mask);}
+    SDL_Texture *handle=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_RGBA32,SDL_TEXTUREACCESS_STATIC,w,h);
+    if(!handle){stbi_image_free(pixels);failure("Cannot create texture",SDL_GetError());return NULL;}
+    int result=SDL_UpdateTexture(handle,NULL,pixels,w*4);stbi_image_free(pixels);
+    if(result){SDL_DestroyTexture(handle);failure("Cannot upload image",SDL_GetError());return NULL;}
+    Texture *t=calloc(1,sizeof(*t));if(!t){SDL_DestroyTexture(handle);return NULL;}
+    snprintf(t->path,sizeof(t->path),"%s",path);snprintf(t->alpha,sizeof(t->alpha),"%s",alpha);t->handle=handle;t->w=w;t->h=h;t->next=textures;textures=t;SDL_SetTextureBlendMode(handle,SDL_BLENDMODE_BLEND);return t;
+}
+bool draw_sprite(const char *name,float x,float y,double time,int frame,float alpha) {
+    Animation *a=animation_find(name);if(!a || !a->frame_count)return false;
+    int index=frame>=0?frame:(int)(time*a->fps)%a->frame_count;if(index>=a->frame_count)index=a->frame_count-1;
+    SpriteFrame *f=&a->frames[index];Texture *t=texture_load(a->texture,NULL);if(!t)return false;
+    SDL_Rect src={(int)lroundf(f->u*t->w),(int)lroundf((1-f->v-f->cv)*t->h),(int)lroundf(f->cu*t->w),(int)lroundf(f->cv*t->h)};
+    SDL_FRect dest={x-f->dx,GAME_HEIGHT-y-f->h+f->dy,f->w,f->h};SDL_SetTextureAlphaMod(t->handle,(Uint8)(fminf(1,fmaxf(0,alpha))*255));
+    if(SDL_RenderCopyF(renderer,t->handle,&src,&dest)){failure("Sprite render failed",SDL_GetError());return false;}return true;
+}
+bool draw_image(const char *relative,float x,float y,float w,float h,const char *alpha) {
+    char path[PATH_CAPACITY],mask[PATH_CAPACITY]="";if(!join_path(path,sizeof(path),asset_root,relative))return false;
+    if(alpha&&*alpha&&!join_path(mask,sizeof(mask),asset_root,alpha))return false;
+    Texture *t=texture_load(path,mask);if(!t)return false;
+    SDL_FRect dest={x,GAME_HEIGHT-y-h,w,h};SDL_SetTextureAlphaMod(t->handle,255);return SDL_RenderCopyF(renderer,t->handle,NULL,&dest)==0;
+}
+bool draw_atlas(const char *relative,SDL_FRect rect,SDL_FRect uv) {
+    char path[PATH_CAPACITY];if(!join_path(path,sizeof path,asset_root,relative))return false;
+    Texture *t=texture_load(path,NULL);if(!t)return false;
+    SDL_Rect src={(int)lroundf(uv.x*t->w),(int)lroundf((1-uv.y-uv.h)*t->h),
+        (int)lroundf(uv.w*t->w),(int)lroundf(uv.h*t->h)};
+    if(src.w<=0||src.h<=0||rect.w<=0||rect.h<=0)return true;
+    if(src.x<0||src.y<0||src.x+src.w>t->w||src.y+src.h>t->h)return failure("GUI region outside original atlas",relative);
+    rect.y=GAME_HEIGHT-rect.y-rect.h;
+    SDL_SetTextureAlphaMod(t->handle,255);SDL_SetTextureColorMod(t->handle,255,255,255);
+    return SDL_RenderCopyF(renderer,t->handle,&src,&rect)==0;
+}
+static Font *font_find(const char *name) {
+    for(int i=0;i<font_count;i++)if(!strcmp(fonts[i].name,name))return &fonts[i];return NULL;
+}
+float text_width(const char *name,const char *text,int size) {
+    Font *f=font_find(name);if(!f||f->size<=0)return 0;
+    float width=0;
+    while(*text){uint32_t code=utf8_read(&text);for(int i=0;i<f->count;i++)if(f->glyphs[i].code==code){width+=f->glyphs[i].advance*(float)size/f->size;break;}}
+    return width;
+}
+void draw_font(const char *name,const char *text,float x,float y,int size,SDL_Color color) {
+    Font *f=font_find(name);if(!f||f->size<=0)return;
+    Texture *t=texture_load(f->texture,NULL);if(!t)return;float scale=(float)size/f->size,left=x,baseline=y+size;
+    SDL_SetTextureColorMod(t->handle,color.r,color.g,color.b);SDL_SetTextureAlphaMod(t->handle,color.a);
+    while(*text){uint32_t code=utf8_read(&text);if(code=='\n'){x=left;baseline+=size;continue;}Glyph *g=NULL;
+        for(int i=0;i<f->count;i++)if(f->glyphs[i].code==code){g=&f->glyphs[i];break;}
+        if(!g)for(int i=0;i<f->count;i++)if(f->glyphs[i].code=='?'){g=&f->glyphs[i];break;}
+        if(!g)continue;
+        if(g->w&&g->h){SDL_Rect src={g->x,g->y,g->w,g->h};SDL_FRect dst={x+g->bx*scale,baseline-g->by*scale,g->w*scale,g->h*scale};SDL_RenderCopyF(renderer,t->handle,&src,&dst);}x+=g->advance*scale;
+    }
+    SDL_SetTextureColorMod(t->handle,255,255,255);SDL_SetTextureAlphaMod(t->handle,255);
+}
+void draw_text(const char *text,float x,float y,int size,SDL_Color color) {
+    draw_font("CambriaBold30W",text,x,y,size,color);
+}
+void draw_rect(float x,float y,float w,float h,SDL_Color c){SDL_SetRenderDrawColor(renderer,c.r,c.g,c.b,c.a);SDL_FRect r={x,y,w,h};SDL_RenderFillRectF(renderer,&r);}
+void draw_line(float x,float y,float xx,float yy,SDL_Color c){SDL_SetRenderDrawColor(renderer,c.r,c.g,c.b,c.a);SDL_RenderDrawLineF(renderer,x,y,xx,yy);}
+bool renderer_screenshot(const char *path) {
+    int w,h;SDL_GetRendererOutputSize(renderer,&w,&h);SDL_Surface *surface=SDL_CreateRGBSurfaceWithFormat(0,w,h,32,SDL_PIXELFORMAT_RGBA32);if(!surface)return false;
+    bool ok=SDL_RenderReadPixels(renderer,NULL,SDL_PIXELFORMAT_RGBA32,surface->pixels,surface->pitch)==0&&SDL_SaveBMP(surface,path)==0;SDL_FreeSurface(surface);return ok;
+}
+bool resources_selftest(void) {
+    int frames=0;
+    const char *required_fonts[]={"CambriaBold30W","CambriaBold30B","CalibriRegular22N","CalibriBold20W","CalibriBold20G"};
+    for(size_t i=0;i<sizeof required_fonts/sizeof *required_fonts;i++)
+        if(!font_find(required_fonts[i]))return failure("Missing retail HUD font",required_fonts[i]);
+    for(int i=0;i<font_count;i++) {
+        Font *f=&fonts[i];int w,h,n;
+        if(!stbi_info(f->texture,&w,&h,&n))return failure("Invalid bitmap font texture",f->texture);
+        for(int j=0;j<f->count;j++) {
+            Glyph *g=&f->glyphs[j];
+            if(g->x<0||g->y<0||g->w<0||g->h<0||g->x+g->w>w||g->y+g->h>h)
+                return failure("Glyph outside original font atlas",f->name);
+        }
+    }
+    for(int i=0;i<animations_count;i++){
+        Animation *a=&animations[i];int w,h,n;
+        if(!a->frame_count||!stbi_info(a->texture,&w,&h,&n))return failure("Invalid original animation texture",a->texture);
+        for(int j=0;j<a->frame_count;j++){SpriteFrame *f=&a->frames[j];int x=(int)lroundf(f->u*w),y=(int)lroundf((1-f->v-f->cv)*h),fw=(int)lroundf(f->cu*w),fh=(int)lroundf(f->cv*h);
+            if(x<0||y<0||fw<=0||fh<=0||x+fw>w||y+fh>h)return failure("Frame outside original atlas",a->name);frames++;}
+    }
+    /* Exercise the same complete parser used for originals, without creating
+       files or invoking any scripting runtime. Rejected inputs do not allocate
+       animations, so the live resource registry remains intact. */
+    const char *rejected[]={
+        "os.execute('must not run')",
+        "require('anything')",
+        "texinfo = dofile('anything')",
+        "bounds = { nested = function() end }",
+        "bounds = { 1e100 }",
+        "bounds = { 1e999 }",
+        "bounds = { 0, 1 ",
+        "--[[",
+        "--[[missing close",
+        "texinfo = createTextureInfoEx('unterminated)",
+    };
+    char saved_error[sizeof last_error];memcpy(saved_error,last_error,sizeof last_error);
+    for(size_t i=0;i<sizeof rejected/sizeof rejected[0];i++) {
+        last_error[0]=0;
+        if(parse_source(rejected[i],strlen(rejected[i]),"parser rejection self-test",false))
+            return failure("Parser accepted unsupported or malformed resource data",rejected[i]);
+    }
+    const char *valid="--[[constant bounds]]\nbounds = { { x=1.25, y=-2 }, {3,4} }";
+    if(!parse_source(valid,strlen(valid),"parser acceptance self-test",false))return false;
+    const char *invalid_frame="{{dx=0,dy=0,u=1e20,v=0,cu=.5,cv=.5,w=32,h=32}}";
+    Lexer frame_lexer={.source=invalid_frame,.at=invalid_frame,.end=invalid_frame+strlen(invalid_frame),.path="invalid UV self-test",.line=1};
+    Animation temporary={0};next(&frame_lexer);
+    bool frame_accepted=frame_table(&frame_lexer,&temporary);free(temporary.frames);
+    if(frame_accepted)return failure("Parser accepted invalid atlas UV bounds","self-test");
+    memcpy(last_error,saved_error,sizeof last_error);
+    printf("Resource checks: %d animations, %d frames inside original texture bounds; malformed/executable declarations rejected; UTF-16 font metrics loaded.\n",animations_count,frames);return true;
+}
+void resources_destroy(void) {
+    for(int i=0;i<animations_count;i++)free(animations[i].frames);free(animations);animations=NULL;animations_count=0;
+    for(int i=0;i<font_count;i++)free(fonts[i].glyphs);font_count=0;
+    while(textures){Texture *next=textures->next;SDL_DestroyTexture(textures->handle);free(textures);textures=next;}
+}

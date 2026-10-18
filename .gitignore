@@ -1,0 +1,4 @@
+/build/
+/resources/
+*.bmp
+.DS_Store
