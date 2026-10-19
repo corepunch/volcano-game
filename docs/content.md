@@ -77,7 +77,8 @@ archetypes the same way, and they stay local to that mission.
 **Placement.** An `<object>`'s `x,y` is where it stands. For classes with
 a base (`base`, `obstacle`, `pickup`, `lot`, `producer`, `service`, `valve`)
 that is the centre of the base: the selection ring is centred there, and the
-sprite's body is centred on it horizontally whatever its pivot. The pivot's
+shown frame's body is centred on it horizontally whatever its pivot (an
+animating sprite centres the union of its frames). The pivot's
 height sets the sprite's ground line, so it is the only thing art needs to
 tune. Place a building at the centre of its painted clearing. Actors and
 scenery stand on their sprite's pivot.

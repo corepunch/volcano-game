@@ -63,8 +63,10 @@ bool game_entity_sprite(const Game *g,const Entity *e,char *out,size_t size)
 Vec2 game_footprint(const Game *g,const Entity *e)
 {
     char name[160];const Sprite *s;float w=100;
-    if (game_entity_sprite(g,e,name,sizeof name) && (s=sprite_find(name)) && s->frame_count)
-        w=fmaxf(65,s->body_right-s->body_left+24);
+    if (game_entity_sprite(g,e,name,sizeof name) && (s=sprite_find(name)) && s->frame_count) {
+        float left,right;sprite_body_span(s,e->frame,&left,&right);
+        w=fmaxf(65,right-left+24);
+    }
     w=fminf(w,170);
     return vec2(w*.5f,w*.62f*.5f);
 }

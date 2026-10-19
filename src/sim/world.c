@@ -66,9 +66,17 @@ static bool spawn(Game *g,int i)
         else if (e->kind==RESOURCE) g->resources++;
         else g->survivors++;
     }
-    char sprite[160];
-    if (p->type->effect==EFFECT_NONE && game_entity_sprite(g,e,sprite,sizeof sprite) && !sprite_find(sprite))
+    char sprite[160];const Sprite *art=NULL;
+    if (p->type->effect==EFFECT_NONE && game_entity_sprite(g,e,sprite,sizeof sprite) && !(art=sprite_find(sprite)))
         return error_set("Missing sprite '%s' for object %u (%s)",sprite,p->id,p->type->id);
+    /* A position given as a sprite pivot becomes the base centre, so the object
+     * draws exactly where its source format put it while its ring and approach
+     * move to the middle of its base. */
+    if (g->spec.positions_are_pivots && art && art->frame_count && archetype_has_base(p->type)) {
+        float shift=sprite_base_x(art,e->frame);
+        e->p.x+=shift;e->origin.x+=shift;e->roam.x+=shift;
+        if (!e->has_workpoint) e->workpoint.x+=shift;
+    }
     return true;
 }
 

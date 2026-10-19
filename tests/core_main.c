@@ -77,10 +77,21 @@ static void sheet_tests(void)
         CHECK(b.w==50 && b.h==25 && b.dx==15 && fabsf(b.dy+5)<1e-4f,"body maps to world units: %g,%g %gx%g",b.dx,b.dy,b.w,b.h);
         /* Objects with a base stand on their body's horizontal centre whatever
          * the pivot; actors stand on the pivot. Both keep the pivot's height. */
-        Vec2 p=vec2(300,200),cafe=archetype_sprite_origin(archetype_find("cafe"),s,p);
-        Vec2 worker=archetype_sprite_origin(archetype_find("worker"),s,p);
+        Vec2 p=vec2(300,200),cafe=archetype_sprite_origin(archetype_find("cafe"),s,0,p);
+        Vec2 worker=archetype_sprite_origin(archetype_find("worker"),s,0,p);
         CHECK(fabsf(cafe.x-b.dx+b.w*.5f-p.x)<1e-4f && cafe.y==p.y,"building body centred on its position: %g",cafe.x-b.dx+b.w*.5f);
         CHECK(worker.x==p.x && worker.y==p.y,"actor stands on its pivot");
+    }
+    /* A shown state frame is centred on its own body; an animation on the
+     * union of its frames, so it keeps its registration. */
+    write_file(sheet,"<sprites image=\"art.png\"><sprite name=\"t/b\">"
+        "<frame rect=\"0,0,100,10\" pivot=\"0.2,1\"/><frame rect=\"0,0,40,10\" pivot=\"0.75,1\"/></sprite></sprites>");
+    CHECK(assets_load_level(NULL,0,files,1) && (s=sprite_find("t/b")),"state sheet loads");
+    if ((s=sprite_find("t/b"))) {
+        const Archetype *stone=archetype_find("stone");Vec2 p=vec2(0,0);
+        CHECK(archetype_sprite_origin(stone,s,0,p).x==-30,"frame 0 body centred: %g",archetype_sprite_origin(stone,s,0,p).x);
+        CHECK(archetype_sprite_origin(stone,s,1,p).x==10,"frame 1 body centred: %g",archetype_sprite_origin(stone,s,1,p).x);
+        CHECK(archetype_sprite_origin(stone,s,-1,p).x==-25,"animation centred on its frames' union: %g",archetype_sprite_origin(stone,s,-1,p).x);
     }
     write_file(sheet,"<sprites image=\"art.png\"><sprite name=\"t/a\" rect=\"0,0,20,10\" anchor=\"1,1\"/></sprites>");
     CHECK(!assets_load_level(NULL,0,files,1),"absolute anchors are rejected");

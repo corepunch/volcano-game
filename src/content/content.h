@@ -86,8 +86,9 @@ bool archetype_is(const Archetype *a,const Archetype *ancestor);
  * on it horizontally while the sprite's pivot sets the ground line. Actors
  * and scenery are positioned by their sprite's pivot. */
 bool archetype_has_base(const Archetype *a);
-/* Where SPRITE's pivot goes for an object of type A positioned at P. */
-Vec2 archetype_sprite_origin(const Archetype *a,const Sprite *sprite,Vec2 p);
+/* Where SPRITE's pivot goes when an object of type A positioned at P shows
+ * FRAME (-1 while animating). */
+Vec2 archetype_sprite_origin(const Archetype *a,const Sprite *sprite,int frame,Vec2 p);
 /* Construction menu: producers with a menu slot, ordered by slot. */
 int content_menu(const Archetype **out,int capacity);
 bool mission_allows(const Mission *m,const Archetype *a);
@@ -135,6 +136,7 @@ typedef struct {
     char path[PATH_CAPACITY],title[128];
     char background[PATH_CAPACITY],background_alpha[PATH_CAPACITY];
     bool retail_background;             /* Background is a retail texture path, resolved through the VFS. */
+    bool positions_are_pivots;          /* Placements give sprite pivots, not base centres (retail levels). */
     Mission mission;
     int campaign;                       /* Original campaign position, 0 for missions. */
     int source_index;                   /* Original level file number, -1 for missions. */

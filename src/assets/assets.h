@@ -33,11 +33,19 @@ static inline SpriteFrame sprite_body_frame(SpriteFrame f)
     return f;
 }
 
-/* Horizontal geometric centre of the sprite's body (all frames), relative to
- * its anchor. Objects with a base stand on this point; see game_sprite_origin. */
-static inline float sprite_base_x(const Sprite *s)
+/* Body extent of FRAME relative to the anchor; frame -1 (animating) spans all
+ * frames, so an animation keeps its registration. */
+static inline void sprite_body_span(const Sprite *s,int frame,float *left,float *right)
 {
-    return s->frame_count?(s->body_left+s->body_right)*.5f:0;
+    if (frame<0 || !s->frame_count) { *left=s->body_left;*right=s->body_right;return; }
+    SpriteFrame f=sprite_body_frame(s->frames[frame<s->frame_count?frame:s->frame_count-1]);
+    *left=-f.dx;*right=f.w-f.dx;
+}
+/* Horizontal geometric centre of the body, relative to the anchor. Objects
+ * with a base stand on this point; see archetype_sprite_origin. */
+static inline float sprite_base_x(const Sprite *s,int frame)
+{
+    float left,right;sprite_body_span(s,frame,&left,&right);return (left+right)*.5f;
 }
 
 bool assets_load_base(void);

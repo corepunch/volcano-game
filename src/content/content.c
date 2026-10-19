@@ -50,9 +50,9 @@ bool archetype_has_base(const Archetype *a)
     }
 }
 
-Vec2 archetype_sprite_origin(const Archetype *a,const Sprite *sprite,Vec2 p)
+Vec2 archetype_sprite_origin(const Archetype *a,const Sprite *sprite,int frame,Vec2 p)
 {
-    if (sprite && archetype_has_base(a)) p.x-=sprite_base_x(sprite);
+    if (sprite && sprite->frame_count && archetype_has_base(a)) p.x-=sprite_base_x(sprite,frame);
     return p;
 }
 

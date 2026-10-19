@@ -87,13 +87,15 @@ index.
   a mission placed restores the mission's variant.
 - **Placement.** An object with a base (headquarters, buildings, lots,
   services, valves, obstacles, supplies) is positioned by its base centre.
-  Its selection ring is centred on that point, and its sprite is drawn with
-  the body's horizontal geometric centre on it, so every state of a building
-  sits in the middle of its ring. Only the height of the ground line comes
-  from the sprite's pivot. Actors and scenery are positioned by their pivot.
-  `archetype_sprite_origin` is the one rule; drawing and picking both use it.
-  Retail coordinates are pivot positions, so the importer converts them to
-  base centres.
+  Its selection ring is centred on that point, and the frame it shows is
+  drawn with its body's horizontal geometric centre on it, so every state of
+  a building sits in the middle of its ring (an animating sprite uses the
+  union of its frames, keeping its registration). Only the height of the
+  ground line comes from the sprite's pivot. Actors and scenery are
+  positioned by their pivot. `archetype_sprite_origin` is the one rule;
+  drawing, picking and the ring all use it. Retail levels give pivot
+  positions (`LevelSpec.positions_are_pivots`), which the world converts to
+  base centres when it spawns them.
 - **Appearance** (`sim/appearance.c`) derives the sprite from archetype,
   state and pose, and measures the footprint from that sprite. The renderer
   draws the selection ring from the same footprint the navigator uses, so
