@@ -8,6 +8,7 @@ Original declarations supply unchanged world sizes, pivots, FPS and frame order.
 import argparse
 from array import array
 from collections import defaultdict
+import hashlib
 import json
 from pathlib import Path
 import re
@@ -19,6 +20,86 @@ ROOT = Path(__file__).resolve().parents[1]
 DECL = re.compile(r"texinfo\s*=\s*createTextureInfoEx\('([^']+)'\)")
 FRAMES = re.compile(r"frames\s*=\s*\{(.*?)\}\s*(addTextureInfoExNodes\(texinfo, )'([^']+)'(, frames, [\d.]+\))", re.S)
 FIELD = re.compile(r"\b(dx|dy|u|v|cu|cv|w|h)\s*=\s*([\d.eE+-]+)")
+
+
+class ShadowAtlas:
+    """Pack authored ground footprints without touching the object artwork.
+
+    Placement uses the final visible body rectangle, rather than the retail
+    pivot alone: tall buildings and tiny supplies have different bottom edges.
+    Each damage/repair state has its own source art and placement record.
+    """
+
+    def __init__(self, art, required):
+        manifest = json.loads((art / "shadows.json").read_text())
+        if manifest["format"] != "volcano-static-shadows-1":
+            raise ValueError("expected authored static ground shadows")
+        path = art / manifest["sheet"]
+        if hashlib.sha256(path.read_bytes()).hexdigest() != manifest["sha256"]:
+            raise ValueError("shadow artwork changed without updating its manifest")
+        self.source = Image.open(path).convert("RGBA")
+        if list(self.source.size) != manifest["sheet_size"]:
+            raise ValueError("shadow sheet dimensions changed")
+        self.entries = {}
+        for entry in manifest["frames"]:
+            key = entry["animation"], entry["frame"]
+            if key in self.entries:
+                raise ValueError(f"duplicate authored shadow: {key}")
+            left, top, right, bottom = entry["region"]
+            if not (0 <= left < right <= self.source.width and
+                    0 <= top < bottom <= self.source.height):
+                raise ValueError(f"invalid shadow source region: {key}")
+            self.entries[key] = entry
+        if set(self.entries) != required:
+            raise ValueError("every HD object state must have exactly one authored shadow")
+        self.image = Image.new("RGBA", (2048, 1024))
+        self.x = self.y = self.row_height = 4
+        self.rows = defaultdict(list)
+        self.suffixes = {}
+        self.report = []
+
+    def add(self, name, index, original, sprite_size, suffix):
+        entry = self.entries[name, index]
+        footprint = entry["footprint"]
+        # These are the same integer placements used for the body atlas below.
+        fw, fh = round(original["w"] * 2), round(original["h"] * 2)
+        bw, bh = sprite_size
+        body_left = -original["dx"] + ((fw - bw) // 2) / 2
+        body_bottom = -original["h"] + original["dy"] + ((fh - bh) // 2 + bh) / 2
+        body_width = bw / 2
+        w = max(2, round(body_width * footprint["width"] * 2))
+        h = max(2, round(body_width * footprint["height"] * 2))
+        center_x = body_left + body_width * (.5 + footprint["offset_x"])
+        center_y = body_bottom - body_width * footprint["inset"] + footprint["drop"]
+        if self.x + w + 4 > self.image.width:
+            self.x, self.y = 4, self.y + self.row_height + 4
+            self.row_height = 0
+        if self.y + h + 4 > self.image.height:
+            raise ValueError("packed shadow atlas is full")
+        shadow = self.source.crop(entry["region"]).resize((w, h), Image.Resampling.LANCZOS)
+        self.image.alpha_composite(shadow, (self.x, self.y))
+        frame = dict(dx=w / 4 - center_x, dy=center_y + h / 4,
+                     w=w / 2, h=h / 2, u=self.x / self.image.width,
+                     v=1 - (self.y + h) / self.image.height,
+                     cu=w / self.image.width, cv=h / self.image.height)
+        self.rows[name].append("  { " + ", ".join(f"{k}={v:.10g}" for k, v in frame.items()) + " },")
+        self.suffixes[name] = suffix
+        self.report.append(dict(animation=name, frame=index, pivot=[frame["dx"], frame["dy"]],
+                                world_size=[frame["w"], frame["h"]],
+                                atlas_region=[self.x, self.y, w, h]))
+        self.x += w + 4
+        self.row_height = max(self.row_height, h)
+
+    def save(self, output):
+        declarations = []
+        for name, rows in self.rows.items():
+            declarations.append(f"texinfo = createTextureInfoEx('{name}_ground_shadow')\n"
+                                "frames =\n{\n" + "\n".join(rows) + "\n}\n"
+                                "addTextureInfoExNodes(texinfo, 'volcano-static-shadows'" +
+                                self.suffixes[name] + "\n")
+        self.image.save(output / "texture/lazy/volcano-static-shadows.png")
+        (output / "texture/lazy/volcano-static-shadows.lua").write_text("\n".join(declarations))
+        (output / "hd-static-shadows-report.json").write_text(json.dumps(self.report, indent=2) + "\n")
 
 
 def extract_regions(path, regions, threshold):
@@ -103,6 +184,7 @@ def build(assets, output, art):
         sheet: extract_regions(art / sheet, regions, manifest["alpha_core_threshold"])
         for sheet, regions in sheets.items()
     }
+    shadows = ShadowAtlas(art, {(name, index) for name, states in selected.items() for index in states})
     atlas = Image.new("RGBA", (2048, 1024))
     cursor_x = cursor_y = row_height = 4
     replacements, report = {}, []
@@ -135,6 +217,7 @@ def build(assets, output, art):
                     raise ValueError(f"source artwork too small for true 2x: {name}[{index}]")
                 sprite = sprite.resize((max(1, round(sprite.width * ratio)),
                                         max(1, round(sprite.height * ratio))), Image.Resampling.LANCZOS)
+                shadows.add(name, index, frame, sprite.size, table[4])
                 if cursor_x + w + 4 > atlas.width:
                     cursor_x, cursor_y = 4, cursor_y + row_height + 4
                     row_height = 0
@@ -169,8 +252,10 @@ def build(assets, output, art):
     for name, content in replacements.items():
         (folder / name).write_bytes(content)
     atlas.save(folder / "volcano-static.png")
+    shadows.save(output)
     (output / "hd-static-report.json").write_text(json.dumps(report, indent=2) + "\n")
     print(f"HD assets: {len(selected)} static sprites, {len(report)} authored states at exact 2x texture resolution.")
+    print(f"Ground shadows: {len(shadows.report)} authored footprints, with matching state order and FPS.")
     print(f"World sizes, pivots, frame order and all other declarations preserved. Output: {output}")
 
 

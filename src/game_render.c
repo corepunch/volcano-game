@@ -72,7 +72,12 @@ static void game_paint(Game *g, const Entity *e)
             draw_sprite_tinted("water0",pose.p.x,pose.p.y,g->time,0,game_color(95,175,65,215));return;
         }
         double time=g->time+(e->ambient==BIRD?game_particle_random(e->seed)*2.4:0);
-        draw_sprite_rotated(game_sprite_name(e->anim),pose.p.x,pose.p.y,time,e->frame,e->ambient==CLOUD?.65f:1,pose.angle);
+        const char *sprite=game_sprite_name(e->anim);char shadow[128];
+        snprintf(shadow,sizeof shadow,"%s_ground_shadow",sprite);
+        /* HD assets opt in with an authored footprint for every object state.
+         * Share the pose and frame so repair, clearing and floating stay aligned. */
+        if (animation_find(shadow)) draw_sprite_rotated(shadow,pose.p.x,pose.p.y,time,e->frame,.55f,pose.angle);
+        draw_sprite_rotated(sprite,pose.p.x,pose.p.y,time,e->frame,e->ambient==CLOUD?.65f:1,pose.angle);
     }
 }
 

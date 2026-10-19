@@ -127,6 +127,15 @@ Original resources under `reference/rescue-team` stay untouched. macOS windows
 support Retina backing pixels. `make test-hd` runs the conversion, mission,
 resource and campaign checks with the HD asset directory.
 
+HD buildings, debris, bridges, road damage and supplies also have short, soft
+ground shadows in the retail style. All 46 shadow states were authored together
+in `assets/hd-static/shadows.generated.png`; `shadows.prompt.txt` records the
+ImageGen prompt and `shadows.json` records source regions and footprint placement.
+The packer retains the generated alpha and produces a separate
+`volcano-static-shadows` atlas. Each shadow follows its object's repair/clearing
+frame, ground position and rotation, at 55% render opacity. Body textures,
+pivots and click bounds stay unchanged. Retail character shadows remain in use.
+
 On macOS, `make app` also creates the double-clickable `build/Volcano.app`
 with its own bundled resource copy. The app does not need the Documents folder.
 The tracked bundle metadata lives in `packaging/Info.plist`.
