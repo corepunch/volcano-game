@@ -1,0 +1,60 @@
+GROUND ZERO — reference and mission brief
+
+A fictional Rescue Team mission inspired by aerial views of the World Trade
+Center site during September 2001 rescue/recovery operations. Rescue counts,
+people, paths and playable logistics are invented; this is not a reconstruction
+of individual historical rescues.
+
+Photographic references inspected 2026-10-19:
+1. U.S. Navy / Chief Photographer's Mate Eric J. Tilford, September 17, 2001,
+   010917-N-7479T-514. Large oblique aerial: dusty steel/concrete debris field,
+   damaged surrounding buildings, standing facade fragments, cranes, smoke.
+   https://commons.wikimedia.org/wiki/File:010917-N-7479T-514_WTC_Ground_Zero_Aerial.jpg
+2. Library of Congress, Witness and Response, digital aerial series. New York
+   State Office for Technology / EarthData International, September 15 and 26,
+   2001. Overhead geography, surrounding street grid and cleared access lanes.
+   https://www.loc.gov/exhibits/911/911-maps.html#obj004
+   September 26 image: https://www.loc.gov/exhibits/911/images/lg-map-aerial3.jpg
+3. FEMA / Michael Rieger, September 27, 2001, aerial series; FEMA / Andrea
+   Booher, October 4 and 8. Additional views of cranes and working lanes.
+   https://publicintelligence.net/911-ground-zero-high-resolution-aerial-photos/
+
+Source photos are research references, not the game's background. The new
+painted plate and all props are generated with built-in ImageGen. No photographic
+people are reused, and no bodies or injuries are depicted. Original UI is reused.
+
+PLAYABLE GEOGRAPHY — 1366 x 768, top-left screen coordinates
+HQ clearing: (165,620). Main cleared south street: (165,620) to (1130,620).
+Western interior lane: (400,620) -> (400,410) -> (345,340) -> (345,190).
+Western food station pad: (265,425), with approach at (345,435).
+Central lane: (710,620) -> (710,410) -> (740,330) -> (740,220).
+East lane: (1070,620) -> (1070,430) -> (1050,360) -> (1120,270).
+East side rescue branch: (1070,450) -> (1215,450).
+Southern timber station pad: (630,710), approach at (630,620).
+Southern logistics station pad: (940,710), approach at (940,620).
+Central debris islands occupy the spaces between lanes, including upright
+trident-like facade sections, floor slabs and tangled rusty steel beams.
+Surrounding office blocks frame the top and side margins without hiding lanes.
+No important play in HUD corners x<446,y<100 or x>1010,y<100.
+
+ECONOMY AND OBJECTIVE
+Two starting workers, 40 food, no wood/money/fuel. Nine civilians plus one
+stranded rescue worker; two animals. IDs deliberately match the existing larger
+mission test contract, with a dedicated mode for this mission.
+20: salvage timber on western lane (400,530), costs 20 food, yields 20 wood.
+21: concrete debris at (345,290), costs 20 food; western rescue pocket beyond.
+22: collapsed street debris at (520,620), costs 20 food; 3 x 20 timber caches
+    beyond, plus production station access. It leaves the western cafe reachable.
+23: heavy steel/concrete at (1070,535), costs 40 food + 100 money.
+24: repairable broken paving at (1155,450), costs 20 wood; east rescue pocket.
+25: compact concrete debris at (710,410), costs 20 food; central rescue pocket.
+Food station repair 20 wood, timber station 20, logistics station 30.
+All produce original resources at original intervals. Preserve original costs,
+queue semantics, collision and removal, using authored presentation overrides
+for urban debris and field stations. Generated prop states together in one atlas.
+
+A plausible depleted opening clears 20 and 22 (food=0), collects 60 timber plus
+20 salvaged timber, repairs food station for 20 wood, resumes queued work through
+renewable food. Three production repair orders must complete with no grants.
+Gates 21/25/23+24 isolate the three rescue pockets. No central perimeter-only
+layout: crews use three actual routes within the destroyed complex.
