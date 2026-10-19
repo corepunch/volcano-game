@@ -105,7 +105,9 @@ sprites. HD artwork covers every interactive building, debris and resource sprit
 used by the two custom missions, plus the fuel station and construction lot:
 23 sprites and 46 authored damage/repair states. HD workers and civilians use
 our [Kenney character adaptation](assets/kenney-characters/README.md), rendered
-from an editable Blender rig in eight directions. Animals, scenery animations
+from an editable Blender rig in eight directions. See the [character rendering
+guide](docs/rendering-characters.md) to render saved models, rebuild animations,
+refresh selected sprite clips and verify the HD output. Animals, scenery animations
 and HUD artwork retain their original textures.
 
 Both HD missions also use AI-upscaled **3344×1882** backgrounds, exactly twice

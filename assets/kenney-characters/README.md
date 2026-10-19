@@ -36,24 +36,30 @@ The scheduler selects axe work for trees, pickaxe work for rocks, hammering for 
 
 The sprite installer retains each original animation's frame count and FPS. It resamples the baked source poses to those frames; Transparent 128×160 renders (160×160 for wide tool swings) supply 2× texture resolution. Packing rejects empty, clipped or unlit frames. It trims alpha and computes pivots from the projected world origin, so changing poses and eight-direction turns stay attached to the same ground point. Directions follow the game's convention: E, NE, N, NW, W, SW, S, SE. Retail shadow sprites remain in use.
 
-## Rebuild through Blender MCP
+## Render or rebuild through Blender MCP
 
-The installed Blender MCP extension provides a null-delimited socket bridge. `tools/blender_mcp.py` talks directly to that extension; it does not require a separate cloud connection. Use a dedicated background Blender process so an open user scene remains untouched:
+Follow the [character rendering guide](../../docs/rendering-characters.md) for
+setup, saved-model rendering, rebuilding from FBX sources, partial re-renders,
+previewing, cache recovery and game verification.
+
+To render the existing model, start a dedicated background Blender MCP process
+with the saved scene loaded:
 
 ```sh
-/Applications/Blender.app/Contents/MacOS/Blender --background --online-mode \
+/Applications/Blender.app/Contents/MacOS/Blender --background \
+  assets/kenney-characters/blender/rescue-characters.blend --online-mode \
   --command blender_mcp --host 127.0.0.1 --port 9877
 ```
 
-In a second terminal, from the repository root:
+Then, in another terminal at the repository root:
 
 ```sh
-python3 tools/blender_mcp.py tools/build_rescue_characters.py
 python3 tools/blender_mcp.py tools/render_rescue_characters.py
 python3 tools/pack_rescue_characters.py --pack
-make hd-assets
+make test-hd hd-app
 ```
 
-The render cache is under `build/kenney-character-frames`. A changed blend file or render script invalidates the cache. A first-time full rebuild after an interrupted preview can be forced by removing that generated cache directory. The saved `sprites/` PNG atlases and catalog make normal game builds independent of Blender.
-
-The FBX clips have different rest poses. The authoring script transfers each clip through its exported Targeting Pose before baking, rather than copying incompatible local quaternion tracks. New work actions are authored on the retargeted rig. Uniform details follow the existing skinned body through its texture. Only the helmet and props add geometry. `tools/texture_rescue_uniform.py` authors the flat-color paint and bakes it onto the original UV layout in Blender; no raised tape, pockets or belt pieces are created.
+`tools/build_rescue_characters.py` is a separate authoring step: it recreates the
+scene from source and overwrites the saved model and baked uniform. Use it when
+rebuilding from the authoring scripts, not merely to re-render saved edits.
+Normal game builds use the committed sprite atlases and do not require Blender.
