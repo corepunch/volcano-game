@@ -1,0 +1,928 @@
+{
+  "$schema": "../docs/level-source.schema.json",
+  "format": "volcano-level-1",
+  "_comment": "Ground Zero: fictional rescue mission inspired by September 2001 aerial photographs. Three interior search lanes through steel/concrete rubble, nine civilians and a stranded rescue worker, two animals. Original mechanics, authored urban prop presentation. Source positions measured against the generated plate; bottom-left world coordinates. See ground-zero.design.txt for sources and budget.",
+  "background": "@ground-zero.png",
+  "mission": {
+    "food": 40,
+    "wood": 0,
+    "money": 0,
+    "fuel": 0,
+    "rescue_goal": 10,
+    "basin_goal": 0,
+    "allow_cafe": true
+  },
+  "objects": [
+    {
+      "type": "traffic",
+      "id": 1,
+      "layer": 4,
+      "points": [
+        [
+          165.0,
+          220.0
+        ],
+        [
+          191.36,
+          220.0
+        ],
+        [
+          217.73,
+          220.0
+        ],
+        [
+          244.09,
+          220.0
+        ],
+        [
+          270.45,
+          220.0
+        ],
+        [
+          296.82,
+          220.0
+        ],
+        [
+          323.18,
+          220.0
+        ],
+        [
+          349.55,
+          220.0
+        ],
+        [
+          375.91,
+          220.0
+        ],
+        [
+          402.27,
+          220.0
+        ],
+        [
+          428.64,
+          220.0
+        ],
+        [
+          455.0,
+          220.0
+        ],
+        [
+          476.25,
+          220.0
+        ],
+        [
+          497.5,
+          220.0
+        ],
+        [
+          518.75,
+          220.0
+        ],
+        [
+          540.0,
+          220.0
+        ],
+        [
+          566.5,
+          220.0
+        ],
+        [
+          593.0,
+          220.0
+        ],
+        [
+          619.5,
+          220.0
+        ],
+        [
+          646.0,
+          220.0
+        ],
+        [
+          672.5,
+          220.0
+        ],
+        [
+          699.0,
+          220.0
+        ],
+        [
+          725.5,
+          220.0
+        ],
+        [
+          752.0,
+          220.0
+        ],
+        [
+          777.33,
+          220.0
+        ],
+        [
+          802.67,
+          220.0
+        ],
+        [
+          828.0,
+          220.0
+        ],
+        [
+          853.33,
+          220.0
+        ],
+        [
+          878.67,
+          220.0
+        ],
+        [
+          904.0,
+          220.0
+        ],
+        [
+          929.33,
+          220.0
+        ],
+        [
+          954.67,
+          220.0
+        ],
+        [
+          980.0,
+          220.0
+        ],
+        [
+          1005.0,
+          220.0
+        ],
+        [
+          1030.0,
+          220.0
+        ],
+        [
+          1055.0,
+          220.0
+        ],
+        [
+          1080.0,
+          220.0
+        ],
+        [
+          1105.0,
+          220.0
+        ],
+        [
+          1130.0,
+          220.0
+        ],
+        [
+          456.67,
+          244.33
+        ],
+        [
+          458.33,
+          268.67
+        ],
+        [
+          460.0,
+          293.0
+        ],
+        [
+          461.67,
+          318.0
+        ],
+        [
+          463.33,
+          343.0
+        ],
+        [
+          465.0,
+          368.0
+        ],
+        [
+          467.33,
+          388.0
+        ],
+        [
+          469.67,
+          408.0
+        ],
+        [
+          472.0,
+          428.0
+        ],
+        [
+          459.0,
+          443.0
+        ],
+        [
+          446.0,
+          458.0
+        ],
+        [
+          428.5,
+          471.0
+        ],
+        [
+          411.0,
+          484.0
+        ],
+        [
+          408.0,
+          501.0
+        ],
+        [
+          405.0,
+          518.0
+        ],
+        [
+          412.5,
+          543.0
+        ],
+        [
+          420.0,
+          568.0
+        ],
+        [
+          415.0,
+          590.5
+        ],
+        [
+          410.0,
+          613.0
+        ],
+        [
+          445.0,
+          368.0
+        ],
+        [
+          425.0,
+          368.0
+        ],
+        [
+          405.0,
+          368.0
+        ],
+        [
+          378.33,
+          368.0
+        ],
+        [
+          351.67,
+          368.0
+        ],
+        [
+          325.0,
+          368.0
+        ],
+        [
+          312.5,
+          355.5
+        ],
+        [
+          300.0,
+          343.0
+        ],
+        [
+          285.0,
+          340.5
+        ],
+        [
+          270.0,
+          338.0
+        ],
+        [
+          752.0,
+          245.6
+        ],
+        [
+          752.0,
+          271.2
+        ],
+        [
+          752.0,
+          296.8
+        ],
+        [
+          752.0,
+          322.4
+        ],
+        [
+          752.0,
+          348.0
+        ],
+        [
+          749.33,
+          371.33
+        ],
+        [
+          746.67,
+          394.67
+        ],
+        [
+          744.0,
+          418.0
+        ],
+        [
+          757.0,
+          435.5
+        ],
+        [
+          770.0,
+          453.0
+        ],
+        [
+          781.0,
+          478.0
+        ],
+        [
+          792.0,
+          503.0
+        ],
+        [
+          791.33,
+          526.33
+        ],
+        [
+          790.67,
+          549.67
+        ],
+        [
+          790.0,
+          573.0
+        ],
+        [
+          765.0,
+          578.0
+        ],
+        [
+          740.0,
+          583.0
+        ],
+        [
+          1130.0,
+          241.5
+        ],
+        [
+          1130.0,
+          263.0
+        ],
+        [
+          1128.33,
+          284.67
+        ],
+        [
+          1126.67,
+          306.33
+        ],
+        [
+          1125.0,
+          328.0
+        ],
+        [
+          1125.0,
+          348.0
+        ],
+        [
+          1125.0,
+          368.0
+        ],
+        [
+          1110.0,
+          391.33
+        ],
+        [
+          1095.0,
+          414.67
+        ],
+        [
+          1080.0,
+          438.0
+        ],
+        [
+          1090.0,
+          454.67
+        ],
+        [
+          1100.0,
+          471.33
+        ],
+        [
+          1110.0,
+          488.0
+        ],
+        [
+          1126.67,
+          504.67
+        ],
+        [
+          1143.33,
+          521.33
+        ],
+        [
+          1160.0,
+          538.0
+        ],
+        [
+          1185.0,
+          550.5
+        ],
+        [
+          1210.0,
+          563.0
+        ],
+        [
+          1152.5,
+          368.0
+        ],
+        [
+          1180.0,
+          368.0
+        ],
+        [
+          1203.33,
+          368.0
+        ],
+        [
+          1226.67,
+          368.0
+        ],
+        [
+          1250.0,
+          368.0
+        ],
+        [
+          640.0,
+          220.0
+        ],
+        [
+          640.0,
+          199.0
+        ],
+        [
+          640.0,
+          178.0
+        ],
+        [
+          640.0,
+          156.75
+        ],
+        [
+          640.0,
+          135.5
+        ],
+        [
+          640.0,
+          114.25
+        ],
+        [
+          640.0,
+          93.0
+        ],
+        [
+          980.0,
+          199.0
+        ],
+        [
+          980.0,
+          178.0
+        ],
+        [
+          980.0,
+          156.75
+        ],
+        [
+          980.0,
+          135.5
+        ],
+        [
+          980.0,
+          114.25
+        ],
+        [
+          980.0,
+          93.0
+        ]
+      ]
+    },
+    {
+      "type": "base",
+      "id": 2,
+      "layer": 5,
+      "x": 165,
+      "y": 220
+    },
+    {
+      "type": "worker",
+      "id": 3,
+      "layer": 6,
+      "x": 165,
+      "y": 220
+    },
+    {
+      "type": "worker",
+      "id": 4,
+      "layer": 6,
+      "x": 185,
+      "y": 220
+    },
+    {
+      "type": "barrier",
+      "id": 20,
+      "layer": 5,
+      "x": 460,
+      "y": 293,
+      "params": "tree00",
+      "_comment": "Salvageable timber shoring: 20 food yields 20 wood, opens kitchen approach."
+    },
+    {
+      "type": "barrier",
+      "id": 21,
+      "layer": 5,
+      "x": 405,
+      "y": 513,
+      "params": "stone00",
+      "_comment": "Western search pocket concrete gate."
+    },
+    {
+      "type": "barrier",
+      "id": 22,
+      "layer": 5,
+      "x": 540,
+      "y": 220,
+      "params": "stone00",
+      "_comment": "South street debris gates the caches and supply stations."
+    },
+    {
+      "type": "barrier",
+      "id": 23,
+      "layer": 5,
+      "x": 1130,
+      "y": 263,
+      "params": "stone_big00",
+      "_comment": "Heavy eastern steel and concrete: 40 food and 100 money."
+    },
+    {
+      "type": "barrier",
+      "id": 24,
+      "layer": 5,
+      "x": 1180,
+      "y": 368,
+      "params": "broken_road0",
+      "_comment": "Restore existing broken paving to east-side search pocket for 20 wood."
+    },
+    {
+      "type": "barrier",
+      "id": 25,
+      "layer": 5,
+      "x": 752,
+      "y": 348,
+      "params": "stone00",
+      "_comment": "Concrete gate on interior central search lane."
+    },
+    {
+      "type": "building",
+      "id": 30,
+      "layer": 5,
+      "x": 270,
+      "y": 338,
+      "params": "burger",
+      "extra": "1;0"
+    },
+    {
+      "type": "resource",
+      "id": 31,
+      "layer": 5,
+      "x": 350,
+      "y": 368,
+      "params": "food1",
+      "link_id": 30
+    },
+    {
+      "type": "building",
+      "id": 32,
+      "layer": 5,
+      "x": 640,
+      "y": 93,
+      "params": "sawmill",
+      "extra": "1;0"
+    },
+    {
+      "type": "resource",
+      "id": 33,
+      "layer": 5,
+      "x": 670,
+      "y": 220,
+      "params": "wood1",
+      "link_id": 32
+    },
+    {
+      "type": "building",
+      "id": 34,
+      "layer": 5,
+      "x": 980,
+      "y": 93,
+      "params": "house",
+      "extra": "1;0"
+    },
+    {
+      "type": "resource",
+      "id": 35,
+      "layer": 5,
+      "x": 1020,
+      "y": 220,
+      "params": "money1",
+      "link_id": 34
+    },
+    {
+      "type": "resource",
+      "id": 40,
+      "layer": 5,
+      "x": 600,
+      "y": 220,
+      "params": "wood2"
+    },
+    {
+      "type": "resource",
+      "id": 41,
+      "layer": 5,
+      "x": 790,
+      "y": 220,
+      "params": "wood2"
+    },
+    {
+      "type": "resource",
+      "id": 42,
+      "layer": 5,
+      "x": 850,
+      "y": 220,
+      "params": "money2"
+    },
+    {
+      "type": "resource",
+      "id": 43,
+      "layer": 5,
+      "x": 935,
+      "y": 220,
+      "params": "wood2"
+    },
+    {
+      "type": "civilian",
+      "id": 50,
+      "layer": 6,
+      "x": 385,
+      "y": 613
+    },
+    {
+      "type": "civilian",
+      "id": 51,
+      "layer": 6,
+      "x": 415,
+      "y": 598
+    },
+    {
+      "type": "civilian",
+      "id": 52,
+      "layer": 6,
+      "x": 445,
+      "y": 613
+    },
+    {
+      "type": "civilian",
+      "id": 54,
+      "layer": 6,
+      "x": 720,
+      "y": 588
+    },
+    {
+      "type": "civilian",
+      "id": 55,
+      "layer": 6,
+      "x": 750,
+      "y": 578
+    },
+    {
+      "type": "civilian",
+      "id": 56,
+      "layer": 6,
+      "x": 775,
+      "y": 603
+    },
+    {
+      "type": "civilian",
+      "id": 57,
+      "layer": 6,
+      "x": 1210,
+      "y": 563
+    },
+    {
+      "type": "civilian",
+      "id": 58,
+      "layer": 6,
+      "x": 1235,
+      "y": 378
+    },
+    {
+      "type": "civilian",
+      "id": 59,
+      "layer": 6,
+      "x": 1265,
+      "y": 353
+    },
+    {
+      "type": "worker",
+      "id": 53,
+      "layer": 6,
+      "x": 405,
+      "y": 573,
+      "_comment": "Fictional stranded rescue worker; counted in ten-person objective."
+    },
+    {
+      "type": "animal",
+      "id": 60,
+      "layer": 6,
+      "x": 430,
+      "y": 578,
+      "params": "cat"
+    },
+    {
+      "type": "animal",
+      "id": 61,
+      "layer": 6,
+      "x": 750,
+      "y": 548,
+      "params": "dog"
+    },
+    {
+      "type": "effect",
+      "id": 200,
+      "layer": 5,
+      "x": 0,
+      "y": 768,
+      "link_id": 2,
+      "name": "Command post",
+      "params": "sprite;image=@ground-zero-props.png;rect=10,20,350,380;pivot=0.5,0.93;state=default",
+      "scale_x": 0.39,
+      "scale_y": 0.39
+    },
+    {
+      "type": "effect",
+      "id": 201,
+      "layer": 5,
+      "x": 0,
+      "y": 768,
+      "link_id": 30,
+      "name": "Field kitchen",
+      "params": "sprite;image=@ground-zero-props.png;rect=380,110,345,280;pivot=0.5,0.93;state=default",
+      "scale_x": 0.34,
+      "scale_y": 0.34
+    },
+    {
+      "type": "effect",
+      "id": 202,
+      "layer": 5,
+      "x": 0,
+      "y": 768,
+      "link_id": 30,
+      "name": "Field kitchen",
+      "params": "sprite;image=@ground-zero-props.png;rect=745,110,345,280;pivot=0.5,0.93;state=operational",
+      "scale_x": 0.34,
+      "scale_y": 0.34
+    },
+    {
+      "type": "effect",
+      "id": 203,
+      "layer": 5,
+      "x": 0,
+      "y": 768,
+      "link_id": 32,
+      "name": "Salvage supply station",
+      "params": "sprite;image=@ground-zero-props.png;rect=1095,110,350,290;pivot=0.5,0.93;state=default",
+      "scale_x": 0.36,
+      "scale_y": 0.36
+    },
+    {
+      "type": "effect",
+      "id": 204,
+      "layer": 5,
+      "x": 0,
+      "y": 768,
+      "link_id": 32,
+      "name": "Salvage supply station",
+      "params": "sprite;image=@ground-zero-props.png;rect=10,430,350,290;pivot=0.5,0.93;state=operational",
+      "scale_x": 0.36,
+      "scale_y": 0.36
+    },
+    {
+      "type": "effect",
+      "id": 205,
+      "layer": 5,
+      "x": 0,
+      "y": 768,
+      "link_id": 34,
+      "name": "Logistics station",
+      "params": "sprite;image=@ground-zero-props.png;rect=375,425,350,285;pivot=0.5,0.93;state=default",
+      "scale_x": 0.36,
+      "scale_y": 0.36
+    },
+    {
+      "type": "effect",
+      "id": 206,
+      "layer": 5,
+      "x": 0,
+      "y": 768,
+      "link_id": 34,
+      "name": "Logistics station",
+      "params": "sprite;image=@ground-zero-props.png;rect=740,425,350,285;pivot=0.5,0.93;state=operational",
+      "scale_x": 0.36,
+      "scale_y": 0.36
+    },
+    {
+      "type": "effect",
+      "id": 207,
+      "layer": 5,
+      "x": 0,
+      "y": 768,
+      "link_id": 20,
+      "name": "Timber shoring",
+      "params": "sprite;image=@ground-zero-props.png;rect=1095,510,345,200;pivot=0.5,0.7;state=default",
+      "scale_x": 0.26,
+      "scale_y": 0.26
+    },
+    {
+      "type": "effect",
+      "id": 208,
+      "layer": 5,
+      "x": 0,
+      "y": 768,
+      "link_id": 21,
+      "name": "Concrete slabs",
+      "params": "sprite;image=@ground-zero-props.png;rect=15,785,350,250;pivot=0.5,0.7;state=default",
+      "scale_x": 0.25,
+      "scale_y": 0.25
+    },
+    {
+      "type": "effect",
+      "id": 209,
+      "layer": 5,
+      "x": 0,
+      "y": 768,
+      "link_id": 22,
+      "name": "Street debris",
+      "params": "sprite;image=@ground-zero-props.png;rect=1095,800,340,225;pivot=0.5,0.7;state=default",
+      "scale_x": 0.25,
+      "scale_y": 0.25
+    },
+    {
+      "type": "effect",
+      "id": 210,
+      "layer": 5,
+      "x": 0,
+      "y": 768,
+      "link_id": 23,
+      "name": "Heavy steel debris",
+      "params": "sprite;image=@ground-zero-props.png;rect=375,790,365,240;pivot=0.5,0.7;state=default",
+      "scale_x": 0.3,
+      "scale_y": 0.3
+    },
+    {
+      "type": "effect",
+      "id": 211,
+      "layer": 5,
+      "x": 0,
+      "y": 768,
+      "link_id": 24,
+      "name": "Broken paving",
+      "params": "sprite;image=@ground-zero-props.png;rect=745,830,345,200;pivot=0.5,0.5;state=default",
+      "scale_x": 0.25,
+      "scale_y": 0.25
+    },
+    {
+      "type": "effect",
+      "id": 212,
+      "layer": 5,
+      "x": 0,
+      "y": 768,
+      "link_id": 25,
+      "name": "Concrete slabs",
+      "params": "sprite;image=@ground-zero-props.png;rect=15,785,350,250;pivot=0.5,0.7;state=default",
+      "scale_x": 0.25,
+      "scale_y": 0.25
+    },
+    {
+      "type": "effect",
+      "id": 100,
+      "layer": 5,
+      "x": 600,
+      "y": 403,
+      "params": "motes;width=130;height=70;count=5;speed=.25;opacity=.16"
+    },
+    {
+      "type": "effect",
+      "id": 101,
+      "layer": 5,
+      "x": 950,
+      "y": 498,
+      "params": "motes;width=100;height=60;count=4;speed=.3;opacity=.14"
+    }
+  ]
+}

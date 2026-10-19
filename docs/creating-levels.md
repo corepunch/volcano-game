@@ -125,6 +125,30 @@ checks as Ancient Echoes. Source, built-in ImageGen art and exact prompt are
 `levels/twisted-tracks.*`; compiled levels and all required images/rules live
 under `build/levels/`.
 
+## Ground Zero
+
+`make ground-zero` plays a fictional rescue mission inspired by September 2001
+aerial photographs of the World Trade Center site. Three search lanes pass
+through steel/concrete rubble to nine civilians, a stranded rescue worker and
+two animals. The surrounding city, cranes and large facade remnants are painted
+scenery; six discrete clearing/repair jobs gate the actual roads. A field kitchen,
+salvage supply station and logistics station use the existing cafe, sawmill and
+house economy with new authored artwork. Two workers start with 40 food.
+
+`make ground-zero-app` creates `build/Ground Zero.app`; `make test-ground-zero`
+checks all rescue gates, the depleted-food opening, automatic queue recovery,
+three repair orders, authored click bounds, complete debris removal, pause and
+restart. `make test` includes this mission. The mission's people and rescue
+counts are invented, not a record of historical rescues.
+
+Editable source/art and exact built-in ImageGen prompts are in
+`levels/ground-zero.level.json`, `levels/ground-zero.png`,
+`levels/ground-zero.prompt.txt`, `levels/ground-zero-props.png` and
+`levels/ground-zero-props.prompt.txt`. The props, including damaged/repaired
+station states, were generated together in one transparent atlas. Measured
+rectangles select the authored pixels without deriving new visual states.
+`levels/ground-zero.design.txt` records the photo links and measured layout.
+
 ## Source fields
 
 JSON uses double quotes and disallows comments and trailing commas. `_comment`
@@ -303,6 +327,34 @@ It also warns about missing crew/base, mismatched goals, unsupported mission
 types, and dangling known references. It does not prove solvability, validate
 animation existence, simulate the economy, or detect every blocking shortcut.
 Load and complete the level to verify those properties.
+
+## Authored stationary-object artwork
+
+A custom type-5 `effect` with `params="sprite;..."` and a nonzero `link_id`
+replaces a base, barrier or building's artwork. The link names the gameplay
+object, independent of source record order. Use the same local-image, `rect`,
+`pivot` and scale syntax as ordinary scene sprites. The target's position/layer
+controls drawing; the effect record's position is ignored. `name` optionally
+supplies its tooltip title (maximum 127 UTF-8 bytes).
+
+Use `state=default` (or omit state) for the normal/damaged artwork and a second
+record with `state=operational` for a building's repaired artwork. There can be
+only one record per target/state, and an operational state requires a default.
+Both must be world-stage sprites with no wind/rotation. Their measured, scaled
+rectangles also define click bounds. Prices, production, work duration, route
+blocking, queue state and removal still come from the target's original type
+and parameters. A cleared removable barrier hides its replacement completely.
+Demolishing or replacing a producer restores ordinary lot/new-building artwork.
+Generate all required props/states in one atlas; never synthesize repaired or UI
+states by tinting or otherwise post-processing a normal sprite.
+
+For example, attach a measured field kitchen cell to building 30:
+
+```json
+{"type":"effect","id":200,"link_id":30,"name":"Field kitchen",
+ "params":"sprite;image=@props.png;rect=380,110,345,280;pivot=.5,.93;state=default",
+ "scale_x":0.34,"scale_y":0.34}
+```
 
 ## Layered map visuals
 

@@ -245,13 +245,14 @@ static bool play_production_mission(const char *path,bool mayday)
     game_key(SDLK_r);
     return check(!game.won && !game.time && game.food==40 && game.wood==0,"mission restart resets puzzle");
 }
-/* These IDs are shared deliberately by the two disaster missions. Exercise the actual
+/* These IDs are shared deliberately by the disaster missions. Exercise the actual
  * UI, route graph and economy; no inventory grants or completion shortcuts. */
-static bool play_disaster_mission(const char *path,bool coaster)
+static bool play_disaster_mission(const char *path,int variant)
 {
-    const char *name=coaster?"Twisted Tracks":"Ancient Echoes";
-    const char *slug=coaster?"twisted-tracks":"ancient-echoes";
-    int goal=coaster?10:9;char shot[80];
+    bool coaster=variant==1,site=variant==2;
+    const char *name=site?"Ground Zero":coaster?"Twisted Tracks":"Ancient Echoes";
+    const char *slug=site?"ground-zero":coaster?"twisted-tracks":"ancient-echoes";
+    int goal=coaster || site?10:9;char shot[80];
     if (!game_init_file(path)) return false;
     test_click_entity(test_entity(20));test_click_entity(test_entity(22));
     for (int tick=0;tick<1200;tick++) game_update(.1);
@@ -277,13 +278,41 @@ static bool play_disaster_mission(const char *path,bool coaster)
                    game.workers[0].phase==IDLE && game.workers[1].phase==IDLE && game.workers[2].phase==STRANDED &&
                    game.food==40 && game.wood==0 && game.money==0,"disaster mission starting crew, recruit and supplies")) return false;
         for (uint32_t seed=50;seed<=61;seed++) {
-            if (seed==59 && !coaster) continue;
+            if (seed==59 && !coaster && !site) continue;
             int i=test_entity(seed);float length;int count;Vec2 points[MAX_PATH];
             if (!check(i>=0 && !game_route_to(game_current(),&game.workers[0],game.objects[i].p,-1,points,&count,&length),
                        "every tourist, recruit and animal starts gated")) return false;
         }
+        if (site) {
+            const uint32_t props[]={2,20,21,22,23,24,25,30,32,34};
+            for (size_t j=0;j<sizeof props/sizeof *props;j++) {
+                Entity *e=&game.objects[test_entity(props[j])];
+                if (!check(e->visual>=0 && game.scene.visuals[e->visual].kind==MAP_SPRITE &&
+                           game_distance(game.scene.visuals[e->visual].p,e->p)==0 && *e->presentation_title,
+                           "site presentation is attached to its actual gameplay object")) return false;
+                if (e->kind==BUILDING && !check(e->operational_visual>=0 && e->operational_visual!=e->visual,
+                    "field stations have separately authored repaired artwork")) return false;
+            }
+            Cost salvage=game_job_cost(game_current(),&game.objects[test_entity(20)]);
+            Cost heavy=game_job_cost(game_current(),&game.objects[test_entity(23)]);
+            Cost paving=game_job_cost(game_current(),&game.objects[test_entity(24)]);
+            if (!check(salvage.food==20 && heavy.food==40 && heavy.money==100 && paving.wood==20,
+                       "urban artwork preserves original job costs")) return false;
+            /* This natural visible point is outside the original timber-station bounds. */
+            Entity *station=&game.objects[test_entity(32)];
+            game_pointer(station->p.x-59,GAME_HEIGHT-station->p.y-35,false);
+            if (!check(game_hovered_object(game_current())==test_entity(32),
+                       "authored field-station footprint is clickable")) return false;
+            if (!order && !test_frame("ground-zero-station-hover")) return false;
+            game_pointer(-100,-100,false);
+        }
         snprintf(shot,sizeof shot,"%s-start",slug);
         if (!order && !test_frame(shot)) return false;
+        if (site && !order) {
+            game_key(SDLK_F1);
+            if (!test_frame("ground-zero-routes")) return false;
+            game_key(SDLK_F1);
+        }
         bool repaired=false,paid=false;
         for (int tick=0;tick<7500 && !game.won;tick++) {
             if (tick%10==0) {
@@ -317,6 +346,10 @@ static bool play_disaster_mission(const char *path,bool coaster)
                     order,game.rescued,game.animals_rescued,game.food,game.wood,game.money,game.time);
             return false;
         }
+        if (site) for (uint32_t seed=20;seed<=25;seed++) {
+            Entity *e=&game.objects[test_entity(seed)];
+            if (!check(e->done && e->hidden,"all urban debris disappears completely after clearing")) return false;
+        }
         snprintf(shot,sizeof shot,"%s-complete",slug);
         if (!order && !test_frame(shot)) return false;
         printf("PASS: %s repair order %d rescues %d people and two animals in %.1fs.\n",name,order+1,goal,game.time);
@@ -336,7 +369,7 @@ int main(int argc,char **argv)
         }
         free(level);printf("Production C reader accepted %d compiled binaries\n",argc-2);return 0;
     }
-    if ((argc!=3 && argc!=4) || (argc==4 && strcmp(argv[3],"--emerald") && strcmp(argv[3],"--mayday") && strcmp(argv[3],"--ancient") && strcmp(argv[3],"--coaster")) || strlen(argv[1])>=sizeof asset_root) return 2;
+    if ((argc!=3 && argc!=4) || (argc==4 && strcmp(argv[3],"--emerald") && strcmp(argv[3],"--mayday") && strcmp(argv[3],"--ancient") && strcmp(argv[3],"--coaster") && strcmp(argv[3],"--ground-zero")) || strlen(argv[1])>=sizeof asset_root) return 2;
     strcpy(asset_root,argv[1]);
     if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER)) return 2;
     SDL_Surface *surface=SDL_CreateRGBSurfaceWithFormat(0,GAME_WIDTH,GAME_HEIGHT,32,SDL_PIXELFORMAT_RGBA32);
@@ -344,8 +377,8 @@ int main(int argc,char **argv)
     bool ok=renderer && resources_init();
     if (ok) {
         SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_BLEND);
-        ok=argc==4?((!strcmp(argv[3],"--ancient") || !strcmp(argv[3],"--coaster"))?
-            play_disaster_mission(argv[2],!strcmp(argv[3],"--coaster")):
+        ok=argc==4?((!strcmp(argv[3],"--ancient") || !strcmp(argv[3],"--coaster") || !strcmp(argv[3],"--ground-zero"))?
+            play_disaster_mission(argv[2],!strcmp(argv[3],"--ground-zero")?2:!strcmp(argv[3],"--coaster")?1:0):
             play_production_mission(argv[2],!strcmp(argv[3],"--mayday"))):play(argv[2]);
     }
     if (!ok) fprintf(stderr,"%s\n",last_error);

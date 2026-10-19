@@ -17,6 +17,18 @@ static int draw_entry_compare(const void *a,const void *b)
     if (aa->layer!=bb->layer) return aa->layer<bb->layer?-1:1;
     return aa->depth==bb->depth?aa->entity->order-bb->entity->order:aa->depth>bb->depth?-1:1;
 }
+static const MapVisual *game_presentation(const Game *g,const Entity *e)
+{
+    /* Demolishing/replacing a producer restores the ordinary lot/new-building art. */
+    if (e->kind==BUILD_LOT || (e->kind==BUILDING && e->building!=game_building_type(g->level.objects[e->source].params))) return NULL;
+    int index=e->operational && e->operational_visual>=0?e->operational_visual:e->visual;
+    return index>=0?&g->scene.visuals[index]:NULL;
+}
+static SpriteFrame game_presentation_frame(const MapVisual *v)
+{
+    return (SpriteFrame){.w=v->region.w*v->scale_x,.h=v->region.h*v->scale_y,
+        .dx=v->region.w*v->scale_x*v->pivot.x,.dy=v->region.h*v->scale_y*(1-v->pivot.y)};
+}
 typedef struct { int units[4]; } TooltipAmounts; /* Food, wood, money, fuel. */
 typedef struct { TooltipAmounts required,income;int interval; } TooltipEconomy;
 static const SDL_FRect resource_icons[]={
@@ -59,7 +71,8 @@ int game_depth_compare(Game *g, const void *a,const void *b)
 static void game_paint(Game *g, const Entity *e)
 {
     if (!e->hidden) {
-        if (e->visual>=0) {map_visual_draw(&g->scene.visuals[e->visual],g->time);return;}
+        const MapVisual *presentation=game_presentation(g,e);
+        if (presentation) {map_visual_draw(presentation,g->time);return;}
         VisualPose pose=game_visual_pose(g, e);
         if (e->effect==1) {
             char path[128];snprintf(path,sizeof path,"texture/static/part_%s.png",e->anim);
@@ -250,8 +263,9 @@ int game_hovered_object(Game *g)
     for (int i=0;i<g->object_count;i++) {
         Entity *e=&g->objects[i];
         if (e->hidden || !(game_job(g, e) || e->kind==BUILD_LOT || e->kind==BUILDING || e->kind==BASE || e->kind==RECRUIT || e->kind==SERVICE || e->kind==VEHICLE) || (game_job(g, e) && e->done && e->kind!=BUILDING)) continue;
-        Animation *a=animation_find(game_sprite_name(e->anim));if ((!a || !a->frame_count) && !e->effect) continue;
-        SpriteFrame f=e->effect?(SpriteFrame){.dx=40,.dy=20,.w=80,.h=64}:sprite_body_frame(a->frames[0]);VisualPose pose=game_visual_pose(g, e);
+        const MapVisual *presentation=game_presentation(g,e);
+        Animation *a=animation_find(game_sprite_name(e->anim));if (!presentation && (!a || !a->frame_count) && !e->effect) continue;
+        SpriteFrame f=presentation?game_presentation_frame(presentation):e->effect?(SpriteFrame){.dx=40,.dy=20,.w=80,.h=64}:sprite_body_frame(a->frames[0]);VisualPose pose=game_visual_pose(g, e);
         float angle=pose.angle*(float)(PI/180),c=cosf(angle),s=sinf(angle);
         float dx=p.x-pose.p.x,dy=p.y-pose.p.y,lx=c*dx-s*dy,ly=s*dx+c*dy;
         if (lx>=-f.dx-6 && lx<=f.w-f.dx+6 && ly>=-f.dy-6 && ly<=f.h-f.dy+6) {
@@ -353,6 +367,7 @@ static void game_economy_tooltip(Game *g, const char *title,TooltipEconomy t)
 
 static const char *game_entity_title(Game *g, const Entity *e)
 {
+    if (*e->presentation_title && game_presentation(g,e)) return e->presentation_title;
     if (e->kind==BUILD_LOT) return e->assigned?game_buildings[e->building].name:"Building slot";
     if (e->kind==BASE) return "Headquarters";
     if (e->kind==ANIMAL) return !strcmp(g->level.objects[e->source].params,"cat")?"Rescue a cat":"Rescue a dog";
@@ -441,7 +456,8 @@ void game_render(Game *g)
     int hover=game_hovered_object(g);
     if (!g->paused && (hover>=0 || g->build_menu>=0)) {
         int selected=g->build_menu>=0?g->build_menu:hover;Entity *e=&g->objects[selected];
-        Animation *a=animation_find(game_sprite_name(e->anim));float w=a?fmaxf(65,sprite_body_frame(a->frames[0]).w+24):100;
+        const MapVisual *presentation=game_presentation(g,e);
+        Animation *a=animation_find(game_sprite_name(e->anim));float w=presentation?fmaxf(65,game_presentation_frame(presentation).w+24):a?fmaxf(65,sprite_body_frame(a->frames[0]).w+24):100;
         w=fminf(w,170);float h=w*.62f;
         int state=(e->kind==BASE || game_reachable(g, selected)) && game_affordable(g, game_job_cost(g, e)) &&
             (!g->early || e->transport==ON_FOOT || g->gas>=10)?1:0;

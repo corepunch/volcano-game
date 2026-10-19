@@ -14,7 +14,7 @@ static int game_add_entity(Game *g, int kind,const LevelObject *raw,const char *
     e->kind=kind;e->p=e->workpoint=e->origin=e->roam=(Vec2){raw->x,raw->y};e->frame=-1;e->follower=-1;e->order=index;e->fire_stopped=-1;
     /* Retail marks burning barriers in the object's name, not its sprite. */
     e->fire=raw->type==102 && !strcmp(raw->name,"fire");
-    e->seed=raw->id;e->support=-1;e->visual=-1;e->owner=e->output=e->gate=e->checked_route=-1;e->roof=kind==SURVIVOR && !strcmp(raw->extra,"roof");
+    e->seed=raw->id;e->support=-1;e->visual=e->operational_visual=-1;e->owner=e->output=e->gate=e->checked_route=-1;e->roof=kind==SURVIVOR && !strcmp(raw->extra,"roof");
     e->transport=!strcmp(raw->extra,"offroad")?BY_ATV:!strcmp(raw->params,"boat_food")?BY_BOAT:ON_FOOT;
     e->floating=(kind==DECOR && (strstr(anim,"_water") || strstr(anim,"treewater"))) ||
         (kind==RESOURCE && (!strcmp(anim,"boat_wood") || !strcmp(raw->params,"boat_food"))) || raw->type==113;
@@ -166,12 +166,45 @@ static bool spawn_visual(Game *g,int source,const SpawnDef *definition)
     (void)definition;
     if (!*g->custom_path) return true;
     const LevelObject *raw=&g->level.objects[source];int visual;
+    /* Linked sprite records are bound after every gameplay object has spawned. */
+    if (raw->link_id) return true;
     if (!map_visual_parse(&g->scene,raw,g->custom_path,&visual)) return false;
     if (visual>=0 && g->scene.visuals[visual].stage==MAP_WORLD) {
         int entity=game_add_entity(g,DECOR,raw,"");
         if (entity<0) return game_fail("Too many world visuals");
         g->objects[entity].visual=visual;g->objects[entity].source=source;
     }
+    return true;
+}
+
+static bool bind_presentations(Game *g)
+{
+    if (!*g->custom_path) return true;
+    for (int i=0;i<g->level.object_count;i++) {
+        const LevelObject *raw=&g->level.objects[i];
+        if (raw->type!=5 || !raw->link_id) continue;
+        Entity *target=NULL;
+        for (int j=0;j<g->object_count;j++) if (g->objects[j].seed==raw->link_id) target=&g->objects[j];
+        if (!target || (target->kind!=BASE && target->kind!=BARRIER && target->kind!=BUILDING))
+            return game_fail("Presentation %u needs a base, barrier or building target",raw->id);
+        char state[32];bool operational=false;
+        if (level_param(raw->params,"state",state,sizeof state)) {
+            if (!strcmp(state,"operational")) operational=true;
+            else if (strcmp(state,"default")) return game_fail("Presentation %u has invalid state",raw->id);
+        }
+        if (operational && target->kind!=BUILDING) return game_fail("Presentation %u: operational state needs a building",raw->id);
+        int *slot=operational?&target->operational_visual:&target->visual;
+        if (*slot>=0) return game_fail("Presentation %u duplicates a target state",raw->id);
+        if (!map_visual_parse(&g->scene,raw,g->custom_path,slot)) return false;
+        if (*slot<0 || g->scene.visuals[*slot].kind!=MAP_SPRITE || g->scene.visuals[*slot].stage!=MAP_WORLD)
+            return game_fail("Presentation %u must be a world-stage sprite",raw->id);
+        MapVisual *v=&g->scene.visuals[*slot];v->p=target->p;
+        if (v->rotation || v->wind) return game_fail("Presentation %u must have fixed rotation and no wind",raw->id);
+        if (strlen(raw->name)>=sizeof target->presentation_title) return game_fail("Presentation %u title is too long",raw->id);
+        if (*raw->name) snprintf(target->presentation_title,sizeof target->presentation_title,"%s",raw->name);
+    }
+    for (int i=0;i<g->object_count;i++) if (g->objects[i].operational_visual>=0 && g->objects[i].visual<0)
+        return game_fail("Presentation target %u is missing its default state",g->objects[i].seed);
     return true;
 }
 
@@ -240,6 +273,7 @@ bool game_load_level(Game *g,int index,const char *custom_path)
         g->alpha[0]=0;g->local_background=true;
     }
     for (int i=0;i<g->level.object_count;i++) if (!spawn_record(g,i)) return false;
+    if (!bind_presentations(g)) return false;
     if (g->early) for (int i=0;i<g->object_count;i++) {
         Entity *e=&g->objects[i];const LevelObject *raw=&g->level.objects[e->source];
         if (e->kind==SERVICE || e->kind==VALVE) for (int j=0;j<g->level.object_count;j++) {

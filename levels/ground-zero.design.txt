@@ -23,7 +23,7 @@ Source photos are research references, not the game's background. The new
 painted plate and all props are generated with built-in ImageGen. No photographic
 people are reused, and no bodies or injuries are depicted. Original UI is reused.
 
-PLAYABLE GEOGRAPHY — 1366 x 768, top-left screen coordinates
+INITIAL PLAYABLE GEOGRAPHY BRIEF — 1366 x 768, top-left screen coordinates
 HQ clearing: (165,620). Main cleared south street: (165,620) to (1130,620).
 Western interior lane: (400,620) -> (400,410) -> (345,340) -> (345,190).
 Western food station pad: (265,425), with approach at (345,435).
@@ -58,3 +58,42 @@ A plausible depleted opening clears 20 and 22 (food=0), collects 60 timber plus
 renewable food. Three production repair orders must complete with no grants.
 Gates 21/25/23+24 isolate the three rescue pockets. No central perimeter-only
 layout: crews use three actual routes within the destroyed complex.
+
+FINAL MEASURED GEOGRAPHY (source is authoritative)
+The generated plate is 1672 x 941, mapped to 1366 x 768. The generation shifted
+the south service street north to y=548. All source routes/actors were adapted
+to that actual painting rather than retaining the requested coordinates:
+HQ anchor (165,548), kitchen (270,430), supply (640,675), logistics (980,675).
+West lane (455,548)-(460,475)-(465,400)-(472,340)-(446,310)-(411,284)-
+ (405,250)-(420,200)-(410,155); kitchen spur (465,400)-(405,400)-(325,400)-
+ (300,425)-(270,430).
+Central lane (752,548)-(752,420)-(744,350)-(770,315)-(792,265)-(790,195)-
+ (740,185).
+East lane (1130,548)-(1130,505)-(1125,440)-(1125,400)-(1080,330)-
+ (1110,280)-(1160,230)-(1210,205); east search spur to (1250,400).
+Gate centers: 20=(460,475), 21=(405,255), 22=(540,548), 23=(1130,505),
+24=(1180,400), 25=(752,420). South supply spurs and output approaches remain
+clear of both station states. Traffic is sampled at <=28 pixels; the actual
+distance graph and every gated survivor are tested through the engine.
+
+ATLAS
+One built-in ImageGen call authored all twelve props/states together. Actual
+image 1448 x 1086 RGBA, alpha extrema 0..255. Generation did not follow the
+requested equal cell margins precisely: source rectangles are measured around
+the real separated objects, not assumed 512-pixel grid cells. Atlas remains
+unchanged. All props and both station states are used directly through linked
+world sprites. No derived state artwork, recoloring or compositing.
+
+VERIFICATION
+Dedicated --ground-zero check: all ten people and two animals, three repair
+priorities, initial gates, zero-food recovery, automatic queues, nonnegative
+inventory, preserved job costs, authored click bounds, full debris removal,
+pause/restart. Actual start, repaired and completed renders inspected. Full
+make test includes the new mission and existing source/campaign regressions.
+Compiled delivery: ground-zero.lvl, ground-zero.lvl.rules, ground-zero.png and
+ground-zero-props.png together under build/levels/. Local launcher via
+make ground-zero-app. This restoration has not been tested in the retail game.
+
+Final route overlay verified after correcting the western branch to the actual
+cleared street. Native Ground Zero launcher visibly verified. Focused address/
+undefined-behavior sanitizer playthrough passes all three repair orders.

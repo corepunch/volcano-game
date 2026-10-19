@@ -18,7 +18,7 @@ HD_ASSETS = build/hd-assets
 .PHONY: hd-pivot-previews
 .PHONY: ancient-echoes ancient-echoes-app test-ancient-echoes
 .PHONY: twisted-tracks twisted-tracks-app test-twisted-tracks
-.PHONY: run-ancient-echoes run-twisted-tracks
+.PHONY: run-ancient-echoes run-twisted-tracks ground-zero ground-zero-app run-ground-zero test-ground-zero
 all: build/volcano
 build/volcano: $(SOURCES) $(HEADERS) vendor/stb_image.h
 	@mkdir -p build
@@ -37,6 +37,7 @@ run-emerald-falls: emerald-falls
 run-forest-mayday: forest-mayday
 run-ancient-echoes: ancient-echoes
 run-twisted-tracks: twisted-tracks
+run-ground-zero: ground-zero
 test: all test-levels
 	SDL_VIDEODRIVER=dummy ./build/volcano --software --hidden --self-test
 build/check_custom_level: tests/check_custom_level.c $(CORE_SOURCES) $(TEST_SOURCES) $(HEADERS)
@@ -86,6 +87,16 @@ twisted-tracks-app: all build/levels/twisted-tracks.lvl.rules build/levels/twist
 	python3 tools/package_custom_level.py "Twisted Tracks" build/levels/twisted-tracks.lvl "$(ASSETS)"
 test-twisted-tracks: build/check_custom_level build/levels/twisted-tracks.lvl.rules build/levels/twisted-tracks.png
 	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(ASSETS)" build/levels/twisted-tracks.lvl --coaster
+build/levels/ground-zero.lvl: levels/ground-zero.level.json levels/ground-zero.png levels/ground-zero-props.png tools/level_source.py
+	python3 tools/level_source.py compile $< $@
+build/levels/ground-zero.lvl.rules build/levels/ground-zero.png build/levels/ground-zero-props.png: build/levels/ground-zero.lvl
+	@test -f "$@" || python3 tools/level_source.py compile levels/ground-zero.level.json build/levels/ground-zero.lvl
+ground-zero: all build/levels/ground-zero.lvl.rules build/levels/ground-zero.png build/levels/ground-zero-props.png
+	./build/volcano --assets "$(ASSETS)" --level-file build/levels/ground-zero.lvl
+ground-zero-app: all build/levels/ground-zero.lvl.rules build/levels/ground-zero.png build/levels/ground-zero-props.png
+	python3 tools/package_custom_level.py "Ground Zero" build/levels/ground-zero.lvl "$(ASSETS)"
+test-ground-zero: build/check_custom_level build/levels/ground-zero.lvl.rules build/levels/ground-zero.png build/levels/ground-zero-props.png
+	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(ASSETS)" build/levels/ground-zero.lvl --ground-zero
 hd-assets:
 	python3 tools/build_hd_assets.py --assets "$(ASSETS)" --output "$(HD_ASSETS)"
 	python3 tools/pack_rescue_characters.py --assets "$(HD_ASSETS)" --output "$(HD_ASSETS)"
@@ -108,7 +119,7 @@ test-hd: all hd-assets hd-levels build/check_custom_level
 	SDL_VIDEODRIVER=dummy ./build/volcano --assets "$(HD_ASSETS)" --software --hidden --self-test
 analyze-levels:
 	python3 tools/level_source.py analyze "$(ASSETS)/level" build/level-analysis.json
-test-levels: all test-ancient-echoes test-twisted-tracks build/check_custom_level build/levels/first-rescue.lvl.rules build/levels/emerald-falls.lvl.rules build/levels/emerald-falls.png build/levels/forest-mayday.lvl.rules build/levels/forest-mayday.png
+test-levels: all test-ancient-echoes test-twisted-tracks test-ground-zero build/check_custom_level build/levels/first-rescue.lvl.rules build/levels/emerald-falls.lvl.rules build/levels/emerald-falls.png build/levels/forest-mayday.lvl.rules build/levels/forest-mayday.png
 	RESCUE_TEAM_ASSETS="$(ASSETS)" python3 -m unittest discover -s tests -p 'test_level_source.py'
 	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(ASSETS)" build/levels/first-rescue.lvl
 	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(ASSETS)" build/levels/emerald-falls.lvl --emerald

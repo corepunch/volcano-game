@@ -34,7 +34,8 @@ typedef struct {
     double fire_stopped;
     bool done,hidden,assigned,queued,fire,floating,roof,operational;
     uint32_t seed;
-    int ambient,support,visual;
+    int ambient,support,visual,operational_visual;
+    char presentation_title[128];
     float travel_speed;
     int queue_order,building;
     int follower;
