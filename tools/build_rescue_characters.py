@@ -21,6 +21,8 @@ sys.path.insert(0,str(ROOT/'tools'))
 import texture_rescue_uniform
 importlib.reload(texture_rescue_uniform)
 from texture_rescue_uniform import simple_helmet, bake_uniform
+import animate_rescue_run
+importlib.reload(animate_rescue_run)
 
 # This script runs only in our isolated Blender MCP process.
 bpy.ops.wm.read_homefile(use_empty=True,use_factory_startup=True)
@@ -42,6 +44,7 @@ def assign(action):
     rig.animation_data.action = action
     if action.slots:
         rig.animation_data.action_slot = action.slots[0]
+    bpy.context.view_layer.update()
 
 
 def key_pose(frame):
@@ -97,6 +100,7 @@ for clip, count in [('idle', 32), ('run', 16), ('jump', 12)]:
         if a != action:
             bpy.data.actions.remove(a)
 
+animate_rescue_run.enhance_run(rig)
 assign(bpy.data.actions['Rescue_KenneyIdle'])
 bpy.context.scene.frame_set(1)
 base = {pb.name: pb.matrix_basis.copy() for pb in rig.pose.bones}
@@ -162,6 +166,8 @@ counts = dict(Stand=32, Look=32, Carry=16, Chop=24, Gather=24, Hammer=24,
 for name, count in counts.items():
     action = new_action(name, count)
     action['origin'] = 'Authored rescue work motion on the Kenney character rig'
+    if name == 'Carry':
+        action['origin'] = 'Authored rescue carrying run with stride bounce, head follow-through and chest-relative sack grip'
     for frame in range(1, count+2):
         p = (frame-1)/count
         t = p*2*math.pi
@@ -173,8 +179,7 @@ for name, count in counts.items():
             assign(action)
             for b in rig.pose.bones: b.matrix_basis=pose[b.name]
             bpy.context.view_layer.update()
-            arm('Right', (-.15,-.3,-1), (.1,-.45,.8))
-            arm('Left', (.12,-.2,-1), (-.1,-.7,.15))
+            animate_rescue_run.carry_arms(rig)
         elif name in ['Stand','Look']:
             rotate_world('Chest',(1,0,0),.015*math.sin(t))
             rotate_world('Head',(0,0,1),(.35 if name=='Look' else .06)*math.sin(t))

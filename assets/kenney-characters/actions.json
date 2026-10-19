@@ -19,7 +19,7 @@
     "Rescue_Carry": {
       "frames": 16,
       "fps": 24,
-      "origin": "Authored rescue work motion on the Kenney character rig",
+      "origin": "Authored rescue carrying run with stride bounce, head follow-through and chest-relative sack grip",
       "props": [
         "sack"
       ]
@@ -95,7 +95,7 @@
     "Rescue_Run": {
       "frames": 16,
       "fps": 24,
-      "origin": "Retargeted from Kenney run.fbx through its Targeting Pose",
+      "origin": "Kenney run retargeted through its Targeting Pose; authored stride bounce, torso recoil, head follow-through and arm drive",
       "props": []
     },
     "Rescue_Sink": {

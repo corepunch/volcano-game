@@ -9,8 +9,8 @@ The uniform is painted into `textures/rescue-worker.png`: vest, reflective tape,
 | Action | Game animation names | Equipment / behavior |
 | --- | --- | --- |
 | Stand / Look | `worker_wait0..2`, civilian `*_idle0..2` | Breathing and looking around |
-| Run | `worker_run0..7`, civilian `*_run0..7` | Retargeted Kenney run, in place |
-| Carry | `worker_bag0..7` | Run with supply sack |
+| Run | `worker_run0..7`, civilian `*_run0..7` | Bouncy in-place run with torso recoil, head follow-through and arm drive |
+| Carry | `worker_bag0..7` | Same bouncing stride with a chest-relative supply sack grip |
 | Chop | `worker_wood0..7` | Two-handed axe swing |
 | Gather | `worker_gather0..7` | Bend and reach for supplies |
 | Hammer | `worker_srepair0..7` | Hammer strike at a low work surface |
@@ -25,6 +25,8 @@ The uniform is painted into `textures/rescue-worker.png`: vest, reflective tape,
 | Jump | Available in the Blender file and sprite atlas | Retargeted Kenney jump; no current game trigger |
 
 `Rescue_KenneyIdle` retains the retargeted original idle separately. `actions.json` lists all eighteen actions. `retail-worker-actions.json` inventories the original worker's frame counts and frame rates. Ill, Alert and Sink also have male and female civilian renders; both original civilian color variants currently map to the same male/female skin.
+
+The sixteen-frame run adds two distinct compressions and airborne crests per cycle. Hips rise and fall by 0.38 model units; the head travels 0.56 units forward/back through torso pitching and delayed neck/head rotation. Shoulder counter-rotation and stronger arm swings make the whole silhouette move. Carry inherits this motion with its arms held relative to the chest. Both actions include a matching loop endpoint at frame 17. `previews/dynamic-run.gif` shows side and three-quarter views of both clips. `tools/animate_rescue_run.py` applies these edits after retargeting, without changing the original mesh or texture.
 
 The scheduler selects axe work for trees, pickaxe work for rocks, hammering for construction and repair, valve turning, animal petting and calling to a survivor. Standing, running, gathering and carrying retain their usual roles. Sitting and distress states replace their original resource names for campaign scenes; Jump is available for future use. This changes job presentation without altering costs, durations or completion rules.
 
