@@ -32,9 +32,18 @@ The scheduler selects axe work for trees, pickaxe work for rocks, hammering for 
 
 ## Use in the game
 
-`make hd-assets` installs the character atlases after building the HD static art. Existing `make run-emerald-falls-hd`, `make run-forest-mayday-hd` and `make hd-app` targets use them. `make character-assets` creates `build/kenney-assets` with the new characters over the retail environment. The source resource directory is preserved.
+This folder is an asset pack. When it is mounted, the game reads `sprites/*.sprites.xml` from it: `sprites/kenney.sprites.xml` serves the retail worker and civilian sprite names (`worker_*`, `man_*`, `wman_*`) from the atlases in `sprites/`, overriding the originals by name. Everything else, including the shadows, still comes from the retail assets. Nothing is copied into or rewritten in the retail folder.
 
-The sprite installer retains each original animation's frame count and FPS. It resamples the baked source poses to those frames; Transparent 128×160 renders (160×160 for wide tool swings) supply 2× texture resolution. Packing rejects empty, clipped or unlit frames. It trims alpha and computes pivots from the projected world origin, so changing poses and eight-direction turns stay attached to the same ground point. Directions follow the game's convention: E, NE, N, NW, W, SW, S, SE. Retail shadow sprites remain in use.
+Library Rescue mounts the pack in its `mission.xml` with `<pack path="../../assets/kenney-characters"/>`, so `make run MISSION=library-rescue` and its regression use these characters. Mount it for any other mission or campaign level from the command line:
+
+```sh
+./build/volcano --pack assets/kenney-characters --mission missions/forest-mayday/mission.xml
+./build/volcano --pack assets/kenney-characters --campaign 2
+```
+
+`make app` copies the pack into the bundle. `python3 tools/pack_rescue_characters.py --pack --declare` regenerates the atlases, `sprites/catalog.json` and `sprites/kenney.sprites.xml`; `--declare` alone rewrites only the declarations from the saved catalog.
+
+The declarations retain each original animation's frame count and FPS, resampling the baked source poses to those frames. Transparent 128×160 renders (160×160 for wide tool swings) supply 2× texture resolution. Packing rejects empty, clipped or unlit frames. It trims alpha and computes pivots from the projected world origin, so changing poses and eight-direction turns stay attached to the same ground point. Directions follow the game's convention: E, NE, N, NW, W, SW, S, SE. Retail shadow sprites remain in use.
 
 ## Render or rebuild through Blender MCP
 
@@ -55,8 +64,8 @@ Then, in another terminal at the repository root:
 
 ```sh
 python3 tools/blender_mcp.py tools/render_rescue_characters.py
-python3 tools/pack_rescue_characters.py --pack
-make test-hd hd-app
+python3 tools/pack_rescue_characters.py --pack --declare
+make test
 ```
 
 `tools/build_rescue_characters.py` is a separate authoring step: it recreates the

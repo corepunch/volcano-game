@@ -7,19 +7,20 @@ SDL renderer and scheduler. Run the commands below from the repository root.
 
 ## Files and tools
 
-| Tool or file | Use in these levels |
+| Tool or file | Use in these missions |
 | --- | --- |
 | Built-in `image_gen.imagegen` | Generate the original backgrounds and edit their composition/access paths |
 | Image viewing tool | Inspect each original/edit and the real game screenshots before accepting it |
-| [Level skill](../skills/rescue-team-levels/SKILL.md) | Authoring workflow, supported mechanics and verification requirements |
+| [Mission skill](../skills/rescue-team-levels/SKILL.md) | Authoring workflow, supported mechanics and verification requirements |
 | [Art reference](../skills/rescue-team-levels/references/art-and-effects.md) | Canvas coordinates, sprite pivots, foliage, water and other ambient effects |
-| [Layout helper](../skills/rescue-team-levels/scripts/layout.py) | Read original sprite frames and calculate building anchors; sample traffic polylines |
-| Python 3 | Edit JSON, sample measured routes, copy files and record provenance |
-| [Level compiler](../tools/level_source.py) and [schema](level-source.schema.json) | Validate and compile mission JSON, rules and image dependencies |
+| [Layout helper](../skills/rescue-team-levels/scripts/layout.py) | Read original sprite frames and print building `<object>` anchors; sample traffic polylines into `<traffic>` |
+| Python 3 | Sample measured routes, run the mission checker and record provenance |
+| [Mission checker](../tools/mission.py) | Validate `mission.xml` and report route, crew and goal warnings |
+| [Mission guide](creating-missions.md) | The `mission.xml` format, archetypes, routes and economy |
 | C11 compiler, SDL2, `make`, `pkg-config` | Build the actual game and regression runner |
-| [Custom-level runner](../tests/check_custom_level.c) | Normal click/queue playthroughs and real rendered frames |
+| [Mission regressions](../tests/missions_main.c) | Normal click/queue playthroughs and real rendered frames |
 | Python Pillow | Convert the runner's BMP screenshots to PNG for visual inspection |
-| [Launcher packager](../tools/package_custom_level.py) | Create local macOS launchers for the compiled missions |
+| [App packager](../tools/package_app.py) | Build a self-contained macOS app for one mission (`make app APP_MISSION=NAME`) |
 | Git | Retain each verified step, original art and prompts, and publish changes |
 
 The image-generation skill available in the authoring environment supplied the
@@ -29,14 +30,15 @@ used. The existing [Blender character workflow](rendering-characters.md) is a
 separate process. The runtime reads original game assets from the ignored
 `reference/rescue-team/` directory; installation is covered by the
 [project README](../README.md#build-and-run). Pillow is only needed for the
-screenshot conversion commands below, not to load a level.
+screenshot conversion commands below, not to load a mission.
 
-The [preserved history](../levels/background-history/README.md) contains all five
+The [preserved history](../art-source/background-history/README.md) contains all five
 generation/edit stages, including the intermediate coaster image. Its
-[manifest](../levels/background-history/manifest.json) records hashes, dimensions
-and input relationships. The current `.level.json` files, PNGs and prompts in
-`levels/` are the editable deliverables; generated binaries, screenshots and
-launchers belong under ignored `build/`.
+[manifest](../art-source/background-history/manifest.json) records hashes, dimensions
+and input relationships. Each mission folder, `missions/SLUG/`, holds the
+deliverables the game loads: `mission.xml`, `background.png` and its exact
+`background.prompt.txt`. Concepts, earlier stages and rejected images live under
+`art-source/`; screenshots and app bundles belong under ignored `build/`.
 
 ## Plan composition and rescue access
 
@@ -76,8 +78,8 @@ and all authored states in one ImageGen atlas call.
 
 For an initial generation, provide the theme, camera/style, dominant footprint,
 trail surfaces, top-left coordinate polylines, bare pads and exclusions. The exact
-initial prompts are archived for [Ancient Echoes](../levels/background-history/ancient-echoes-v1.prompt.txt)
-and [Twisted Tracks](../levels/background-history/twisted-tracks-v1.prompt.txt).
+initial prompts are archived for [Ancient Echoes](../art-source/background-history/ancient-echoes-v1.prompt.txt)
+and [Twisted Tracks](../art-source/background-history/twisted-tracks-v1.prompt.txt).
 
 The built-in calls used these arguments:
 
@@ -97,21 +99,21 @@ Edit:
 Inspect a local input image before submitting an edit. Explicitly identify it
 as the edit target and state what should change and what should remain. The
 built-in tool returns a saved generation path; copy the chosen PNG into the
-project. Do not leave a level depending on an image only in the authoring
-environment's generated-images folder.
+mission folder as `missions/SLUG/background.png`. Do not leave a mission
+depending on an image only in the authoring environment's generated-images folder.
 
 The temple used one expansion edit. The coaster used an expansion edit followed
 by a targeted access edit: the larger wreck initially covered some eastern
 approaches, so the second edit cleared a narrow dirt route through the fence
 and two rescue pockets while retaining the large structure. See the
-[stage table](../levels/background-history/README.md) for the precise input and
+[stage table](../art-source/background-history/README.md) for the precise input and
 prompt for each call. Do not submit the combined coaster prompt file as though
 it had been one historical call.
 
 Inspect every result. Requested coordinates are guidance; they do not establish
 where the generated artist actually put a path or clearing. Make another focused
 edit when a crucial access gap is missing. For an existing map, preserve its
-previous image and prompt in history before accepting a replacement. Record the
+previous image and prompt in `art-source/background-history/` before accepting a replacement. Record the
 full edit sequence, input images and output hashes. Image generation is
 nondeterministic; exact pixels are reproduced by retaining the selected PNG,
 not by assuming a prompt rerun will match it.
@@ -131,23 +133,26 @@ For a 1366 × 768 game render, x already matches world x, and
 a desktop screenshot. Use the painting's trail centreline and the centre of a
 bare clearing, rather than the original prompt's coordinates.
 
-Sample routes at about 28–30 logical pixels. The helper prints a traffic record:
+Sample routes at about 28–30 logical pixels. The helper prints a `<traffic>`
+element ready to paste into `mission.xml`:
 
 ```sh
 mkdir -p build
 python3 skills/rescue-team-levels/scripts/layout.py route --screen --spacing 28 \
   --points '[[155,470],[200,455],[300,450],[450,450],[650,450],[800,450]]' \
   --points '[[450,450],[450,350],[450,280],[480,230],[530,190],[550,160]]' \
-  > build/route-example.json
+  > build/route-example.xml
 ```
 
 This example contains only two Ancient Echoes polylines. Merge every intended
 branch deliberately when authoring a complete map; do not replace the current
-network with this partial example. The final JSON contains the measured,
-sampled routes used by the missions. One-off Python authoring scripts applied
-the same interpolation during production; no such script is needed at runtime.
+network with this partial example. A mission may hold several `<traffic>`
+elements, and all their points form one graph. The final `mission.xml` contains
+the measured, sampled routes used by the missions. One-off Python authoring
+scripts applied the same interpolation during production; no such script is
+needed at runtime.
 
-The movement rules come from [game_navigation.c](../src/game_navigation.c):
+The movement rules come from [navigation.c](../src/sim/navigation.c):
 
 - Every pair of traffic points at distance **less than 50** connects, regardless
   of point order. Keep unrelated routes at least 50 pixels apart.
@@ -156,7 +161,13 @@ The movement rules come from [game_navigation.c](../src/game_navigation.c):
   bend can bypass it.
 - Objects attach to their nearest traffic point, with their approach and return
   segments checked too. Moving a survivor can change its effective branch.
-- Painted rubble, supports and fences have no collision. Add real barrier
+- Workers stop where their route enters an obstacle's, producer's, lot's,
+  service's or valve's selection ellipse (width = sprite body width + 24,
+  clamped to 65–170; height 0.62 × width) and face it while working, unless the
+  object has a `workpoint`. Keep the approach side of each obstacle on a road
+  that is reachable before it is cleared. Pickups, survivors and animals are
+  still approached at their centre.
+- Painted rubble, supports and fences have no collision. Add real obstacle
   objects for paid work; keep cosmetic debris out of the visible walking strip.
 
 Press F1 for graph links during manual inspection. Validation warnings about
@@ -173,16 +184,18 @@ anchor_x = clearing_world_x - w/2 + dx
 anchor_y = clearing_world_y - h/2 + dy
 ```
 
-Read actual frames and compare damaged/repaired states with the tracked helper:
+Read actual frames and compare damaged/repaired states with the tracked helper.
+It prints the measurements as XML comments followed by an `<object>` element:
 
 ```sh
 python3 skills/rescue-team-levels/scripts/layout.py anchor \
   --assets reference/rescue-team --sprite burger0_br \
-  --center 310 350 --screen --compare-sprite burger0
+  --center 310 350 --screen --compare-sprite burger0 --id 30 --type cafe
 ```
 
-For this Ancient Echoes cafe, the result is world anchor `(308,406.5)`, or
-screen attachment `(308,361.5)`. Do not change renderer pivots to compensate
+For this Ancient Echoes cafe, the result is
+`<object id="30" type="cafe" x="308" y="406.5"/>`, or screen attachment
+`(308,361.5)`. Do not change renderer pivots to compensate
 for a map placement. Inspect both states and keep pickups outside their combined
 footprints. The final measured building centres, in top-left logical pixels, are:
 
@@ -192,15 +205,16 @@ footprints. The final measured building centres, in top-left logical pixels, are
 | Sawmill | (530,610) | (665,675) |
 | House / visitor office | (835,610) | (1040,675) |
 
-These are the 2026-10-19 accepted layouts. The current mission JSON is
-authoritative if later revisions move anything. Buildings use layer 5 and
-characters layer 6. Production pickups link to their producer with `link_id`;
-place them where a player can naturally click and a worker can reach them.
+These are the 2026-10-19 accepted layouts. The current `mission.xml` is
+authoritative if later revisions move anything. Buildings default to layer 5
+and characters to layer 6. Production pickups name their producer with
+`producer="ID"`; place them where a player can naturally click and a worker can
+reach them, outside the building's selection ellipse.
 
-Ambient accents are independent type-5 `effect` records: water `sparkles`, the
+Ambient accents are independent `<effect>` elements: water `sparkles`, the
 original animated `butterfly` via `insects`, sparse `motes`, and the coaster
 pond's `foam`. Use the [effect reference](../skills/rescue-team-levels/references/art-and-effects.md)
-for syntax and bounds. Put glints inside the measured water surface and pure
+or the [mission guide](creating-missions.md#map-effects) for attributes and bounds. Put glints inside the measured water surface and pure
 white foam at the waterfall's impact, not along the falling sheet. Recheck all
 effect positions when an edit moves the pond or terrain. Large baked structures
 do not need separate sprites to appear in these missions.
@@ -219,26 +233,28 @@ The log yields 20 wood and the three caches deliver 60, giving 80 wood. Repairin
 the cafe costs 20 wood and restores food; the other producers renew timber and
 money. The large stone (23) costs 40 food and 100 money. Art changes must preserve
 access to these sources before their mandatory expenses. The full supported
-costs and mechanics are in the [level guide](creating-levels.md).
+costs and mechanics are in the [mission guide](creating-missions.md).
 
-`play_disaster_mission()` in the custom-level runner uses this exact ID/budget
-contract for `--ancient` and `--coaster`. A new unrelated mission needs a deliberate
+`play_disaster_mission()` in [`tests/missions_main.c`](../tests/missions_main.c)
+uses this exact ID/budget contract for `--ancient`, `--coaster` and
+`--library-rescue`. A new unrelated mission needs a deliberate
 test mode or adaptation. Moving an initial gate, cache or building can invalidate
 the recovery puzzle even when total supplies remain unchanged.
 
 ## Build, inspect and complete both missions
 
-The background reference is `@ancient-echoes.png` or `@twisted-tracks.png` in
-the corresponding level JSON. The compiler copies the image unchanged beside
-the binary and writes the `.lvl.rules` sidecar. Keep all three together.
+Each `mission.xml` names its painting with `background="background.png"`,
+relative to the mission folder. The game loads it directly; there is no compile
+or copy step.
 
 ```sh
-python3 tools/level_source.py check levels/ancient-echoes.level.json
-python3 tools/level_source.py check levels/twisted-tracks.level.json
-make all
-VOLCANO_TEST_SHOTS=1 make test-ancient-echoes test-twisted-tracks
+python3 tools/mission.py check missions/ancient-echoes/mission.xml missions/twisted-tracks/mission.xml
+make
+VOLCANO_TEST_SHOTS=1 make test-missions
 ```
 
+`make test-missions` plays every project mission on the generated placeholder
+pack; add `MISSION_ASSETS=reference/rescue-team` to render with the retail art.
 The runner captures `build/SLUG-start.bmp`, `build/SLUG-repaired.bmp` and
 `build/SLUG-complete.bmp` for each of these slugs. Convert them for viewing:
 
@@ -268,30 +284,36 @@ crew/recruit distinction, a zero-food opening, affordable cafe repair past
 blocked queued jobs, automatic queue recovery, nonnegative balances, completion
 in three repair orders, pause and restart. They use ordinary clicks, production
 and simulation updates, without stock grants or direct completion flags. Finish
-with `make test` for the project suite after relevant mission/test changes.
+with `make test` for the project suite after relevant mission/test changes, and
+`make test-retail ASSETS=reference/rescue-team` when the retail art is available.
 
 ## Play, package and hand over
 
 | Purpose | Ancient Echoes | Twisted Tracks |
 | --- | --- | --- |
-| Build and play | `make ancient-echoes` | `make twisted-tracks` |
-| Matching run alias | `make run-ancient-echoes` | `make run-twisted-tracks` |
-| Build local launcher | `make ancient-echoes-app` | `make twisted-tracks-app` |
-| Dedicated test | `make test-ancient-echoes` | `make test-twisted-tracks` |
+| Build and play | `make run MISSION=ancient-echoes` | `make run MISSION=twisted-tracks` |
+| Play with the HD statics pack | `make run-hd MISSION=ancient-echoes` | `make run-hd MISSION=twisted-tracks` |
+| Build app bundle | `make app APP_MISSION=ancient-echoes` | `make app APP_MISSION=twisted-tracks` |
+| Dedicated test | `--ancient` in `make test-missions` | `--coaster` and `tests/coaster_main.c` in `make test-missions` |
 
-The launcher targets create `build/Ancient Echoes.app` and
-`build/Twisted Tracks.app`. These launch the current binary, compiled map and
-original-asset directory on this machine; they are local launchers rather than
-self-contained distributable games. Native desktop launch is a separate check
-from software-renderer tests. The existing `hd-levels`/`hd-app` workflow currently
-packages Emerald Falls and Forest Mayday; it does not automatically add these
-two maps or produce Retina versions of their backgrounds.
+The app target creates `build/Ancient Echoes.app` or `build/Twisted Tracks.app`.
+The bundle is self-contained: it copies the binary, the retail asset folder,
+`content/`, `missions/` and the project's packs, and refers only to paths inside
+itself. Retail assets are not redistributable; share such a bundle only where
+licensed. Native desktop launch is a separate check from software-renderer tests.
 
-Recompile after changing JSON or art. **R reloads level data and resets the
-mission.** A rebuilt executable requires reopening the app. Do not restart an
-active playthrough just to demonstrate a revision without considering its state.
+With `--hd` (as `make run-hd` passes), the game uses `background@2x.png` beside
+a mission's `background.png` when it exists. Emerald Falls and Forest Mayday have
+upscaled copies, recorded in
+[`art-source/retina-backgrounds.json`](../art-source/retina-backgrounds.json);
+these two maps do not yet have Retina versions of their backgrounds.
 
-Retain the selected image, exact per-call prompts, inputs/history, JSON, test
-mode and Make targets. Review the diff, commit each completed verified step
+There is no compile step. After changing `mission.xml`, `sprites.xml` or art,
+**press R: it reloads the mission and resets it.** A rebuilt executable requires
+restarting the game or rebuilding the app. Do not restart an active playthrough
+just to demonstrate a revision without considering its state.
+
+Retain the selected image, exact per-call prompts, inputs/history under
+`art-source/`, `mission.xml` and the regression mode. Review the diff, commit each completed verified step
 before starting the next as required by `AGENTS.md`, and push when requested.
 The checks establish behavior in this restoration, not in the retail game.
