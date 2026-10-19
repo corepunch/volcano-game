@@ -1,0 +1,10 @@
+Use case: stylized-concept. Production transparent RGBA sprite atlas for Rescue Team game.
+Reference images: original retail atlas is CONTENT reference for the listed building types; current painted HD atlas is STYLE reference. Match current HD painterly 3D game art, overhead isometric camera, cream masonry, detailed wood, warm top-left light and fine hand-painted textures. Maintain the same footprint, camera, position and building identity across each row's states. No people, no UI repair signs, no warning badges, no labels, no text, no grid, no backdrop. True transparent background. Include a short subtle soft northwest ground shadow with every sprite, fading into transparency. No solid ground tiles.
+CRITICAL: every state authored together in this atlas; no missing cells, no overlap, no clipped edges. Exactly uniform grid with generous transparent gutters. Draw large high-detail source sprites, at least 400 pixels wide each; request 2048px or larger output.
+Exactly 4 columns by 4 rows, 2560x2560 sheet, SIXTEEN sprites. Cell size 640, sprites 500px wide maximum.
+Each row contains SAME facility in 4 states left to right: severely damaged, partly repaired, almost repaired, complete operational. Preserve footprint and size in every state.
+Row 1: squat cream police station with blue flat parapet roof edges, yellow star shield sign above entrance, blue police car partly in garage, black yellow safety stripes.
+Row 2: red and cream fire station with tall watchtower, silver grey sloping roofs, two red engine garage doors, small red fire engine in front.
+Row 3: compact three storey cream hospital with flat grey roofs, red lower walls, red medical cross sign over a small projecting ambulance entrance.
+Row 4: circular low grey metal helipad with yellow landing circle and white H painted on it; damaged states show cracked concrete plates, broken metal edging and loose panels; complete state has clean grey landing surface and clear white H. No tower on helipad.
+Damage is physically broken walls/roofs and rubble, not scaffolding. No text other than H and pictograms.

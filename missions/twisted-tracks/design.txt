@@ -44,3 +44,12 @@ make app APP_MISSION=twisted-tracks builds build/Twisted Tracks.app.
 The dedicated tests/coaster_main.c runner also exercises all eight clickable
 atlas regions, clears every job before the final rescue, checks full sprite and
 click-target removal, and verifies the final car reserves 40 food/100 money once.
+
+Building placement correction
+The production plate's pad centers differ from the requested generation
+coordinates. Inspect the ground-contact footprint in both damaged and repaired
+renders, rather than aligning a tall sprite's full-frame midpoint to the dirt.
+Corrected anchors (bottom-left world pixels): HQ (150.5,160), cafe (489,109.5),
+sawmill (935.5,82), park office (1135,114). Starting crew and final approach nodes
+move with their buildings. Cafe output is at (555,155), outside both building
+states. Original atlas pivots and the background artwork are unchanged.

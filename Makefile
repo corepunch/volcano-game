@@ -38,7 +38,7 @@ ENGINE_LIB := $(OUT)/libvolcano_engine.a
 TEST_SUPPORT := $(OUT)/obj/tests/test_support.o $(OUT)/obj/tests/architecture.o
 MISSIONS := $(patsubst missions/%/mission.xml,%,$(wildcard missions/*/mission.xml))
 
-.PHONY: all test test-core test-missions test-tools test-retail test-all run run-campaign run-hd hd-pack app sanitize analyze-levels clean
+.PHONY: all test test-core test-missions test-tools test-retail test-all run run-campaign run-hd hd-pack test-hd hd-pivot-previews app sanitize analyze-levels clean
 .DELETE_ON_ERROR:
 
 all: $(OUT)/volcano
@@ -116,6 +116,13 @@ run-campaign: $(OUT)/volcano
 # HD statics are an overlay pack built from retail sprites plus authored art.
 hd-pack:
 	python3 tools/build_hd_assets.py --assets "$(ASSETS)" --output "$(HD_PACK)"
+
+# Every original building and attachment frame must use the HD texture.
+test-hd: hd-pack
+	python3 tools/check_hd_building_parity.py --assets "$(ASSETS)" --output "$(HD_PACK)"
+
+hd-pivot-previews: hd-pack
+	python3 tools/preview_hd_pivots.py --assets "$(HD_PACK)" --retail "$(ASSETS)"
 
 run-hd: $(OUT)/volcano hd-pack
 	./$(OUT)/volcano --assets "$(ASSETS)" --pack "$(HD_PACK)" --hd --mission missions/$(MISSION)/mission.xml

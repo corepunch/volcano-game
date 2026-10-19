@@ -166,11 +166,20 @@ project:
   rendered from an editable Blender rig in eight directions. They replace the
   retail character sprites by name. Library Rescue mounts this pack itself.
   See the [character rendering guide](docs/rendering-characters.md).
-- **HD statics** (`make hd-pack` → `build/packs/hd`): every interactive
-  building, obstacle and supply sprite at twice the texture resolution, with
-  authored ground shadows baked in. The sources, prompts and manifest are in
-  [`assets/hd-static`](assets/hd-static). This pack is built from the retail
-  declarations, so it needs `ASSETS`.
+- **HD statics** (`make hd-pack` → `build/packs/hd`): every declaration in
+  both retail building atlases (all production tiers, emergency facilities,
+  docks, stations, garages, bases, landing pads and the construction lot, plus
+  their animated flags, valves and beacons), and every debris and supply
+  sprite. In total that is 61 sprites and 129 authored frames at twice the
+  texture resolution, with authored ground shadows. Every building state has
+  an explicit ground-footprint pivot, so its painted base stays centred on its
+  selection ring across damage, construction and upgrades. The sources,
+  prompts and manifests are in [`assets/hd-static`](assets/hd-static).
+  `make test-hd` checks that all 101 original building and attachment frames
+  use the HD texture with their original timing and body bounds.
+  `make hd-pivot-previews` renders every packed state with its pivot, bounds
+  and ring. This pack is built from the retail declarations, so it needs
+  `ASSETS`.
 
 Mission backgrounds may have a `background@2x.png` (3344×1882) beside the
 1672×941 original. `--hd` uses it, and the logical playfield stays 1366×768.
@@ -220,7 +229,7 @@ VOLCANO_TEST_SHOTS=1 make test   # also save frames to build/
 | `tools/mission.py check` | Validate missions and warn about likely design problems |
 | `tools/retail_levels.py` | Dump or analyze original level binaries |
 | `tools/make_test_pack.py` | Generate the placeholder asset pack used by tests |
-| `tools/build_hd_assets.py`, `tools/preview_hd_pivots.py` | Build and review the HD statics overlay |
+| `tools/build_hd_assets.py`, `tools/preview_hd_pivots.py`, `tools/check_hd_building_parity.py` | Build, review and verify the HD statics overlay |
 | `tools/pack_rescue_characters.py` | Pack rendered characters and write their sprite sheet |
 | `tools/package_app.py` | Self-contained macOS bundle (`make app`) |
 | `tools/audit_rescue_team.py` | Audit report of original campaign coverage |
