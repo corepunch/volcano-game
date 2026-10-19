@@ -55,17 +55,20 @@ ground pivots; transparent padding is not the visible obstacle footprint.
 Custom sprite presentation must preserve independently defined job cost, reward,
 duration, collision, click bounds, queue state and complete removal on clearing.
 
-The restoration supports this through a separate type-5 `effect` with a nonzero
-`link_id` naming the base/barrier/building. Keep the target's ordinary gameplay
-`params` (for example `tree00` for salvageable timber or `stone00` for a small
-clearance job). The linked record uses
-`sprite;image=@debris.png;rect=x,y,w,h;pivot=.5,.65;stage=world`, its measured
-`scale_x/scale_y`, and an optional `name` for the tooltip title. The target owns
-position, layer, costs and lifetime; there is no passive duplicate of the prop.
-World-stage rigid presentations require zero wind/rotation. See the current
-`docs/creating-levels.md` section on authored stationary-object artwork before
-using building states. Do not implement a parallel sprite/obstacle system when
-this presentation mechanism already fits the task.
+The restoration supports this with mission archetypes. Name each atlas region
+in `missions/SLUG/sprites.xml` (`rect`, ground `pivot`, measured `scale`), load it
+with `<sprites path="sprites.xml"/>`, and declare an `<archetype>` that `extends`
+the ordinary job whose rules fit, for example `tree` for salvageable timber,
+`stone` for a small clearance job or `boulder` for an expensive one, with its
+own `title` and `sprite`. Twisted Tracks' ten debris jobs are archetypes of this
+kind over eight sprites. The parent supplies cost, reward, duration, work
+animation, collision and removal; the placed object owns position and layer.
+There is no passive duplicate of the prop. Stations work the same way by
+extending `cafe`, `sawmill` or `house` with `sprite` and `damaged` art, as in
+Library Rescue. Workers stop on the selection ellipse derived from the sprite's
+body, so a wide prop changes where its approach ends. See
+`docs/creating-missions.md` (Mission-specific artwork). Do not implement a
+parallel sprite/obstacle system when this mechanism already fits the task.
 
 ## Check the layout as a puzzle
 
@@ -75,9 +78,11 @@ Terrain does not enforce collision: audit the actual distance-based traffic
 graph. In a road loop, gate every bypass or intentionally leave a branch
 optional; do not assume a painted obstacle locks a rescue pocket.
 
-Measure the finished plate. Keep separate branches at least 50 world pixels
-apart unless an intersection is intended; gates block segments within 20 pixels.
-Check worker approach and return, nearest-node attachments, all gated survivors,
+Measure the finished plate. Keep separate branches at least 50 world units
+apart unless an intersection is intended; gates block segments within 20 units.
+Workers stop where their route meets a job's footprint ellipse, so the side they
+approach from must be reachable before that job is cleared. Check worker
+approach and return, nearest-node attachments, all gated survivors,
 resource-depleted recovery and alternative spending orders. Compare start and
 cleared renders: sprites should disappear fully, revealing intact traversable
 road without removing adjacent static wreck. Keep HUD and building footprints

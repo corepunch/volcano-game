@@ -22,8 +22,9 @@ reinforced concrete. Ordinary underlying barrier rules retain their established
 costs and work animations. The timber panels cost 20 food and yield 20 wood;
 other small jobs cost 20 food. The car costs 40 food plus 100 money.
 The concrete job is a small broken footing, so it uses a small clearing cost.
-Linked type-5 sprite presentations give each job its actual debris appearance
-and title while preserving barrier collision, queueing, cost and removal rules.
+Mission archetypes extending tree/stone/boulder, with art from sprites.xml, give
+each job its actual debris appearance and title while preserving obstacle
+collision, queueing, cost and removal rules.
 
 Two starting workers have 40 food and no wood or money. Clearing the inward
 panels and service-road fence can spend all food; the panels' 20 timber plus
@@ -37,8 +38,9 @@ The existing coaster playthrough deliberately retains stable objective/producer
 IDs and exercises the revised source, road graph, jobs and atlas in the real
 runtime. It covers a zero-food opening, queued-job recovery, three repair orders,
 all ten people and two animals, nonnegative inventory, pause and restart.
-Inspect start and repaired screenshots in build/ after running the checker with
-VOLCANO_TEST_SHOTS=1. Native launcher is build/Twisted Tracks.app.
-The dedicated check_coaster_debris runner also exercises all eight clickable
+Inspect start and repaired screenshots in build/ after running
+VOLCANO_TEST_SHOTS=1 make test-missions (mode --coaster in tests/missions_main.c).
+make app APP_MISSION=twisted-tracks builds build/Twisted Tracks.app.
+The dedicated tests/coaster_main.c runner also exercises all eight clickable
 atlas regions, clears every job before the final rescue, checks full sprite and
 click-target removal, and verifies the final car reserves 40 food/100 money once.

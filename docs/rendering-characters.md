@@ -16,7 +16,7 @@ equipment and corresponding game resource names.
 - Python 3 and Pillow for packing and preview generation. Check with
   `python3 -c 'from PIL import Image; print(Image.__version__)'`.
 - The game dependencies and retail resources described in the
-  [project README](../README.md#build-and-run) for installation and game checks.
+  [project README](../README.md#quick-start) for installation and game checks.
 
 Use a separate Blender process for this work. In the Codex filesystem sandbox,
 Blender's GPU initialization and the localhost socket client have required

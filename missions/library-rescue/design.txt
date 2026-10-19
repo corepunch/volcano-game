@@ -65,17 +65,19 @@ flags. Initial rescue gates, original HQ art, click bounds, complete obstacle
 removal, pause and restart are covered by --library-rescue.
 
 DELIVERY
-make library-rescue; make library-rescue-app; make test-library-rescue.
-Compiled level/rules/background/prop atlas stay together in build/levels/.
-Local launcher: build/Library Rescue.app. Old real-site launcher is retired.
+make run MISSION=library-rescue; make app APP_MISSION=library-rescue;
+make test-missions (mode --library-rescue). The game loads mission.xml,
+background.png, sprites.xml and props.png from missions/library-rescue/.
+App bundle: build/Library Rescue.app. Old real-site launcher is retired.
 Compatibility is verified in this restoration, not in the retail game.
 
 CHARACTERS
 Use the project's existing authored Kenney worker and civilian atlases, including
-blue workwear and yellow hard hats. make character-assets refreshes the installed
-pack from the saved catalog without rendering or changing the models. Library
-run, app and test targets all select build/kenney-assets. The regression refuses
-original worker/male/female texture declarations, preventing a silent fallback.
+blue workwear and yellow hard hats. mission.xml mounts assets/kenney-characters
+with <pack>, so run, app and test all use it; python3
+tools/pack_rescue_characters.py --declare refreshes its sprite declarations from
+the saved catalog without rendering or changing the models. The regression
+refuses original worker/male/female textures, preventing a silent fallback.
 The original HQ sprite is independent of this character pack and stays unchanged.
 
 Final verification: all three playthroughs pass with the custom character pack;

@@ -29,7 +29,7 @@ fallback, custom image SDK, Blender scene or procedural background painter was
 used. The existing [Blender character workflow](rendering-characters.md) is a
 separate process. The runtime reads original game assets from the ignored
 `reference/rescue-team/` directory; installation is covered by the
-[project README](../README.md#build-and-run). Pillow is only needed for the
+[project README](../README.md#quick-start). Pillow is only needed for the
 screenshot conversion commands below, not to load a mission.
 
 The [preserved history](../art-source/background-history/README.md) contains all five

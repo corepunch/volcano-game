@@ -2,21 +2,21 @@
 
 These are the preserved inputs and exact prompts used to create and revise
 Ancient Echoes and Twisted Tracks on 2026-10-19. The current game loads the PNGs
-in the parent `levels/` directory; these archived inputs are for authoring.
+in each `missions/<slug>/` folder; these archived inputs are for authoring.
 See the [production guide](../../docs/creating-backgrounds.md) for the workflow.
 
 | Stage | Input | Exact prompt | Output |
 | --- | --- | --- | --- |
 | Ancient Echoes: initial generation | Text only | [Initial prompt](ancient-echoes-v1.prompt.txt) | [Original image](ancient-echoes-v1.png) |
-| Ancient Echoes: expanded ruins and rough tracks | Original image | [Edit prompt](../ancient-echoes.prompt.txt) | [Current image](../ancient-echoes.png) |
+| Ancient Echoes: expanded ruins and rough tracks | Original image | [Edit prompt](../../missions/ancient-echoes/background.prompt.txt) | [Current image](../../missions/ancient-echoes/background.png) |
 | Twisted Tracks: initial generation | Text only | [Initial prompt](twisted-tracks-v1.prompt.txt) | [Original image](twisted-tracks-v1.png) |
 | Twisted Tracks: expanded wreck and rough tracks | Original image | [Expansion prompt](twisted-tracks-expanded.prompt.txt) | [Intermediate image](twisted-tracks-expanded.png) |
-| Twisted Tracks: clear access through the right side | Intermediate image | [Access refinement prompt](twisted-tracks-access.prompt.txt) | [Current image](../twisted-tracks.png) |
+| Twisted Tracks: clear access through the right side | Intermediate image | [Access refinement prompt](twisted-tracks-access.prompt.txt) | [Current image](../../missions/twisted-tracks/background.png) |
 
 Each row was one built-in `image_gen.imagegen` call. Generation had no image
 input; edits referenced the indicated input PNG. All used
 `transparent_background=false`. The top-level
-[`twisted-tracks.prompt.txt`](../twisted-tracks.prompt.txt) combines its two edit
+[`twisted-tracks.prompt.txt`](../../missions/twisted-tracks/background.prompt.txt) combines its two edit
 prompts as a readable record; they were executed as separate calls, in order.
 
 [`manifest.json`](manifest.json) records the input-stage relationships,
@@ -30,13 +30,13 @@ PNG files are the authoritative artwork used for these versions of the maps.
 The source commits also preserve the initial mission layouts. To inspect them:
 
 ```sh
-git show ad9c0c9:levels/ancient-echoes.level.json
+git show ad9c0c9:levels/ancient-echoes.level.json   # historical JSON source
 git show a6745fb:levels/twisted-tracks.level.json
 ```
 
 Current placements and routes are in
-[`ancient-echoes.level.json`](../ancient-echoes.level.json) and
-[`twisted-tracks.level.json`](../twisted-tracks.level.json). Measure any newly
+[`ancient-echoes/mission.xml`](../../missions/ancient-echoes/mission.xml) and
+[`twisted-tracks/mission.xml`](../../missions/twisted-tracks/mission.xml). Measure any newly
 generated output again before reusing those coordinates. Update the archive and
 manifest when adding later image stages; do not silently change a recorded stage.
 
@@ -49,7 +49,7 @@ Its unchanged painting, exact prompt and design record are preserved here as
 `ground-zero-rejected.design.txt`. These files are authoring history and are not
 loaded by the current mission.
 
-The replacement is `../library-rescue.png`: an original fictional teal/ochre
+The replacement is `missions/library-rescue/background.png`: an original fictional teal/ochre
 library, generated anew using only two real photographs for structural/material
 observations. Its prompt and reference links are saved alongside the current
 level. The original game HQ sprite is restored.
