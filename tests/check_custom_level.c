@@ -284,7 +284,10 @@ static bool play_disaster_mission(const char *path,int variant)
                        "every tourist, recruit and animal starts gated")) return false;
         }
         if (site) {
-            const uint32_t props[]={2,20,21,22,23,24,25,30,32,34};
+            Entity *base=&game.objects[test_entity(2)];
+            if (!check(base->visual<0 && !strcmp(base->anim,"base0"),
+                       "original headquarters sprite is retained")) return false;
+            const uint32_t props[]={20,21,22,23,24,25,30,32,34};
             for (size_t j=0;j<sizeof props/sizeof *props;j++) {
                 Entity *e=&game.objects[test_entity(props[j])];
                 if (!check(e->visual>=0 && game.scene.visuals[e->visual].kind==MAP_SPRITE &&

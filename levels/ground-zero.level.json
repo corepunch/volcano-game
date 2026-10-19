@@ -754,18 +754,6 @@
     },
     {
       "type": "effect",
-      "id": 200,
-      "layer": 5,
-      "x": 0,
-      "y": 768,
-      "link_id": 2,
-      "name": "Command post",
-      "params": "sprite;image=@ground-zero-props.png;rect=10,20,350,380;pivot=0.5,0.93;state=default",
-      "scale_x": 0.39,
-      "scale_y": 0.39
-    },
-    {
-      "type": "effect",
       "id": 201,
       "layer": 5,
       "x": 0,
