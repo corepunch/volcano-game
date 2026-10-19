@@ -87,6 +87,9 @@ the log and three timber caches fund the cafe, sawmill and visitor-centre house.
 The cafe restores food and the house earns the 100 money needed at the main
 rockfall. The final broken paving needs 20 wood. All scenery and ancient masonry
 remain in the painted background; only authored jobs block movement.
+The enlarged ruined complex fills the centre and eastern side of the screen.
+The formal visitor approach gives way to rough rescue tracks through collapsed
+colonnades, rubble-lined service access and fragments of mosaic courtyard.
 
 `make ancient-echoes-app` creates `build/Ancient Echoes.app`, a local macOS
 launcher. `make test-ancient-echoes` checks every initial rescue gate, a zero-food
