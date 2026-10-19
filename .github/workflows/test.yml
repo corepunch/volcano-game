@@ -1,0 +1,19 @@
+name: test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install SDL2 and Pillow
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libsdl2-dev python3-pil
+      - name: Build
+        run: make -j"$(nproc)"
+      - name: Retail-free suites (core without SDL, missions on placeholder art, tools)
+        run: make test -j"$(nproc)"
+      - name: Sanitizers
+        run: make sanitize -j"$(nproc)"
