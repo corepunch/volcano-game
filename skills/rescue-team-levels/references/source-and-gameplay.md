@@ -1,167 +1,199 @@
-# Source format and gameplay
+# Mission format and gameplay
 
-Contents: source/binary contract; mission settings; object vocabulary; routes;
-economy and queues; linked mechanics; supported boundaries.
+Contents: mission folder and XML; settings; archetypes and objects; routes;
+economy and queues; relationships and advanced mechanics; retail scenes;
+supported boundaries.
 
-## Source and binary contract
+## Mission folder and XML
 
-Use the repository compiler, not a new binary writer:
+A mission is `missions/SLUG/mission.xml` plus its art. The game reads the XML
+directly; there is no compile step, sidecar or binary output. Validate with:
 
 ```sh
-python3 tools/level_source.py check levels/SLUG.level.json
-python3 tools/level_source.py compile levels/SLUG.level.json build/levels/SLUG.lvl
-python3 tools/level_source.py decompile build/levels/SLUG.lvl build/editable/SLUG.level.json
-python3 tools/level_source.py analyze reference/rescue-team/level build/level-analysis.json
+python3 tools/mission.py check missions/SLUG/mission.xml
+make run MISSION=SLUG
 ```
 
-| Root field | Contract |
+| File | Contract |
 | --- | --- |
-| `format` | Required `volcano-level-1` |
-| `background` | Required retail stem, e.g. `103`, or local `@SLUG.png` |
-| `objects` | Required ordered array, maximum 4096 records |
-| `mission` | Seven fields below; omit only for an intentional prototype scene |
-| `version` | Optional, defaults to 301; other values rejected |
-| `max_id` | Optional uint32, derived when omitted; omit for a new scene |
-| `$schema` | Usually `../docs/level-source.schema.json` from `levels/` |
-| `_comment` | Author note; also accepted on mission and object records |
+| `mission.xml` | Required; grammar below |
+| `background.png` | Painted 16:9 plate stretched over 1366×768 |
+| `background@2x.png` | Optional; used instead with `--hd` |
+| `*.png` + `sprites.xml` | Optional mission art and its sprite sheet |
+| `*.prompt.txt`, `design.txt` | Provenance: exact prompts, measured layout, references |
 
-JSON has no comments/trailing commas; unknown fields are rejected. Coordinates
-must fit finite float32. ID, layer and link values are uint32. Object IDs must
-be unique; start new IDs at 1 since reference zero means no link. Preserve object
-order and unknown numeric types when adapting retail scenes.
+Concepts, rejected images and earlier stages go to `art-source/`, not the
+mission folder.
 
-The v301 binary is little endian: uint32 version; uint16-byte-length background;
-uint32 max ID and object count; typed records. Ordinary records store type, ID,
-layer, three length-prefixed strings, link ID and five float32 transforms; type 6
-adds two auxiliary floats. Traffic instead stores type, ID, point count,
-float32 coordinate pairs and layer. Do not append custom mission data/trailers.
-
-Mission settings compile into `SLUG.lvl.rules`: UTF-8 `version=1` plus all seven
-settings, with `allow_cafe` as 0/1. Keep it beside the `.lvl`. Decompilation reads
-an adjacent sidecar but does not invent one for a retail binary. Compilation
-rejects replacing a rules-bearing output with a source without `mission`; resolve
-obsolete sidecars explicitly rather than accidentally reusing stale settings.
-
-Local PNG/JPEG backgrounds and custom sprite images are copied unchanged beside
-the output binary. `@` references must be bare filenames beside the source,
-with no directory components. Keep these images with a shared compiled mission.
-Retail background stems still require the original asset directory.
-The production reader and converter round-trip 52 original binaries; this does
-not establish that a new custom file works in the original commercial game.
-
-## Mission configuration
-
-```json
-"mission": {
-  "food": 40, "wood": 0, "money": 0, "fuel": 0,
-  "rescue_goal": 7, "basin_goal": 0, "allow_cafe": true
-}
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- One-line summary of the mission. -->
+<mission format="volcano-mission-1" title="Starter Rescue" retail-background="103">
+  <settings rules="rescue" food="20" people="2"/>
+  <traffic>326,371 314,342 310,304 …</traffic>
+  <object id="2" type="hq" x="345" y="371"/>
+  <object id="3" type="worker" x="345" y="371"/>
+  <object id="4" type="tree" x="545" y="358"/>
+  <object id="5" type="bridge" x="426" y="196" sprite="bridge_wood01"/>
+  <object id="6" type="civilian" x="525" y="395"/>
+  <object id="8" type="food-large" x="315" y="268"/>
+</mission>
 ```
 
-All seven keys are required when `mission` exists. Quantities are integers
-0–1000000; `allow_cafe` is boolean. `rescue_goal` counts civilians **plus recruits
-who return home**, excluding starting crew. Every authored animal adds a separate
-animal objective automatically. `basin_goal`, when nonzero, counts completed
-valve activations, not unique water tiles. There are no configurable custom
-deadlines, star thresholds, upgrades or campaign progression in this format.
+| Element | Contract |
+| --- | --- |
+| `<mission>` | `format="volcano-mission-1"`, `title`, exactly one of `background="FILE"` or `retail-background="103"` |
+| `<settings>` | Exactly one; see below |
+| `<pack path>` | Asset folder mounted for this mission (e.g. `../../assets/kenney-characters`); up to 8 |
+| `<sprites path>` | Mission sprite sheet, usually `sprites.xml`; up to 8 |
+| `<archetype>` | Mission-specific object kind: `id`, `extends`, overrides |
+| `<traffic>` | Space-separated `x,y` points; may repeat; all points form one graph |
+| `<object>` | Placed archetype |
+| `<effect>` | Decorative animated effect; see art/effects reference |
 
-Use one HQ. Starting workers must be **strictly less than 80 world pixels** from
-the first base; more distant on-foot workers start stranded and join after
-returning home. Include those recruits in the rescue goal. Custom missions use
-the first base as their common destination. Limits: 64 worker records,
-64 civilians, 16 vehicles.
+The loader (`src/content/mission.c`) is strict: unknown elements/attributes,
+duplicate ids, unknown types, out-of-range values and relationships to the
+wrong kind of object are errors naming the line. Paths are relative to the
+mission file. Coordinates are world units, **bottom-left origin**, on the
+1366×768 playfield. Limits: 4096 objects, 4096 traffic points, 1024 effects.
+`retail-background` requires the original asset directory.
 
-## Object records
+## Mission settings
 
-Required: `id`, `type`. Defaults for ordinary records:
+```xml
+<settings rules="rescue" food="40" wood="0" money="0" fuel="0" people="7" basins="0"/>
+```
 
-| Field | Default | Meaning |
+| Attribute | Default | Meaning |
 | --- | --- | --- |
-| `layer` | 0 | Preserved layer, commonly 5 for gameplay and 6 for actors |
-| `name` | empty | Also identifies burning logs and named groups |
-| `params` | empty | Sprite name or type-specific parameter text |
-| `extra` | empty | State/transport metadata |
-| `link_id` | 0 | Type-dependent reference/value; not always another object's ID |
-| `x,y` | 0,0 | Bottom-left world pixels, 1366×768 playfield |
-| `rotation` | 0 | Retained original transform; not a general gameplay rotation |
-| `scale_x,scale_y` | 1,1 | Used for custom scene sprites, not general obstacle collision |
-| `auxiliary` | x,y | Only ambient/type 6: initial ambient position pair |
+| `rules` | required | Ruleset; missions use `rescue` |
+| `food`, `wood`, `money`, `fuel` | 0 | Starting stock, 0–1000000 |
+| `people` | 0 | Civilians **plus recruits who return home**, excluding starting crew |
+| `basins` | 0 | Completed valve activations required |
+| `crew-at-hq` | false | Every on-foot worker starts in HQ (no recruits) |
+| `offroad` | true | Affects only retail imports of ATV/garage records |
+| `buildable` | all four | Producers lots may build, e.g. `"sawmill house gas-station"` |
 
-String byte maxima: background 127; name 511; params and extra 4095 each. No NUL.
-New text is UTF-8; surrogate escapes preserve non-UTF-8 retail bytes on round-trip.
-Traffic records use only type, ID, layer and points (plus optional `_comment`):
+Every authored animal adds a separate animal objective automatically. There are
+no configurable deadlines, star thresholds or upgrades. The original campaign's
+settings use the same attributes in `content/campaign.xml`.
 
-```json
-{"type":"traffic","id":1,"layer":4,"points":[[200,400],[230,400],[260,400]]}
+Use one HQ. Starting workers must be **strictly less than 80 world units** from
+the first `hq`; more distant on-foot workers start stranded and join after
+returning home. Include those recruits in `people`. Every mission uses the first
+HQ as the common destination.
+
+## Archetypes and objects
+
+Archetypes are object kinds in `content/archetypes.xml`; `docs/content.md` lists
+every attribute. Prices are data there, not in C.
+
+| Type | Supported authoring behavior |
+| --- | --- |
+| `hq` | Headquarters |
+| `worker` | Starting crew/recruit; `transport="atv"` + `corridor` for ATV recruitment |
+| `boat-worker` | Crew member restricted to the water network |
+| `civilian` | Automatic on-foot evacuation once the route opens; `roof` + `support` for rooftop art |
+| `cat`, `dog` | Click to capture (10 food) and lead home; `variant` 0–2 |
+| `tree` / `log` | 20 food, 20 wood reward; only `tree` can be `burning` |
+| `stone` / `boulder` | 20 food / 40 food + 100 money |
+| `bridge` / `auto-bridge` | 20 wood / 20 food + 40 wood; `sprite="bridge_wood01"` etc. for variants |
+| `road` | 20 wood |
+| `debris` | Art-less, cost-free obstruction; base for themed archetypes |
+| `fog` | Cleared by its `gate` valve; blocks work within 105 units |
+| `blast-rock`, `fire-hazard` | Dynamite/road-fire rules not restored; avoid as mandatory gates |
+| `food-small/large`, `wood-…`, `money-…`, `fuel-small/large` | 10/20-unit supplies |
+| `floating-wood` | 10 wood for a boat worker |
+| `fishing-spot`, `fishing-spot-large` | 10/20 food for the fishing boat; `transport="boat"` |
+| `sawmill`, `cafe`, `house`, `gas-station` | Producers; damaged unless `operational="true"` |
+| `lot` | Construction site for a `buildable` producer |
+| `pier`, `garage` | Vehicle services; 40 wood repair; `operational="true"` starts working |
+| `valve` | 20 money; clears its gated group; counts toward `basins` |
+| `atv`, `fishing-boat` | Vehicles; need `service` and `home` |
+| `decor` | Scenery with per-placement `sprite`, depth-sorted with actors |
+| `water`, `polluted-water`, `bird`, `cloud` | Animated water and ambient scenery |
+
+A mission archetype inherits everything from `extends` (cost, reward, duration,
+work animation, production, collision, removal) and overrides only the named
+attributes, usually `title`, `sprite` and `damaged`. `<cost>`, `<reward>`,
+`<build>` or `<repair food= wood= money= fuel=/>` children replace the inherited
+amounts:
+
+```xml
+<archetype id="derailed-coaster-car" extends="boulder" title="Derailed coaster car"
+           sprite="twisted-tracks/derailed-coaster-car"/>
+<archetype id="field-kitchen" extends="cafe" title="Field kitchen"
+           sprite="library-rescue/field-kitchen" damaged="library-rescue/field-kitchen-damaged"/>
 ```
 
-Multiple traffic records concatenate; the combined maximum is 4096 points.
+Object attributes:
 
-| Alias / code | Supported authoring behavior |
-| --- | --- |
-| `base` / 110 | Headquarters, no params needed |
-| `worker` / 104 | Starting crew/recruit; `extra="offroad"` for supported ATV recruitment |
-| `civilian` / 109 | Automatic on-foot evacuation once the route opens |
-| `animal` / 105 | `cat` or `dog`; click to capture and return home |
-| `barrier` / 102 | `tree00`, `stone00`, `stone_big00`, `bridge_wood00/01`, `bridge_auto00/01`, `broken_road0`, linked `fog_high` |
-| `building` / 101 | `sawmill`, `burger`, `house`, `derrick`; `extra="0;0"` working, other values damaged |
-| `resource` / 108 | `food1/2`, `wood1/2`, `money1/2`, `gas1/2`; `boat_food` for fishing |
-| `lot` / 146 | `build_place`; construct a chosen producer |
-| `marker` / 3 | Service/valve approach or named vehicle home marker |
-| `valve` / 128 | Named group controller, optional linked workpoint |
-| `pollution` / 151 | Named water group; link value can be tile metadata |
-| `boat` / 113 | Named boat linked through a home marker to a pier |
-| `pier` / 114 | `seaport`; working only when `extra="0;0"` |
-| `atv` / 153 | Named vehicle linked through a home marker to a garage |
-| `garage` / 154 | `garage`; working only when `extra="0;0"` |
-| `offroad_region` / 152 | Center x,y, radius in `link_id` |
-| `effect` / 5 | Generic map visual; see art/effects reference |
-| `scenery` / 2 | Existing cosmetic animations, e.g. `anim=water0` |
-| `ambient` / 6 | Original birds/clouds; preserve params and auxiliary position when adapting |
-| `background` / 4 | Preserved retail object; root background drives custom loading |
-
-The compiler accepts further aliases/numeric types for preservation. That does
-not establish their mission behavior; check engine support before using them.
+| Attribute | Default | Meaning |
+| --- | --- | --- |
+| `id` | required | Positive, unique integer; relationships refer to it |
+| `type` | required | Shared or mission archetype id |
+| `x`, `y` | 0 | Ground point, bottom-left world units |
+| `layer` | 6 for workers/civilians/animals/vehicles, else 5 | Draw order, then descending y |
+| `sprite` | archetype's | Per-placement art (decor, alternate bridge) |
+| `variant` | 0 | Animal art: 0–2 selects `cat0`/`cat1`/`cat2` |
+| `operational` | false | Working producer/service |
+| `burning` | false | Burnable obstacle on fire |
+| `floating` | false | Bobs on water |
+| `roof` | false | Rooftop survivor (with `support`) |
+| `transport` | `foot` | `atv` recruit or `boat` fishing spot |
+| `producer`, `gate`, `service`, `support` | none | Relationships (below) |
+| `workpoint="x,y"`, `home="x,y"`, `corridor="x,y,radius"` | none | Authored points (below) |
+| `speed` | archetype's | Ambient bird/cloud travel speed |
 
 ## Movement graph
 
 - Every pair of traffic points at distance **strictly less than 50** connects;
   exactly 50 does not. Neither point order nor painted roads defines edges.
-- Sample roads about 30–42 pixels apart; helper defaults to 30. Keep unrelated
-  routes at least 50 apart, including workpoint/pickup approaches near gates.
-- A live barrier blocks any segment passing **strictly less than 20** pixels
+- Sample roads about 28–42 units apart; the helper defaults to 30. Keep
+  unrelated routes at least 50 apart, including workpoint/pickup approaches
+  near gates.
+- A live obstacle blocks any segment passing **strictly less than 20** units
   from its center. Gate a narrow throat so nearby cross-links cannot bypass it.
   Avoid placing gates exactly at a sharp corner: diagonal links can cut around
   their blocking radius even when every painted path looks gated.
-- The target barrier is excluded from its own collision check; other barriers
+- The target obstacle is excluded from its own collision check; other obstacles
   still apply. Avoid gates that mutually block access to each other.
 - Every actor/destination attaches to its nearest graph point. Both attachment
   segments are collision checked. Give off-path buildings clear short approaches.
+- **Footprint approach.** Workers stop where their route enters the selection
+  ellipse of an obstacle, producer, lot, service or valve, and face it while
+  working, unless it has a `workpoint`. The ellipse is centered on the object's
+  ground point; width = sprite body width + 24, clamped to 65–170; height =
+  0.62 × width. Pickups, civilians and animals are approached at their center.
+  Keep the approach side of each obstacle on a road reachable before clearing.
 - Check outbound and return paths. Terrain and sprite silhouettes do not make
   collision. Use F1 to inspect all potential geometric links.
 
-`check` warns about disconnected components, distant approaches, missing crew/HQ,
-references and goals. It does not prove solvability, animation existence, or the
-absence of gate shortcuts. Separate water networks may be intentional.
+`tools/mission.py check` warns about disconnected traffic networks, objects 50
+or more units from traffic, all workers stranded, a `people` goal that differs
+from civilians plus stranded recruits, and `basins` above the valve count. It
+does not prove solvability, animation existence or the absence of gate shortcuts.
+Separate water networks may be intentional.
 
 ## Restoration economy
 
-Confirm against `job_cost`, `finish_work`, `update_production`, and vehicle logic
-in `src/game.c`. These prices are explicit restoration rules, not recovered retail
-constants; do not change them merely to match a screenshot from the retail game.
+Confirm against `content/archetypes.xml` and `src/sim/jobs.c`/`economy.c`.
+These prices are explicit restoration rules, not recovered retail constants; do
+not change them merely to match a screenshot from the retail game. A mission
+changes them only through its own archetypes.
 
 | Action | Reserved cost | Result |
 | --- | --- | --- |
-| Clear tree | 20 food | 20 wood on completion |
-| Clear small stone | 20 food | Opens route |
-| Clear large stone | 40 food + 100 money | Opens route |
-| Repair wooden bridge/broken road | 20 wood | Opens route |
-| Repair auto bridge | 20 food + 40 wood | Opens route |
+| Clear tree/log | 20 food | 20 wood on completion |
+| Clear stone | 20 food | Opens route |
+| Clear boulder | 40 food + 100 money | Opens route |
+| Repair bridge/road | 20 wood | Opens route |
+| Repair auto-bridge | 20 food + 40 wood | Opens route |
 | Construct sawmill/cafe/house/gas station | 40/40/60/80 wood | Production |
 | Repair those buildings | 20/20/30/40 wood | Restored production |
 | Repair pier/garage | 40 wood | Enables service |
 | Capture animal | 10 food | Rescue counted after return home |
-| Operate valve | 20 money | Clears named effect; optional basin progress |
+| Operate valve | 20 money | Clears gated group; optional basin progress |
 | ATV/fishing trip | 10 fuel | Recruitment/food delivery |
 | Small/large pickup | No worker resource cost | 10/20 units after delivery |
 
@@ -182,38 +214,65 @@ two people rescued**. The second tree needs 20 food. Repairing the reachable caf
 for 20 wood produces food and automatically resumes the queued tree. This is
 recoverable without inventory grants. Keep that recovery possible after moves.
 
-## Links and advanced supported mechanics
+## Relationships and advanced supported mechanics
 
-**Production outputs:** one `resource.link_id` points to its building/lot owner.
+**Production outputs:** a pickup's `producer="ID"` names its producer or lot.
 Output stays hidden until operation. Keep it clickable outside damaged/repaired
-footprints. Demolition retains the relationship while releasing the lot.
-The runtime updates its supply type to match the current producer on replenishment.
+footprints. Demolition retains the relationship while releasing the lot. The
+runtime updates its supply type to match the current producer on replenishment.
 
-**Burning logs:** `barrier params="tree00", name="fire"` adds restored fire/smoke;
-an unmarked tree stays unlit. Params literally equal to `fire` refer to a different,
-incompletely restored specialist hazard. Avoid mandatory road-fire/dynamite puzzles.
+**Burning trees:** `<object type="tree" burning="true"/>` adds restored
+fire/smoke; an unmarked tree stays unlit and `log` cannot burn. `fire-hazard` is
+a different, incompletely restored specialist hazard. Avoid mandatory
+road-fire/dynamite puzzles.
 
-**Valves:** match valve `name` to fog/pollution `name`. An unnamed marker with
-`link_id=VALVE_ID` supplies its workpoint. Fog suppresses dispatch within 105
-pixels, so keep that approach outside active fog. Named groups and numeric links
-are not interchangeable.
+**Valves:** fog, polluted water, piers and fishing spots take `gate="VALVE_ID"`.
+Operating the valve clears gated fog/pollution and opens the gated services.
+Fog suppresses dispatch within 105 units, so give the valve a `workpoint`
+outside active fog.
 
-**ATV:** vehicle `name` matches a named marker whose `link_id` identifies the
-garage. An unnamed linked marker supplies the garage repair approach. The recruit
-uses `extra="offroad"` and lies inside a type-152 region whose `link_id` is its
-radius. The vehicle follows the authored region and pays fuel once per trip.
-This supports offroad recruits, not arbitrary civilian rescues.
+**ATV:** `<object type="atv" service="GARAGE_ID" home="x,y"/>`. The recruit is a
+`worker` with `transport="atv"` and `corridor="x,y,radius"`; the ATV drives home →
+corridor center → recruit and back, paying 10 fuel per trip, and drops the
+recruit at the garage's workpoint. Start with an operational garage or provide a
+reachable repair approach and 40 wood. This supports offroad recruits, not
+arbitrary civilian rescues.
 
-**Boat:** use the same named-marker pattern for a boat and pier. Put the home
-marker on the water network and the unnamed repair approach on land. Fishing
-uses `params="boat_food"`; `name="food2"` delivers 20 food, otherwise 10. The
-nearest named pollution tile gates piers/fishing through its valve group, so
-separate basins carefully and provide land access, repairs and fuel first.
+**Boat:** `<object type="fishing-boat" service="PIER_ID" home="x,y"/>` with
+`home` on the water network and the pier's `workpoint` on land. Fishing spots
+use `transport="boat"`; gate piers and fishing spots with their basin's valve.
+Separate basins carefully (keep different water networks over 50 apart) and
+provide land access, repairs and fuel first.
+
+**Rooftop survivors:** `roof="true"` with `support="DECOR_ID"` draws the
+survivor on that building. An open foot route still evacuates the person.
+
+## Retail scenes
+
+The game imports original scenes at runtime (`--campaign N`, `--level INDEX`,
+`src/content/retail_import.c`); there is no decompiler to editable missions. To
+adapt one, dump it and author a new `mission.xml`:
+
+```sh
+python3 tools/retail_levels.py dump reference/rescue-team/level/level018.lvl build/level018.xml
+make analyze-levels      # build/level-analysis.json for all 52 binaries
+```
+
+Mapping: barrier `tree00`→`tree` (`name="fire"`→`burning="true"`), other
+`tree*`→`log`, `stone_big*`→`boulder`, `stone_dynamite*`→`blast-rock`,
+`stone*`→`stone`, `bridge_auto*`→`auto-bridge`, `bridge*`→`bridge`
+(`bridge_wood01` is `type="bridge" sprite="bridge_wood01"`), `road*`/`broken_road0`→`road`;
+resources `food1/2`, `wood1/2`, `money1/2`, `gas1/2`→`food-small/large`,
+`wood-…`, `money-…`, `fuel-small/large`; buildings `sawmill`/`burger`/`house`/`derrick`→
+`sawmill`/`cafe`/`house`/`gas-station`; `extra="0;0"`→`operational="true"`;
+resource `link_id`→`producer`; worker `extra="offroad"`→`transport="atv"`;
+civilian `extra="roof"`→`roof="true"`. Markers become `workpoint`/`home`, type-152
+regions become `corridor`, named valve groups become `gate`.
 
 Original examples: `level011` (boats/piers), `level012` (ATV/garage), `level013`
-(valve/fog), `level018` (production outputs). Import retail scenes under `build/`
-and preserve their fields. Exact relationship IDs are in the project's
-`docs/creating-levels.md`; do not fabricate retail metadata.
+(valve/fog), `level018` (production outputs). Exact relationship IDs are in
+`docs/creating-missions.md`; do not fabricate retail metadata. Keep dumps under
+`build/`.
 
 ## Campaign patterns to study
 
@@ -235,16 +294,17 @@ The repeated design is a potentially connected network partitioned by paid jobs,
 with rewards/producers opening the next partition. Introduce one dependency,
 then combine it with familiar route/resource constraints and add branches.
 This is an interpretation of scene data and restored play, not recovered retail AI.
-The retail first-mission runtime relocates its crew to HQ despite distant binary
-positions; custom missions use the under-80-pixel rule. Move starting crew near
-HQ when adapting that scene. Presence of service records alone proves no behavior.
+Campaign mission 1 starts its crew at HQ (`crew-at-hq="true"` in
+`content/campaign.xml`) despite distant binary positions; missions use the
+under-80-unit rule by default. Move starting crew near HQ when adapting that
+scene. Presence of service records alone proves no behavior.
 
 ## Unsupported progression
 
 Helicopter transport, doctors/healing, police/thieves, railways, medicine deadlines,
 generators, bonfires, runway lights, boosts, air deliveries and dynamite rules
-are not fully restored mission systems. Some render cosmetically. Civilian tags
-`heli`, `boat`, `roof`, `sick` do not automatically enforce retail specialist
-requirements. Roof visual attachment exists but an open foot route can evacuate
-the person. Use a crashed aircraft as scenery unless implementing its mechanics
-is explicitly part of the task. Engine feature work needs its own verification.
+are not restored mission systems and have no archetypes. Some retail records
+render cosmetically on import. Roof visual attachment exists but an open foot
+route can evacuate the person. Use a crashed aircraft as scenery unless
+implementing its mechanics is explicitly part of the task. Engine feature work
+needs its own verification.
