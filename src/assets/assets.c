@@ -2,15 +2,17 @@
  *
  * <sprites image="props.png" scale="0.34">            sheet defaults
  *   <sprite name="props/kitchen" rect="380,110,345,280" pivot="0.5,0.7"/>
- *   <sprite name="worker_run0" image="run.png" fps="15">
- *     <frame rect="2,2,40,90" anchor="20,6" size="20,45" repeat="2"/>
+ *   <sprite name="worker_run0" image="run.png" scale="0.5" fps="15">
+ *     <frame rect="2,2,40,90" pivot="0.5,0.93" repeat="2"/>
  *   </sprite>
  * </sprites>
  *
- * Rectangles are image pixels from the top-left. pivot is normalized within
- * the rectangle (0,0 top-left); anchor is the world-unit offset of the
- * ground point from the frame's bottom-left. World size defaults to the
- * rectangle times scale. Image paths are relative to the sheet file. */
+ * Rectangles are image pixels from the top-left. Everything inside a
+ * rectangle is normalized to it (0,0 top-left, 1,1 bottom-right), so it does
+ * not change with the image's resolution: pivot is the ground point (frames of
+ * trimmed animations may hold it slightly outside), body the clickable bounds
+ * without baked shadow. World size is the rectangle times
+ * scale. Image paths are relative to the sheet file. */
 #include "assets_internal.h"
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_ONLY_PNG
@@ -165,22 +167,23 @@ void image_release(void *pixels) { stbi_image_free(pixels); }
 
 static bool sheet_frame(const XmlDoc *doc,const XmlNode *node,int image_w,int image_h,float scale,SpriteFrame *out)
 {
-    float rect[4],pivot[2]={.5f,1},anchor[2],size[2],body[4];
+    float rect[4],pivot[2]={.5f,1},body[4];
     if (!xml_floats(doc,node,"rect",rect,4,true)) return false;
     if (rect[0]<0 || rect[1]<0 || rect[2]<1 || rect[3]<1 || rect[0]+rect[2]>image_w || rect[1]+rect[3]>image_h)
         return xml_fail(doc,node,"rect lies outside the %dx%d image",image_w,image_h);
-    size[0]=rect[2]*scale;size[1]=rect[3]*scale;
-    if (!xml_floats(doc,node,"size",size,2,false) || !xml_floats(doc,node,"pivot",pivot,2,false)) return false;
-    if (size[0]<=0 || size[1]<=0) return xml_fail(doc,node,"size must be positive");
-    anchor[0]=size[0]*pivot[0];anchor[1]=size[1]*(1-pivot[1]);
-    if (xml_attr(node,"anchor") && xml_attr(node,"pivot")) return xml_fail(doc,node,"use pivot or anchor, not both");
-    if (!xml_floats(doc,node,"anchor",anchor,2,false)) return false;
-    SpriteFrame f={.dx=anchor[0],.dy=anchor[1],.w=size[0],.h=size[1],
+    if (!xml_floats(doc,node,"pivot",pivot,2,false)) return false;
+    /* Trimmed animation frames may keep the ground point just outside the art. */
+    if (pivot[0]<-1 || pivot[0]>2 || pivot[1]<-1 || pivot[1]>2) return xml_fail(doc,node,"pivot must lie within -1..2 (0..1 spans the rect)");
+    float w=rect[2]*scale,h=rect[3]*scale;
+    SpriteFrame f={.dx=w*pivot[0],.dy=h*(1-pivot[1]),.w=w,.h=h,
         .u=rect[0]/image_w,.v=1-(rect[1]+rect[3])/image_h,.cu=rect[2]/image_w,.cv=rect[3]/image_h};
     if (xml_attr(node,"body")) {
         if (!xml_floats(doc,node,"body",body,4,true)) return false;
-        if (body[2]<=0 || body[3]<=0) return xml_fail(doc,node,"body size must be positive");
-        f.body_dx=body[0];f.body_dy=body[1];f.body_w=body[2];f.body_h=body[3];
+        if (body[0]<0 || body[1]<0 || body[2]<=0 || body[3]<=0 || body[0]+body[2]>1 || body[1]+body[3]>1)
+            return xml_fail(doc,node,"body must be a non-empty x,y,w,h within 0..1");
+        /* Stored like the anchor: offsets from the body's bottom-left to the ground point. */
+        f.body_w=body[2]*w;f.body_h=body[3]*h;
+        f.body_dx=f.dx-body[0]*w;f.body_dy=f.dy-(1-body[1]-body[3])*h;
     }
     *out=f;return true;
 }
@@ -190,9 +193,9 @@ static bool load_sheet(const char *path,int source)
     XmlDoc doc;
     if (!xml_load(&doc,path)) return false;
     static const char *sheet_attributes[]={"image","scale","fps",NULL},*sheet_children[]={"sprite",NULL};
-    static const char *sprite_attributes[]={"name","image","scale","fps","rect","pivot","anchor","size","body",NULL};
+    static const char *sprite_attributes[]={"name","image","scale","fps","rect","pivot","body",NULL};
     static const char *sprite_children[]={"frame",NULL};
-    static const char *frame_attributes[]={"rect","pivot","anchor","size","body","repeat",NULL};
+    static const char *frame_attributes[]={"rect","pivot","body","repeat",NULL};
     const XmlNode *root=doc.root;bool ok=true;
     char folder[PATH_CAPACITY];path_directory(folder,sizeof folder,path);
     if (strcmp(root->name,"sprites")) ok=xml_fail(&doc,root,"expected <sprites> root");

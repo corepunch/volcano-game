@@ -136,10 +136,11 @@ transparent atlas (for example `missions/SLUG/props.png` with
 ```
 
 `rect=x,y,w,h` is integral top-left image pixels, wholly inside the image.
-`pivot=x,y` is the ground point normalized to that rectangle (0,0 top-left;
-default `0.5,1`). World size is `rect` × `scale`; `image` and `scale` may be set
+`pivot=x,y` is the ground point normalized to that rectangle (0,0 top-left,
+1,1 bottom-right; default `0.5,1`), so it survives redrawing the art at another
+resolution. World size is `rect` × `scale`; `image` and `scale` may be set
 once on `<sprites>`. Image paths are relative to the sheet. Animated sprites use
-`<frame rect= anchor="dx,dy" size="w,h" repeat="N"/>` children. See
+`<frame rect= pivot= repeat="N"/>` children. See
 `src/assets/assets.c` and `docs/content.md#sprite-sheets`.
 
 In `mission.xml`, load the sheet and give an existing archetype the art:

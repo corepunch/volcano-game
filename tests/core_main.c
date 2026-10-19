@@ -57,6 +57,31 @@ static bool collect(const char *path,const char *name,int mount,void *user)
     char entry[64];snprintf(entry,sizeof entry,"%s@%d ",name,mount);strcat(list,entry);return true;
 }
 
+/* Native sheets: pivot and body are normalized to the rectangle, so the same
+ * numbers hold at any art resolution; world size is rect x scale. */
+static void sheet_tests(void)
+{
+    char root[]="/tmp/volcano-sheet-XXXXXX",image[96],sheet[96],cwd[1024],source[1100];
+    if (!mkdtemp(root) || !getcwd(cwd,sizeof cwd)) { CHECK(false,"sheet fixture");return; }
+    snprintf(source,sizeof source,"%s/missions/twisted-tracks/debris.png",cwd);
+    snprintf(image,sizeof image,"%s/art.png",root);snprintf(sheet,sizeof sheet,"%s/art.sprites.xml",root);
+    CHECK(!symlink(source,image),"sheet image link");
+    const char *files[]={sheet};
+    write_file(sheet,"<sprites image=\"art.png\" scale=\"0.5\">"
+        "<sprite name=\"t/a\" rect=\"0,0,200,100\" pivot=\"0.25,0.8\" body=\"0.1,0.2,0.5,0.5\"/></sprites>");
+    const Sprite *s;
+    CHECK(assets_load_level(NULL,0,files,1) && (s=sprite_find("t/a")) && s->frame_count==1,"normalized sheet loads");
+    if ((s=sprite_find("t/a"))) {
+        SpriteFrame f=s->frames[0],b=sprite_body_frame(f);
+        CHECK(f.w==100 && f.h==50 && f.dx==25 && fabsf(f.dy-10)<1e-4f,"pivot maps to world units: %g,%g %gx%g",f.dx,f.dy,f.w,f.h);
+        CHECK(b.w==50 && b.h==25 && b.dx==15 && fabsf(b.dy+5)<1e-4f,"body maps to world units: %g,%g %gx%g",b.dx,b.dy,b.w,b.h);
+    }
+    write_file(sheet,"<sprites image=\"art.png\"><sprite name=\"t/a\" rect=\"0,0,20,10\" anchor=\"1,1\"/></sprites>");
+    CHECK(!assets_load_level(NULL,0,files,1),"absolute anchors are rejected");
+    error_clear();assets_clear_level();
+    unlink(sheet);unlink(image);rmdir(root);
+}
+
 static void vfs_tests(const char *assets)
 {
     char root[]="/tmp/volcano-vfs-XXXXXX",a[64],b[64],path[128];
@@ -188,6 +213,7 @@ int main(int argc,char **argv)
     if (!vfs_mount(argv[1]) || !content_load("content") || !assets_load_base()) { fprintf(stderr,"Setup: %s\n",last_error);return 1; }
     vfs_tests(argv[1]);
     CHECK(assets_selftest(),"sprite catalog and declaration parser");
+    sheet_tests();
     content_tests();
     mission_tests();
     approach_test("missions/first-rescue/mission.xml",4,(Stock){{0}},"fallen tree");

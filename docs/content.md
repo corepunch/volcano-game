@@ -143,23 +143,25 @@ accepts the same attributes as a mission's `<settings>`.
 ```xml
 <sprites image="props.png" scale="0.34">
   <sprite name="library-rescue/field-kitchen" rect="745,110,345,280" pivot="0.5,0.68"/>
-  <sprite name="worker_run0" image="kenney-worker-run.png" fps="15">
-    <frame rect="2,2,40,90" anchor="20,6" size="20,45" repeat="2"/>
+  <sprite name="worker_run0" image="kenney-worker-run.png" scale="0.5" fps="15">
+    <frame rect="2,2,40,90" pivot="0.5,0.93" repeat="2"/>
   </sprite>
 </sprites>
 ```
+
+Rectangles are image pixels. Everything inside a rectangle is normalized to
+it, with `0,0` its top-left and `1,1` its bottom-right, so the numbers stay
+the same when the art is redrawn at another resolution.
 
 | Attribute | Meaning |
 | --- | --- |
 | `name` | Sprite name used by archetypes, objects and effects |
 | `image` | Image path relative to the sheet (on the sheet or the sprite) |
-| `scale` | World units per image pixel (default 1) |
+| `scale` | World units per image pixel (default 1); world size is `rect` × `scale` |
 | `fps` | Animation rate; 0 shows the first frame |
 | `rect` | `x,y,w,h` in image pixels from the top-left |
-| `pivot` | Ground point within `rect`, normalized from the top-left (default `0.5,1`) |
-| `anchor` | Alternatively, the ground point as world units from the frame's bottom-left |
-| `size` | World size (default `rect` × `scale`) |
-| `body` | `dx,dy,w,h` clickable bounds excluding baked shadow |
+| `pivot` | Ground point, normalized (default `0.5,1`). Frames of trimmed animations may hold it slightly outside `0..1` |
+| `body` | Clickable bounds without baked shadow, normalized `x,y,w,h` |
 | `repeat` | Hold a frame for several steps |
 
 A sprite has either a single `rect` or `<frame>` children.
