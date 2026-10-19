@@ -53,7 +53,9 @@ generated placeholder pack (`make test`).
 
 | Make target | Does |
 | --- | --- |
-| `make run MISSION=NAME` | Play `missions/NAME` |
+| `make run-NAME` (or `make NAME`) | Play `missions/NAME`, e.g. `make run-twisted-tracks`; `make missions` lists names |
+| `make run-NAME-hd`, `make NAME-app`, `make test-NAME` | The same mission with HD art, as a macOS bundle, or its regression |
+| `make run MISSION=NAME` | Same as `run-NAME` |
 | `make run-campaign CAMPAIGN=N` | Play an original campaign mission |
 | `make hd-pack`, `make run-hd MISSION=NAME` | Build the HD statics overlay and play with it |
 | `make app [APP_MISSION=NAME]` | Self-contained macOS bundle in `build/` |

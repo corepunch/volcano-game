@@ -7,7 +7,9 @@
 #   make                       game executable
 #   make test                  retail-free suites (placeholder art) and tool tests
 #   make test-retail           retail suites (needs ASSETS)
+#   make run-library-rescue     (also: make library-rescue, run-NAME-hd, NAME-app, test-NAME)
 #   make run MISSION=library-rescue
+#   make missions               list mission names
 #   make run-campaign CAMPAIGN=3
 
 CC ?= cc
@@ -82,14 +84,19 @@ test-core: $(OUT)/test_core $(TEST_PACK)
 	./$(OUT)/test_core $(TEST_PACK)
 
 # The project's own missions, played through the real UI and scheduler.
-test-missions: $(OUT)/test_missions $(OUT)/test_coaster $(TEST_PACK)
-	$(RUN) ./$(OUT)/test_missions $(MISSION_ASSETS) missions/first-rescue/mission.xml
-	$(RUN) ./$(OUT)/test_missions $(MISSION_ASSETS) missions/emerald-falls/mission.xml --emerald
-	$(RUN) ./$(OUT)/test_missions $(MISSION_ASSETS) missions/forest-mayday/mission.xml --mayday
-	$(RUN) ./$(OUT)/test_missions $(MISSION_ASSETS) missions/ancient-echoes/mission.xml --ancient
-	$(RUN) ./$(OUT)/test_missions $(MISSION_ASSETS) missions/twisted-tracks/mission.xml --coaster
-	$(RUN) ./$(OUT)/test_missions $(MISSION_ASSETS) missions/library-rescue/mission.xml --library-rescue
-	$(RUN) ./$(OUT)/test_coaster $(MISSION_ASSETS) missions/twisted-tracks/mission.xml
+# Each mission folder gets test-NAME; MISSION_TEST_NAME picks its scenario.
+MISSION_TEST_emerald-falls := --emerald
+MISSION_TEST_forest-mayday := --mayday
+MISSION_TEST_ancient-echoes := --ancient
+MISSION_TEST_twisted-tracks := --coaster
+MISSION_TEST_library-rescue := --library-rescue
+MISSION_TESTS := $(addprefix test-,$(MISSIONS))
+
+test-missions: $(MISSION_TESTS)
+
+$(MISSION_TESTS): test-%: $(OUT)/test_missions $(OUT)/test_coaster $(TEST_PACK)
+	$(RUN) ./$(OUT)/test_missions $(MISSION_ASSETS) missions/$*/mission.xml $(MISSION_TEST_$*)
+	$(if $(filter twisted-tracks,$*),$(RUN) ./$(OUT)/test_coaster $(MISSION_ASSETS) missions/$*/mission.xml)
 
 test-tools:
 	python3 -m unittest discover -s tests -p 'test_tools.py'
@@ -109,6 +116,27 @@ sanitize:
 
 run: $(OUT)/volcano
 	./$(OUT)/volcano --assets "$(ASSETS)" --mission missions/$(MISSION)/mission.xml
+
+# Every folder in missions/ also gets NAME, run-NAME, run-NAME-hd and NAME-app,
+# e.g. `make run-twisted-tracks` or `make library-rescue-app`.
+RUN_MISSIONS := $(addprefix run-,$(MISSIONS))
+RUN_MISSIONS_HD := $(addsuffix -hd,$(RUN_MISSIONS))
+MISSION_APPS := $(addsuffix -app,$(MISSIONS))
+.PHONY: missions $(MISSIONS) $(RUN_MISSIONS) $(RUN_MISSIONS_HD) $(MISSION_APPS) $(MISSION_TESTS)
+
+missions:
+	@printf '%s\n' $(MISSIONS)
+
+$(MISSIONS): %: run-%
+
+$(RUN_MISSIONS): run-%: $(OUT)/volcano
+	./$(OUT)/volcano --assets "$(ASSETS)" --mission missions/$*/mission.xml
+
+$(RUN_MISSIONS_HD): run-%-hd: $(OUT)/volcano hd-pack
+	./$(OUT)/volcano --assets "$(ASSETS)" --pack "$(HD_PACK)" --hd --mission missions/$*/mission.xml
+
+$(MISSION_APPS): %-app: $(OUT)/volcano
+	python3 tools/package_app.py --binary $(OUT)/volcano --assets "$(ASSETS)" --mission "$*" --output $(OUT)
 
 run-campaign: $(OUT)/volcano
 	./$(OUT)/volcano --assets "$(ASSETS)" --campaign $(CAMPAIGN)
