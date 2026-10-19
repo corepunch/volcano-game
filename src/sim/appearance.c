@@ -58,11 +58,13 @@ bool game_entity_sprite(const Game *g,const Entity *e,char *out,size_t size)
     return template && expand(template,e,out,size);
 }
 
+/* Centred on the object's position; for objects with a base that is the
+ * horizontal centre of the same body (see archetype_sprite_origin). */
 Vec2 game_footprint(const Game *g,const Entity *e)
 {
     char name[160];const Sprite *s;float w=100;
     if (game_entity_sprite(g,e,name,sizeof name) && (s=sprite_find(name)) && s->frame_count)
-        w=fmaxf(65,sprite_body_frame(s->frames[0]).w+24);
+        w=fmaxf(65,s->body_right-s->body_left+24);
     w=fminf(w,170);
     return vec2(w*.5f,w*.62f*.5f);
 }

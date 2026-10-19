@@ -116,6 +116,15 @@ static Placement *add(Import *im,int source,const char *archetype,const char *sp
     p->floating=(type->kind==CLASS_DECOR && (strstr(art,"_water") || strstr(art,"treewater"))) ||
         (type->kind==CLASS_PICKUP && (!strcmp(o->params,"boat_wood") || !strcmp(o->params,"boat_food"))) || o->type==T_BOAT;
     p->operational=!strcmp(o->extra,"0;0");
+    /* Retail positions are sprite pivots; ours are base centres. Convert with
+     * the art the object first shows, so it appears exactly where the retail
+     * game drew it while its ring and approach move to its true centre. */
+    if (archetype_has_base(type) && type->effect==EFFECT_NONE) {
+        const char *shown=p->sprite?p->sprite:!p->operational && type->damaged &&
+            (type->kind==CLASS_PRODUCER || type->kind==CLASS_SERVICE)?type->damaged:type->sprite;
+        const Sprite *drawn=shown?sprite_find(shown):NULL;
+        if (drawn && drawn->frame_count) p->p.x+=sprite_base_x(drawn);
+    }
     if (o->type==T_AMBIENT) {
         p->p=o->auxiliary;p->ambient_start=o->auxiliary;
         const char *last=strrchr(o->params,';');float speed=last?strtof(last+1,NULL):0;

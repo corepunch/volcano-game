@@ -69,7 +69,8 @@ static void paint(const Game *g,const Entity *e)
     }
     if (!game_entity_sprite(g,e,name,sizeof name)) return;
     double time=g->time+(e->type->ambient==AMBIENT_BIRD?hash_random(e->id)*2.4:0);
-    draw_sprite_rotated(name,pose.p.x,pose.p.y,time,e->frame,e->type->opacity,pose.angle);
+    Vec2 origin=archetype_sprite_origin(e->type,sprite_find(name),pose.p);
+    draw_sprite_rotated(name,origin.x,origin.y,time,e->frame,e->type->opacity,pose.angle);
 }
 
 void game_paint_log_particles(const Game *g,const Entity *e)

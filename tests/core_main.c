@@ -75,6 +75,12 @@ static void sheet_tests(void)
         SpriteFrame f=s->frames[0],b=sprite_body_frame(f);
         CHECK(f.w==100 && f.h==50 && f.dx==25 && fabsf(f.dy-10)<1e-4f,"pivot maps to world units: %g,%g %gx%g",f.dx,f.dy,f.w,f.h);
         CHECK(b.w==50 && b.h==25 && b.dx==15 && fabsf(b.dy+5)<1e-4f,"body maps to world units: %g,%g %gx%g",b.dx,b.dy,b.w,b.h);
+        /* Objects with a base stand on their body's horizontal centre whatever
+         * the pivot; actors stand on the pivot. Both keep the pivot's height. */
+        Vec2 p=vec2(300,200),cafe=archetype_sprite_origin(archetype_find("cafe"),s,p);
+        Vec2 worker=archetype_sprite_origin(archetype_find("worker"),s,p);
+        CHECK(fabsf(cafe.x-b.dx+b.w*.5f-p.x)<1e-4f && cafe.y==p.y,"building body centred on its position: %g",cafe.x-b.dx+b.w*.5f);
+        CHECK(worker.x==p.x && worker.y==p.y,"actor stands on its pivot");
     }
     write_file(sheet,"<sprites image=\"art.png\"><sprite name=\"t/a\" rect=\"0,0,20,10\" anchor=\"1,1\"/></sprites>");
     CHECK(!assets_load_level(NULL,0,files,1),"absolute anchors are rejected");

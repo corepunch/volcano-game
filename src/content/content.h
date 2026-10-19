@@ -4,6 +4,7 @@
  * of object lives in an Archetype loaded from content/NAME.xml; missions may
  * add their own archetypes, usually by extending a shared one. No SDL. */
 #include "../core/core.h"
+#include "../assets/assets.h"
 
 typedef enum { RESOURCE_FOOD,RESOURCE_WOOD,RESOURCE_MONEY,RESOURCE_FUEL,RESOURCE_COUNT,RESOURCE_NONE=-1 } Resource;
 typedef union { struct { int food,wood,money,fuel; };int amount[RESOURCE_COUNT]; } Stock;
@@ -79,6 +80,14 @@ void content_destroy(void);
 const Archetype *archetype_find(const char *id);
 const Ruleset *ruleset_find(const char *id);
 bool archetype_is(const Archetype *a,const Archetype *ancestor);
+/* Placement rule. Objects with a base (buildings, lots, services, valves,
+ * headquarters, obstacles, supplies) are positioned by their base centre:
+ * the selection ring is centred there, and their sprite's body is centred
+ * on it horizontally while the sprite's pivot sets the ground line. Actors
+ * and scenery are positioned by their sprite's pivot. */
+bool archetype_has_base(const Archetype *a);
+/* Where SPRITE's pivot goes for an object of type A positioned at P. */
+Vec2 archetype_sprite_origin(const Archetype *a,const Sprite *sprite,Vec2 p);
 /* Construction menu: producers with a menu slot, ordered by slot. */
 int content_menu(const Archetype **out,int capacity);
 bool mission_allows(const Mission *m,const Archetype *a);

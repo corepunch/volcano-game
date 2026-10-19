@@ -113,6 +113,10 @@ bool catalog_add_frame(Sprite *sprite,SpriteFrame frame)
 {
     SpriteFrame *frames=realloc(sprite->frames,(size_t)(sprite->frame_count+1)*sizeof frame);
     if (!frames) return error_set("Out of memory adding frames to %s",sprite->name);
+    SpriteFrame body=sprite_body_frame(frame);
+    float left=-body.dx,right=body.w-body.dx;
+    if (!sprite->frame_count || left<sprite->body_left) sprite->body_left=left;
+    if (!sprite->frame_count || right>sprite->body_right) sprite->body_right=right;
     sprite->frames=frames;sprite->frames[sprite->frame_count++]=frame;return true;
 }
 

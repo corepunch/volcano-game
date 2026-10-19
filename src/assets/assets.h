@@ -22,6 +22,7 @@ typedef struct {
     SpriteFrame *frames;
     int frame_count,source;             /* Source: mount index, or -1 for the level layer. */
     float fps;
+    float body_left,body_right;         /* Body extent over all frames, relative to the anchor. */
 } Sprite;
 typedef struct { uint32_t code;int x,y,w,h,bx,by,advance; } Glyph;
 typedef struct { char name[128],texture[PATH_CAPACITY];Glyph *glyphs;int count,size; } Font;
@@ -30,6 +31,13 @@ static inline SpriteFrame sprite_body_frame(SpriteFrame f)
 {
     if (f.body_w>0) { f.dx=f.body_dx;f.dy=f.body_dy;f.w=f.body_w;f.h=f.body_h; }
     return f;
+}
+
+/* Horizontal geometric centre of the sprite's body (all frames), relative to
+ * its anchor. Objects with a base stand on this point; see game_sprite_origin. */
+static inline float sprite_base_x(const Sprite *s)
+{
+    return s->frame_count?(s->body_left+s->body_right)*.5f:0;
 }
 
 bool assets_load_base(void);

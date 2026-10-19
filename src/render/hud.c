@@ -187,13 +187,14 @@ int game_hovered_object(const Game *g)
     for (int i=0;i<g->object_count;i++) {
         const Entity *e=&g->objects[i];
         if (!hoverable(g,e)) continue;
-        SpriteFrame f;char name[160];const Sprite *s;
+        SpriteFrame f;char name[160];const Sprite *s=NULL;
         if (e->type->effect!=EFFECT_NONE) f=(SpriteFrame){.dx=40,.dy=20,.w=80,.h=64};
         else if (game_entity_sprite(g,e,name,sizeof name) && (s=sprite_find(name)) && s->frame_count) f=sprite_body_frame(s->frames[0]);
         else continue;
         VisualPose pose=game_visual_pose(g,e);
+        Vec2 origin=archetype_sprite_origin(e->type,s,pose.p);
         float angle=pose.angle*(float)(PI/180),c=cosf(angle),sn=sinf(angle);
-        float dx=p.x-pose.p.x,dy=p.y-pose.p.y,lx=c*dx-sn*dy,ly=sn*dx+c*dy;
+        float dx=p.x-origin.x,dy=p.y-origin.y,lx=c*dx-sn*dy,ly=sn*dx+c*dy;
         if (lx>=-f.dx-6 && lx<=f.w-f.dx+6 && ly>=-f.dy-6 && ly<=f.h-f.dy+6) {
             float d=vec2_distance(p,pose.p);
             if (d<shortest) best=i,shortest=d;

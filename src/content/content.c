@@ -41,6 +41,21 @@ bool archetype_is(const Archetype *a,const Archetype *ancestor)
     return false;
 }
 
+bool archetype_has_base(const Archetype *a)
+{
+    switch (a->kind) {
+    case CLASS_BASE: case CLASS_OBSTACLE: case CLASS_PICKUP: case CLASS_LOT:
+    case CLASS_PRODUCER: case CLASS_VALVE: case CLASS_SERVICE: return true;
+    default: return false;
+    }
+}
+
+Vec2 archetype_sprite_origin(const Archetype *a,const Sprite *sprite,Vec2 p)
+{
+    if (sprite && archetype_has_base(a)) p.x-=sprite_base_x(sprite);
+    return p;
+}
+
 int content_menu(const Archetype **out,int capacity)
 {
     int count=0;
