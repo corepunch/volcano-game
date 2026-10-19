@@ -55,6 +55,18 @@ ground pivots; transparent padding is not the visible obstacle footprint.
 Custom sprite presentation must preserve independently defined job cost, reward,
 duration, collision, click bounds, queue state and complete removal on clearing.
 
+The restoration supports this through a separate type-5 `effect` with a nonzero
+`link_id` naming the base/barrier/building. Keep the target's ordinary gameplay
+`params` (for example `tree00` for salvageable timber or `stone00` for a small
+clearance job). The linked record uses
+`sprite;image=@debris.png;rect=x,y,w,h;pivot=.5,.65;stage=world`, its measured
+`scale_x/scale_y`, and an optional `name` for the tooltip title. The target owns
+position, layer, costs and lifetime; there is no passive duplicate of the prop.
+World-stage rigid presentations require zero wind/rotation. See the current
+`docs/creating-levels.md` section on authored stationary-object artwork before
+using building states. Do not implement a parallel sprite/obstacle system when
+this presentation mechanism already fits the task.
+
 ## Check the layout as a puzzle
 
 Put each blocker across a narrow road throat, with the same old road visible on

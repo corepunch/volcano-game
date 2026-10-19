@@ -105,25 +105,33 @@ ImageGen background and exact generation prompt are `levels/ancient-echoes.*`.
 ## Twisted Tracks
 
 `make twisted-tracks` plays the collapsed amusement-park roller coaster mission.
-Rescue nine visitors and one stranded park technician, plus two animals. The
-overlook, upper evacuation plaza and eastern visitor walkway are separately
-gated. Two workers start with 40 food. The first fallen tree yields the cafe's
-repair timber; clearing the southern service road unlocks three timber caches,
-the sawmill and park-office house. Food production restores an exhausted crew,
-house income finances the 100-money rockfall, and the sawmill replenishes wood
-for the broken visitor walkway. The red coaster, bent yellow supports and empty
-derailed train remain painted scenery, with sparse pond and garden animations.
-The enlarged coaster wreck fills the middle and east as well as the upper map.
-Makeshift dirt access follows broken fencing beside the train, then climbs
-between collapsed supports to the two eastern rescue pockets. The production
-buildings occupy small rough service clearings along the southern edge.
+Ground-level maintenance roads extend through the center of the reorganized
+wreck, branching to visitors in an upper interior pocket, inside the broken loop
+and beside the blue train. Nine visitors and a stranded technician count toward
+ten people; a cat and dog have their own rescue objective.
 
-`make twisted-tracks-app` creates `build/Twisted Tracks.app`, a local macOS
-launcher. `make test-twisted-tracks` verifies the ten-person mission through the
-same ordinary-input recovery, three repair-order, gating, pause and restart
-checks as Ancient Echoes. Source, built-in ImageGen art and exact prompt are
-`levels/twisted-tracks.*`; compiled levels and all required images/rules live
-under `build/levels/`.
+Ten removable jobs use eight custom debris sprites: red track, yellow supports,
+bent fencing, cables, a detached car, concrete footings, wheels and timber
+maintenance panels. These are ordinary clearing tasks with linked sprite
+presentations, not new traversal mechanics. The panels yield 20 timber; three
+repair caches and renewable cafe, sawmill and park-office production support
+recovery after spending all 40 starting food. The expensive car needs 40 food
+and 100 money and lies on the common train-pocket spur, so the service-road loop
+cannot bypass it. Large static rails, towers and the main train remain painted
+scenery; cleared jobs reveal clean road underneath.
+
+`make twisted-tracks-app` creates `build/Twisted Tracks.app`, a local launcher.
+`make test-twisted-tracks` checks every initial rescue gate, zero-food recovery,
+three producer repair orders, all ten people and both animals, pause/restart,
+eight clickable atlas variants, all ten clearing lifecycles and exact car
+payment. Set `VOLCANO_TEST_SHOTS=1` to retain start, repaired and cleared renders.
+
+Editable source is `levels/twisted-tracks.level.json`. The production background
+is `levels/twisted-tracks-interior.png`; the transparent debris atlas is
+`levels/twisted-tracks-debris.png`, with measured regions in its atlas JSON.
+Both have exact built-in ImageGen prompts saved alongside. The original
+background and concept history remain preserved. Compiled binaries, sidecars,
+copied images, screenshots and launcher live under `build/`.
 
 ## Ground Zero
 

@@ -39,3 +39,6 @@ runtime. It covers a zero-food opening, queued-job recovery, three repair orders
 all ten people and two animals, nonnegative inventory, pause and restart.
 Inspect start and repaired screenshots in build/ after running the checker with
 VOLCANO_TEST_SHOTS=1. Native launcher is build/Twisted Tracks.app.
+The dedicated check_coaster_debris runner also exercises all eight clickable
+atlas regions, clears every job before the final rescue, checks full sprite and
+click-target removal, and verifies the final car reserves 40 food/100 money once.
