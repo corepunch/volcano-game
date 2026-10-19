@@ -45,13 +45,14 @@ The dedicated tests/coaster_main.c runner also exercises all eight clickable
 atlas regions, clears every job before the final rescue, checks full sprite and
 click-target removal, and verifies the final car reserves 40 food/100 money once.
 
-Building placement correction
-Anchors are the centres of the painted pads, measured from background.png: the
-dirt pads were segmented by colour, road necks removed, and each centre taken
-from the pad's widest contiguous rows (then checked by eye against the edges).
-Anchors (bottom-left world units): HQ (147,139), cafe (499,100), sawmill
-(914,85), park office (1127,101.5). The anchor is the sprite's ground point and
-the centre of its selection ring, so the ring and the building both sit centred
-on the pad. Starting crew and the final approach node of each spur moved with
-their buildings; the old HQ node stays as an intermediate step so the HQ spur
-keeps a short link. Outputs stay outside the building footprints.
+Building placement
+Each building stands on the centre of its painted pad, measured from
+background.png: the dirt pads were segmented by colour, road necks removed, and
+each centre taken from the pad's widest contiguous rows (then checked by eye
+against the edges). Positions (bottom-left world units): HQ (147,139), cafe
+(499,100), sawmill (914,85), park office (1127,101.5). A position is the base
+centre: the engine centres every building state and its selection ring there,
+so no coordinate compensates for a sprite's pivot. Starting crew and the final
+approach node of each spur sit at their buildings; the HQ spur keeps an
+intermediate node so its last link stays short. Outputs stay outside the
+building footprints.

@@ -476,18 +476,13 @@ Generate all required props and states in one atlas; never synthesize repaired
 or UI states by tinting or otherwise post-processing a normal sprite. Save the
 exact prompt beside the atlas (for example `props.prompt.txt`).
 
-Retail sprites keep their original atlas pivots, which differ from the visible
-image centres. When centring a retail building in a painted clearing, read its
-frame from the original declaration rather than assuming a centre pivot. For a
-frame with width/height `w,h` and pivot `dx,dy`, its visible rectangle centre in
-world coordinates is `(x + w/2 - dx, y + h/2 - dy)`. To place that centre at a
-clearing's measured `cx,cy`, author `x = cx - w/2 + dx` and
-`y = cy - h/2 + dy`. For example, damaged `burger0_br` is 94×85 with pivot
-(45,31), so its visible centre is 2 units right and 11.5 units above the
-object position. The skill's `layout.py anchor` command prints this calculation
-as an `<object>` element. Repaired art can have different trim bounds while
-retaining the same ground attachment; inspect both states before calling the
-placement finished.
+An object's `x,y` is the centre of its base, for retail and mission art
+alike. The engine centres the shown frame's body on it horizontally and the
+sprite's pivot sets the ground line, so place a building at its painted
+clearing's measured centre (`layout.py place` converts screen measurements).
+Never offset coordinates to compensate for a sprite: if art sits too high or
+low, adjust its pivot height in the sprite sheet. Inspect damaged and repaired
+states before calling the placement finished.
 
 Decorative world-depth art, such as an isolated prop, is an object:
 `<object id="90" type="decor" x="300" y="520" sprite="my-mission/crate"/>`. It

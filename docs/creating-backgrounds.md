@@ -13,7 +13,7 @@ SDL renderer and scheduler. Run the commands below from the repository root.
 | Image viewing tool | Inspect each original/edit and the real game screenshots before accepting it |
 | [Mission skill](../skills/rescue-team-levels/SKILL.md) | Authoring workflow, supported mechanics and verification requirements |
 | [Art reference](../skills/rescue-team-levels/references/art-and-effects.md) | Canvas coordinates, sprite pivots, foliage, water and other ambient effects |
-| [Layout helper](../skills/rescue-team-levels/scripts/layout.py) | Read original sprite frames and print building `<object>` anchors; sample traffic polylines into `<traffic>` |
+| [Layout helper](../skills/rescue-team-levels/scripts/layout.py) | Print an `<object>` standing on a measured clearing centre; sample traffic polylines into `<traffic>` |
 | Python 3 | Sample measured routes, run the mission checker and record provenance |
 | [Mission checker](../tools/mission.py) | Validate `mission.xml` and report route, crew and goal warnings |
 | [Mission guide](creating-missions.md) | The `mission.xml` format, archetypes, routes and economy |
@@ -176,34 +176,29 @@ the image itself looks continuous.
 
 ## Place buildings, supplies and effects
 
-Building x/y is an original atlas attachment, not its visible centre. For a
-frame of width/height `w,h` and pivot `dx,dy`, use:
-
-```text
-anchor_x = clearing_world_x - w/2 + dx
-anchor_y = clearing_world_y - h/2 + dy
-```
-
-Read actual frames and compare damaged/repaired states with the tracked helper.
-It prints the measurements as XML comments followed by an `<object>` element:
+An object's x/y is the centre of its base. The engine centres the shown
+frame's body on it horizontally and the sprite's pivot sets the ground line,
+so a building is placed by measuring its painted clearing's centre and nothing
+else; never compensate for a sprite's pivot in the coordinates. The helper
+converts a measurement taken in top-left logical pixels:
 
 ```sh
-python3 skills/rescue-team-levels/scripts/layout.py anchor \
-  --assets reference/rescue-team --sprite burger0_br \
-  --center 310 350 --screen --compare-sprite burger0 --id 30 --type cafe
+python3 skills/rescue-team-levels/scripts/layout.py place \
+  --center 310 350 --screen --id 30 --type cafe
 ```
 
-For this Ancient Echoes cafe, the result is
-`<object id="30" type="cafe" x="308" y="406.5"/>`, or screen attachment
-`(308,361.5)`. Do not change renderer pivots to compensate
-for a map placement. Inspect both states and keep pickups outside their combined
-footprints. The final measured building centres, in top-left logical pixels, are:
+For this Ancient Echoes cafe the result is
+`<object id="30" type="cafe" x="310" y="418"/>`. If art sits too high or low
+on its clearing, adjust the sprite's pivot height, not the mission. Inspect
+both states and keep pickups outside their combined footprints. The measured
+building centres, in top-left logical pixels, are:
 
 | Building | Ancient Echoes | Twisted Tracks |
 | --- | --- | --- |
-| Cafe | (310,350) | (325,430) |
-| Sawmill | (530,610) | (665,675) |
-| House / visitor office | (835,610) | (1040,675) |
+| Headquarters | — | (147,629) |
+| Cafe | (310,350) | (499,668) |
+| Sawmill | (530,610) | (914,683) |
+| House / park office | (835,610) | (1127,666.5) |
 
 These are the 2026-10-19 accepted layouts. The current `mission.xml` is
 authoritative if later revisions move anything. Buildings default to layer 5

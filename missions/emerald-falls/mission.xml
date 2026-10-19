@@ -11,11 +11,11 @@
   <object id="22" type="stone" x="653.59" y="327.28"/>
   <object id="23" type="boulder" x="866" y="408.89"/>
   <object id="24" type="bridge" x="1094.76" y="408.89"/>
-  <object id="30" type="cafe" x="466" y="586"/>
+  <object id="30" type="cafe" x="468" y="586"/>
   <object id="31" type="food-small" x="520" y="575" producer="30"/>
-  <object id="32" type="sawmill" x="549" y="175"/>
+  <object id="32" type="sawmill" x="543.5" y="175"/>
   <object id="33" type="wood-small" x="600" y="195" producer="32"/>
-  <object id="34" type="house" x="804" y="265"/>
+  <object id="34" type="house" x="806" y="265"/>
   <object id="35" type="money-small" x="816.99" y="215.46" producer="34"/>
   <object id="40" type="wood-large" x="567.81" y="249.74"/>
   <object id="41" type="wood-large" x="608.65" y="217.1"/>

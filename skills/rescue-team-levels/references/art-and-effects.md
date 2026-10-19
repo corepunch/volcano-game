@@ -65,56 +65,23 @@ only in a generated images directory. Concepts and superseded stages belong in
 `art-source/`. Inspect output and measure its **actual** pads and paths.
 A successful generation is not proof that it followed the coordinates.
 
-## Building pivots
+## Building placement
 
-Object x,y is the sprite's ground attachment (pivot), not necessarily the visible
-center.
-Original `texture/lazy/*.lua` declarations contain scalar frame fields
-`dx,dy,w,h,u,v,cu,cv`. They are data, not code to execute. Damaged and repaired
-frames can have different trims while retaining the same attachment.
-
-For anchor `(x,y)`, visible frame center in world space is:
-
-```
-center_x = x + w/2 - dx
-center_y = y + h/2 - dy
-```
-
-To center a frame at a measured clearing center `(cx,cy)`:
-
-```
-x = cx - w/2 + dx
-y = cy - h/2 + dy
-```
-
-The current retail examples in `texture/lazy/build0.lua`, first frame:
-
-| Sprite | w×h | dx,dy |
-| --- | --- | --- |
-| `burger0_br` | 94×85 | 45,31 |
-| `burger0` | 92×83 | 45,29 |
-| `sawmill0_br` | 105×88 | 58,28 |
-| `sawmill0` | 103×85 | 58,25 |
-| `house0_br` | 126×110 | 61,36 |
-| `house0` | 118×117 | 59,36 |
-
-Read current assets rather than treating this table as permanent. The helper
-calculates an anchor, prints each requested state's frame rectangles as XML
-comments, and ends with an `<object>` to paste (or bare `x`/`y` attributes
-without `--id`/`--type`):
+An object's x,y is the centre of its base. The engine draws the shown frame
+with its body's horizontal geometric centre on that point, and the sprite's
+pivot sets only the ground line's height; the selection ring is centred there
+too. Retail and mission art follow the same rule, so placing a building means
+measuring its clearing's centre:
 
 ```sh
-python3 SKILL_DIR/scripts/layout.py anchor \
-  --assets reference/rescue-team --sprite burger0_br \
-  --center 330.25 327.25 --screen --compare-sprite burger0 --id 30 --type cafe
+python3 SKILL_DIR/scripts/layout.py place \
+  --center 330.25 327.25 --screen --id 30 --type cafe
 ```
 
-Expected result for that measured screen center:
-`<object id="30" type="cafe" x="328.25" y="429.25"/>`. Paste it into
-`mission.xml`, then inspect real renders of both states. The
-frame rectangle includes its trimmed artwork and possible shadow/empty pixels;
-confirm the perceived building placement as well. Do not shift drawing pivots
-or all retail buildings to solve one level's authoring problem.
+prints `<object id="30" type="cafe" x="330.25" y="440.75"/>`. Never offset a
+position to compensate for a sprite. If art sits too high or low on its
+clearing, tune that sprite's pivot height in its sheet, then inspect real
+renders of every state.
 
 Keep approach points, recurring output pickups, standalone piles and survivors
 outside the union of both building footprints. After a move, recheck click
@@ -152,15 +119,12 @@ In `mission.xml`, load the sheet and give an existing archetype the art:
 <object id="30" type="field-kitchen" x="245" y="378"/>
 ```
 
-Put the pivot at the projected ground footprint's center, not the image bottom:
-it is the object's ground point, centers the selection ellipse (click bounds and
-where workers stop) and is the `x,y` you author. With such a pivot, place the
-object at the measured footprint center directly. `layout.py anchor --sprites
-missions/SLUG/sprites.xml` instead centers the visible rectangle, which suits
-sprites whose pivot is not the footprint center. Measure each state; a damaged
-and working producer can trim differently. Cleared obstacles disappear
-completely. Never synthesize repaired or UI states by post-processing a normal
-sprite.
+Set each sprite's pivot height to the projected ground footprint's centre,
+not the image bottom; the horizontal value is `0.5` (the engine centres the
+body horizontally anyway). Place the object at the measured footprint centre.
+Measure each state; a damaged and working producer can trim differently.
+Cleared obstacles disappear completely. Never synthesize repaired or UI states
+by post-processing a normal sprite.
 
 World-depth scenery props are `<object type="decor" sprite="SLUG/crate"/>`:
 depth-sorted with actors, never blocking routes or counting as jobs.

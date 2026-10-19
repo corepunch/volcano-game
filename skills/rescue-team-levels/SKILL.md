@@ -67,12 +67,12 @@ them with live code if the engine changes.
    gaps and waterfall feet, then convert those measurements into game coordinates.
    If the painting differs from the brief, adapt the mission or refine the art.
 
-5. **Place gameplay using real pivots.** Write `missions/SLUG/mission.xml` with
+5. **Place gameplay at base centres.** Write `missions/SLUG/mission.xml` with
    complete `<settings>`, unique object ids, one `hq`, starting workers, routes and
-   objectives. Retail building pivots are not visual centers. Use
-   `scripts/layout.py anchor` to calculate an `<object>` from a measured clearing
-   center, and compare damaged and repaired frames. Do not change the renderer or
-   atlas pivots to compensate for poor placement. Workers stop on a target's
+   objectives. An object's x,y is the centre of its base: the engine centres the
+   shown frame's body there and the pivot sets only the ground line, so place a
+   building at its measured clearing centre (`scripts/layout.py place`) and never
+   offset coordinates for a sprite. Workers stop on a target's
    selection ellipse, not its center: keep each obstacle's approach side on a
    reachable road, and keep production pickups and approaches outside both
    building footprints. Themed jobs and stations are mission `<archetype>`s that
@@ -127,19 +127,15 @@ make run MISSION=SLUG
 ## Layout helpers
 
 Run these helpers by their absolute path if the skill is installed outside the
-checkout. They print XML snippets to paste into `mission.xml` (measurements as
-XML comments); they do not mutate missions, images or original assets.
+checkout. They print XML snippets to paste into `mission.xml`; they do not mutate missions, images or original assets.
 
 ```sh
 python3 SKILL_DIR/scripts/layout.py route --screen \
   --points '[[165,450],[450,450],[660,450]]' \
   --points '[[450,450],[455,395],[455,350]]'
-python3 SKILL_DIR/scripts/layout.py anchor \
-  --assets reference/rescue-team --sprite burger0_br \
-  --center 330.25 327.25 --screen --compare-sprite burger0 --id 30 --type cafe
+python3 SKILL_DIR/scripts/layout.py place \
+  --center 330.25 327.25 --screen --id 30 --type cafe
 ```
 
-Replace `SKILL_DIR` with this skill's actual directory. `anchor` also reads pack
-sheets under `--assets` folders and mission sheets passed with `--sprites
-missions/SLUG/sprites.xml`. Merge generated traffic deliberately; helper sampling
-does not rule out accidental geometric shortcuts.
+Replace `SKILL_DIR` with this skill's actual directory. Merge generated traffic
+deliberately; helper sampling does not rule out accidental geometric shortcuts.

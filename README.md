@@ -95,7 +95,10 @@ python3 tools/mission.py check missions/NAME/mission.xml
 
 Workers leave headquarters along the authored traffic network, which links
 points closer than 50 units. Live obstacles block any link passing within 20
-units. A worker walks up to the edge of an obstacle or building, stopping on
+units. A building's or obstacle's position is the centre of its base: its
+selection ring is centred there and its art is centred on it horizontally,
+with the sprite's pivot setting only the ground line. A worker walks up to the
+edge of an obstacle or building, stopping on
 the selection ring you see on hover, faces it and works. Then it goes straight
 back to headquarters. Supplies are picked up on arrival and credited once
 carried home. Survivors walk home by themselves when a route opens. Workers
