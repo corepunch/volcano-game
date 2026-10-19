@@ -120,9 +120,10 @@ are recorded in [`levels/retina-backgrounds.json`](levels/retina-backgrounds.jso
 The ImageGen source sheets, exact prompts and extraction manifest live in
 [`assets/hd-static`](assets/hd-static). `tools/build_hd_assets.py` requires Pillow
 and packs the authored frames into `build/hd-assets/texture/lazy/volcano-static.png`.
-Texture regions have exactly twice the original width and height; world sizes,
-pivots, frame order and frame rates stay unchanged. The source artwork is only
-downsampled when packing, with no enlargement or script-generated work states.
+Texture regions have two pixels per world unit, including padding for shadows;
+body placement, interaction bounds, frame order and frame rates stay unchanged.
+Body artwork is only downsampled when packing, with no enlargement or
+script-generated work states.
 Original resources under `reference/rescue-team` stay untouched. macOS windows
 support Retina backing pixels. `make test-hd` runs the conversion, mission,
 resource and campaign checks with the HD asset directory.
@@ -131,12 +132,13 @@ HD buildings, debris, bridges, road damage and supplies also have short, soft
 ground shadows in the retail style. All 46 shadow states were authored together
 in `assets/hd-static/shadows.generated.png`; `shadows.prompt.txt` records the
 ImageGen prompt and `shadows.json` records source regions and footprint placement.
-The packer retains the generated alpha and produces a separate
-`volcano-static-shadows` atlas. Shadows project northwest (upper-left) at 45°,
+The packer combines each authored shadow with its object into one transparent
+sprite, as retail buildings do. Shadows project northwest (upper-left) at 45°,
 with a grounded near edge and a cast distance proportional to object height;
-road damage retains only contact shading. Each shadow follows its object's
-repair/clearing frame, ground position and rotation, at 55% render opacity. Body textures,
-pivots and click bounds stay unchanged. Retail character shadows remain in use.
+road damage retains only contact shading. The 55% shadow strength is baked into
+the alpha. Runtime draws each object once, with no separate static shadow layer.
+Padded frames retain the original body bounds for clicks and highlights.
+Retail character shadows remain in use.
 
 On macOS, `make app` also creates the double-clickable `build/Volcano.app`
 with its own bundled resource copy. The app does not need the Documents folder.

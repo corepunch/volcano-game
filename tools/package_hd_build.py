@@ -66,6 +66,10 @@ def package(assets):
     macos.mkdir(parents=True, exist_ok=True)
     resources.mkdir(parents=True, exist_ok=True)
     shutil.copy2(binary, macos / "volcano-bin")
+    # Retire the old standalone static-shadow resources from existing bundles.
+    for name in ("texture/lazy/volcano-static-shadows.lua", "texture/lazy/volcano-static-shadows.png",
+                 "hd-static-shadows-report.json"):
+        (resources / name).unlink(missing_ok=True)
     subprocess.run(["rsync", "-a", "--exclude=.DS_Store", str(assets) + "/", str(resources) + "/"], check=True)
     particles = resources / "texture/particles"
     particles.mkdir(parents=True, exist_ok=True)

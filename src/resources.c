@@ -183,14 +183,20 @@ static bool frame_table(Lexer *l,Animation *a) {
         SpriteFrame f={0};unsigned seen=0;
         while(l->token!='}' && !l->failed){
             if(l->token!=TOKEN_WORD){lexer_error(l,"Expected frame field");return false;}
-            const char *names[]={"dx","dy","u","v","cu","cv","w","h"};float *values[]={&f.dx,&f.dy,&f.u,&f.v,&f.cu,&f.cv,&f.w,&f.h};
-            int index=-1;for(int i=0;i<8;i++)if(!strcmp(l->text,names[i]))index=i;
+            const char *names[]={"dx","dy","u","v","cu","cv","w","h","body_dx","body_dy","body_w","body_h"};
+            float *values[]={&f.dx,&f.dy,&f.u,&f.v,&f.cu,&f.cv,&f.w,&f.h,&f.body_dx,&f.body_dy,&f.body_w,&f.body_h};
+            int index=-1;for(int i=0;i<12;i++)if(!strcmp(l->text,names[i]))index=i;
             if(index<0){lexer_error(l,"Unknown frame field");return false;}next(l);
             if(!take(l,'=') || !number_value(l,values[index]))return false;seen|=1u<<index;
             if(l->token==','||l->token==';')next(l);
         }
         if(!take(l,'}'))return false;
-        if(seen!=255||f.w<=0||f.h<=0||f.cu<=0||f.cv<=0||f.u<0||f.v<0||f.cu>1||f.cv>1||f.u+f.cu>1.00001f||f.v+f.cv>1.00001f){lexer_error(l,"Incomplete or invalid sprite frame");return false;}
+        if((seen&255)!=255||f.w<=0||f.h<=0||f.cu<=0||f.cv<=0||f.u<0||f.v<0||f.cu>1||f.cv>1||f.u+f.cu>1.00001f||f.v+f.cv>1.00001f){lexer_error(l,"Incomplete or invalid sprite frame");return false;}
+        if((seen&0xf00) && ((seen&0xf00)!=0xf00 || f.body_w<=0 || f.body_h<=0 ||
+            f.body_dx>f.dx+.001f || f.body_dy>f.dy+.001f ||
+            f.body_w-f.body_dx>f.w-f.dx+.001f || f.body_h-f.body_dy>f.h-f.dy+.001f)) {
+            lexer_error(l,"Incomplete or invalid sprite body bounds");return false;
+        }
         SpriteFrame *frames=grow(a->frames,(size_t)(a->frame_count+1)*sizeof(f));if(!frames)return false;a->frames=frames;a->frames[a->frame_count++]=f;
     }
     return take(l,'}');
@@ -314,26 +320,6 @@ static bool sprite_color(const char *name,float x,float y,double time,int frame,
 }
 bool draw_sprite_rotated(const char *name,float x,float y,double time,int frame,float alpha,float angle) {
     return sprite_color(name,x,y,time,frame,alpha,angle,(SDL_Color){255,255,255,255});
-}
-bool draw_sprite_shadow(const char *name,float x,float y,double time,int frame,float alpha,float angle,float cast) {
-    Animation *a=animation_find(name);if(!a || !a->frame_count)return false;
-    int index=frame>=0?frame:(int)(time*a->fps)%a->frame_count;if(index>=a->frame_count)index=a->frame_count-1;
-    SpriteFrame *f=&a->frames[index];Texture *t=texture_load(a->texture,NULL);if(!t)return false;
-    float radians=angle*.01745329252f,c=cosf(radians),s=sinf(radians);
-    SDL_Color color={255,255,255,(Uint8)(fminf(1,fmaxf(0,alpha))*255)};
-    SDL_Vertex vertices[4];const int indices[]={0,1,2,0,2,3};
-    const int corners[4][2]={{0,0},{1,0},{1,1},{0,1}};
-    for(int i=0;i<4;i++) {
-        int right=corners[i][0],bottom=corners[i][1];
-        float dx=right*f->w-f->dx,dy=bottom*f->h-(f->h-f->dy);
-        /* The near edge stays planted. Move the far edge equally left/up:
-         * northwest at 45 degrees in screen space, even on bobbing objects. */
-        float reach=(1-bottom)*cast;
-        vertices[i]=(SDL_Vertex){.position={x+c*dx-s*dy-reach,GAME_HEIGHT-y+s*dx+c*dy-reach},
-            .color=color,.tex_coord={f->u+right*f->cu,1-f->v-f->cv+bottom*f->cv}};
-    }
-    return SDL_RenderGeometry(renderer,t->handle,vertices,4,indices,6)==0?
-        true:failure("Ground shadow render failed",SDL_GetError());
 }
 bool draw_sprite_tinted(const char *name,float x,float y,double time,int frame,SDL_Color tint) {
     return sprite_color(name,x,y,time,frame,tint.a/255.f,0,tint);
@@ -600,6 +586,24 @@ bool resources_selftest(void) {
     Animation temporary={0};next(&frame_lexer);
     bool frame_accepted=frame_table(&frame_lexer,&temporary);free(temporary.frames);
     if(frame_accepted)return failure("Parser accepted invalid atlas UV bounds","self-test");
+    const char *body_frames[]={
+        "{{dx=20,dy=12,u=0,v=0,cu=.5,cv=.5,w=48,h=48,body_dx=16,body_dy=8,body_w=32,body_h=32}}",
+        "{{dx=20,dy=12,u=0,v=0,cu=.5,cv=.5,w=48,h=48,body_w=32}}",
+        "{{dx=20,dy=12,u=0,v=0,cu=.5,cv=.5,w=48,h=48,body_dx=21,body_dy=8,body_w=32,body_h=32}}",
+        "{{dx=20,dy=12,u=0,v=0,cu=.5,cv=.5,w=48,h=48,body_dx=16,body_dy=8,body_w=64,body_h=32}}",
+    };
+    for(size_t i=0;i<sizeof body_frames/sizeof *body_frames;i++) {
+        const char *source=body_frames[i];
+        Lexer lexer={.source=source,.at=source,.end=source+strlen(source),.path="sprite body self-test",.line=1};
+        Animation a={0};next(&lexer);bool accepted=frame_table(&lexer,&a);
+        bool valid=accepted==(i==0);
+        if(accepted) {
+            SpriteFrame body=sprite_body_frame(a.frames[0]);
+            valid=valid && body.dx==16 && body.dy==8 && body.w==32 && body.h==32;
+        }
+        free(a.frames);
+        if(!valid)return failure("Invalid sprite body bounds handling","self-test");
+    }
     memcpy(last_error,saved_error,sizeof last_error);
     printf("Resource checks: %d animations, %d frames inside original texture bounds; malformed/executable declarations rejected; UTF-16 font metrics loaded.\n",animations_count,frames);return true;
 }

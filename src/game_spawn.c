@@ -313,7 +313,7 @@ bool game_load_level(Game *g,int index,const char *custom_path)
         for (int j=0;j<g->object_count;j++) {
             Entity *house=&g->objects[j];
             if (house->kind!=DECOR || (strcmp(house->anim,"sawmill_water") && strcmp(house->anim,"house_water"))) continue;
-            SpriteFrame f=animation_find(house->anim)->frames[0];
+            SpriteFrame f=sprite_body_frame(animation_find(house->anim)->frames[0]);
             float dx=e->p.x-house->p.x,dy=e->p.y-house->p.y,d=game_distance(e->p,house->p);
             if (dx>=-f.dx && dx<=f.w-f.dx && dy>=-f.dy && dy<=f.h-f.dy && d<closest_house)
                 e->support=j,closest_house=d;

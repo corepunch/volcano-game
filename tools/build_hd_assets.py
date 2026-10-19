@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Pack authored static sprite states at 2x resolution into a separate asset tree.
 
-Requires Pillow. Art and all damage/repair stages come from ImageGen sheets;
-only extraction, proportional downsampling and atlas packing happen here.
-Original declarations supply unchanged world sizes, pivots, FPS and frame order.
+Requires Pillow. Art and all damage/repair stages come from ImageGen sheets.
+Each authored shadow is combined with its body during packing, so runtime uses
+one sprite. Padding preserves body placement and separate interaction bounds.
 """
 import argparse
 from array import array
@@ -22,8 +22,8 @@ FRAMES = re.compile(r"frames\s*=\s*\{(.*?)\}\s*(addTextureInfoExNodes\(texinfo, 
 FIELD = re.compile(r"\b(dx|dy|u|v|cu|cv|w|h)\s*=\s*([\d.eE+-]+)")
 
 
-class ShadowAtlas:
-    """Pack authored ground footprints without touching the object artwork.
+class BakedShadows:
+    """Combine each authored ground footprint with its existing object state.
 
     Placement uses the final visible body rectangle, rather than the retail
     pivot alone: tall buildings and tiny supplies have different bottom edges.
@@ -52,54 +52,37 @@ class ShadowAtlas:
             self.entries[key] = entry
         if set(self.entries) != required:
             raise ValueError("every HD object state must have exactly one authored shadow")
-        self.image = Image.new("RGBA", (2048, 1024))
-        self.x = self.y = self.row_height = 4
-        self.rows = defaultdict(list)
-        self.suffixes = {}
-        self.report = []
-
-    def add(self, name, index, original, sprite_size, suffix):
+    def compose(self, name, index, original, sprite):
         entry = self.entries[name, index]
         footprint = entry["footprint"]
-        # These are the same integer placements used for the body atlas below.
         fw, fh = round(original["w"] * 2), round(original["h"] * 2)
-        bw, bh = sprite_size
-        body_left = -original["dx"] + ((fw - bw) // 2) / 2
-        body_bottom = -original["h"] + original["dy"] + ((fh - bh) // 2 + bh) / 2
-        body_width = bw / 2
-        w = max(2, round(body_width * footprint["width"] * 2))
-        h = max(2, round(body_width * footprint["height"] * 2))
-        center_x = body_left + body_width * (.5 + footprint["offset_x"])
-        center_y = body_bottom - body_width * footprint["inset"] + footprint["drop"]
-        if self.x + w + 4 > self.image.width:
-            self.x, self.y = 4, self.y + self.row_height + 4
-            self.row_height = 0
-        if self.y + h + 4 > self.image.height:
-            raise ValueError("packed shadow atlas is full")
+        bw, bh = sprite.size
+        body_x, body_y = (fw - bw) // 2, (fh - bh) // 2
+        w = max(2, round(bw * footprint["width"]))
+        h = max(2, round(bw * footprint["height"]))
+        center_x = body_x + bw * (.5 + footprint["offset_x"])
+        center_y = body_y + bh - bw * footprint["inset"] + footprint["drop"] * 2
+        sx, sy = round(center_x - w / 2), round(center_y - h / 2)
         shadow = self.source.crop(entry["region"]).resize((w, h), Image.Resampling.LANCZOS)
-        self.image.alpha_composite(shadow, (self.x, self.y))
-        frame = dict(dx=w / 4 - center_x, dy=center_y + h / 4,
-                     w=w / 2, h=h / 2, u=self.x / self.image.width,
-                     v=1 - (self.y + h) / self.image.height,
-                     cu=w / self.image.width, cv=h / self.image.height)
-        self.rows[name].append("  { " + ", ".join(f"{k}={v:.10g}" for k, v in frame.items()) + " },")
-        self.suffixes[name] = suffix
-        self.report.append(dict(animation=name, frame=index, pivot=[frame["dx"], frame["dy"]],
-                                world_size=[frame["w"], frame["h"]],
-                                atlas_region=[self.x, self.y, w, h]))
-        self.x += w + 4
-        self.row_height = max(self.row_height, h)
-
-    def save(self, output):
-        declarations = []
-        for name, rows in self.rows.items():
-            declarations.append(f"texinfo = createTextureInfoEx('{name}_ground_shadow')\n"
-                                "frames =\n{\n" + "\n".join(rows) + "\n}\n"
-                                "addTextureInfoExNodes(texinfo, 'volcano-static-shadows'" +
-                                self.suffixes[name] + "\n")
-        self.image.save(output / "texture/lazy/volcano-static-shadows.png")
-        (output / "texture/lazy/volcano-static-shadows.lua").write_text("\n".join(declarations))
-        (output / "hd-static-shadows-report.json").write_text(json.dumps(self.report, indent=2) + "\n")
+        # Bake the same 45-degree northwest projection formerly drawn at runtime.
+        # No damage/repair artwork is synthesized: each state has authored inputs.
+        cast = 0 if name == "broken_road0" else round(max(3, (original["h"] - original["dy"]) * .5) * 2)
+        if cast:
+            shadow = shadow.transform((w + cast, h + cast), Image.Transform.AFFINE,
+                                      (1, -cast / (h + cast), 0, 0, h / (h + cast), 0),
+                                      Image.Resampling.BICUBIC)
+        shadow.putalpha(shadow.getchannel("A").point(lambda alpha: round(alpha * .55)))
+        left, top = min(0, sx - cast), min(0, sy - cast)
+        right, bottom = max(fw, sx + w), max(fh, sy + h)
+        combined = Image.new("RGBA", (right - left, bottom - top))
+        combined.alpha_composite(shadow, (sx - cast - left, sy - cast - top))
+        combined.alpha_composite(sprite, (body_x - left, body_y - top))
+        frame = dict(original, dx=original["dx"] - left / 2,
+                     dy=original["dy"] + (bottom - fh) / 2,
+                     w=combined.width / 2, h=combined.height / 2,
+                     body_dx=original["dx"], body_dy=original["dy"],
+                     body_w=original["w"], body_h=original["h"])
+        return combined, frame, [-left, -top]
 
 
 def extract_regions(path, regions, threshold):
@@ -184,8 +167,8 @@ def build(assets, output, art):
         sheet: extract_regions(art / sheet, regions, manifest["alpha_core_threshold"])
         for sheet, regions in sheets.items()
     }
-    shadows = ShadowAtlas(art, {(name, index) for name, states in selected.items() for index in states})
-    atlas = Image.new("RGBA", (2048, 1024))
+    shadows = BakedShadows(art, {(name, index) for name, states in selected.items() for index in states})
+    atlas = Image.new("RGBA", (2048, 2048))
     cursor_x = cursor_y = row_height = 4
     replacements, report = {}, []
     for path in sorted((assets / "texture/lazy").glob("*.lua")):
@@ -217,22 +200,24 @@ def build(assets, output, art):
                     raise ValueError(f"source artwork too small for true 2x: {name}[{index}]")
                 sprite = sprite.resize((max(1, round(sprite.width * ratio)),
                                         max(1, round(sprite.height * ratio))), Image.Resampling.LANCZOS)
-                shadows.add(name, index, frame, sprite.size, table[4])
+                sprite, padded, body_offset = shadows.compose(name, index, frame, sprite)
+                w, h = sprite.size
                 if cursor_x + w + 4 > atlas.width:
                     cursor_x, cursor_y = 4, cursor_y + row_height + 4
                     row_height = 0
                 if cursor_y + h + 4 > atlas.height:
                     raise ValueError("packed atlas is full")
-                atlas.alpha_composite(sprite, (cursor_x + (w - sprite.width) // 2,
-                                               cursor_y + (h - sprite.height) // 2))
-                packed = dict(frame, u=cursor_x / atlas.width,
+                atlas.alpha_composite(sprite, (cursor_x, cursor_y))
+                packed = dict(padded, u=cursor_x / atlas.width,
                               v=1 - (cursor_y + h) / atlas.height,
                               cu=w / atlas.width, cv=h / atlas.height)
                 rows.append("  { " + ", ".join(f"{k}={v:.10g}" for k, v in packed.items()) + " },")
                 report.append(dict(animation=name, frame=index,
                                    original_size=[frame["w"], frame["h"]],
                                    texture_size=[w, h],
-                                   pivot=[frame["dx"], frame["dy"]],
+                                   pivot=[padded["dx"], padded["dy"]],
+                                   body_pivot=[frame["dx"], frame["dy"]],
+                                   body_offset=body_offset, shadow="baked-northwest-45",
                                    atlas_region=[cursor_x, cursor_y, w, h]))
                 cursor_x += w + 4
                 row_height = max(row_height, h)
@@ -249,14 +234,17 @@ def build(assets, output, art):
     # builds and an updated ASSETS path cannot accumulate duplicate sprites.
     subprocess.run(["rsync", "-a", "--exclude=.DS_Store", str(assets) + "/", str(output) + "/"], check=True)
     folder = output / "texture/lazy"
+    # Migrate previously built HD trees; there are no shadow-only animations now.
+    for stale in (folder / "volcano-static-shadows.lua", folder / "volcano-static-shadows.png",
+                  output / "hd-static-shadows-report.json"):
+        stale.unlink(missing_ok=True)
     for name, content in replacements.items():
         (folder / name).write_bytes(content)
     atlas.save(folder / "volcano-static.png")
-    shadows.save(output)
     (output / "hd-static-report.json").write_text(json.dumps(report, indent=2) + "\n")
     print(f"HD assets: {len(selected)} static sprites, {len(report)} authored states at exact 2x texture resolution.")
-    print(f"Ground shadows: {len(shadows.report)} authored footprints, with matching state order and FPS.")
-    print(f"World sizes, pivots, frame order and all other declarations preserved. Output: {output}")
+    print(f"Ground shadows: {len(report)} authored footprints baked into their object frames; no separate layer.")
+    print(f"Body placement, click bounds, frame order and FPS preserved. Output: {output}")
 
 
 def main():

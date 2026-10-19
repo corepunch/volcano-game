@@ -72,21 +72,7 @@ static void game_paint(Game *g, const Entity *e)
             draw_sprite_tinted("water0",pose.p.x,pose.p.y,g->time,0,game_color(95,175,65,215));return;
         }
         double time=g->time+(e->ambient==BIRD?game_particle_random(e->seed)*2.4:0);
-        const char *sprite=game_sprite_name(e->anim);char shadow[128];
-        snprintf(shadow,sizeof shadow,"%s_ground_shadow",sprite);
-        /* HD assets opt in with an authored footprint for every object state.
-         * Share the pose and frame so repair, clearing and floating stay aligned. */
-        Animation *body=animation_find(sprite);
-        if (body && body->frame_count && animation_find(shadow)) {
-            int frame=e->frame>=0?e->frame:(int)(time*body->fps)%body->frame_count;
-            if (frame>=body->frame_count) frame=body->frame_count-1;
-            SpriteFrame *f=&body->frames[frame];
-            /* Height above the anchor sets the cast distance. Road damage
-             * stays flush with the ground rather than casting a raised shadow. */
-            float cast=!strcmp(sprite,"broken_road0")?0:fmaxf(3,(f->h-f->dy)*.5f);
-            draw_sprite_shadow(shadow,pose.p.x,pose.p.y,time,e->frame,.55f,pose.angle,cast);
-        }
-        draw_sprite_rotated(sprite,pose.p.x,pose.p.y,time,e->frame,e->ambient==CLOUD?.65f:1,pose.angle);
+        draw_sprite_rotated(game_sprite_name(e->anim),pose.p.x,pose.p.y,time,e->frame,e->ambient==CLOUD?.65f:1,pose.angle);
     }
 }
 
@@ -265,7 +251,7 @@ int game_hovered_object(Game *g)
         Entity *e=&g->objects[i];
         if (e->hidden || !(game_job(g, e) || e->kind==BUILD_LOT || e->kind==BUILDING || e->kind==BASE || e->kind==RECRUIT || e->kind==SERVICE || e->kind==VEHICLE) || (game_job(g, e) && e->done && e->kind!=BUILDING)) continue;
         Animation *a=animation_find(game_sprite_name(e->anim));if ((!a || !a->frame_count) && !e->effect) continue;
-        SpriteFrame f=e->effect?(SpriteFrame){.dx=40,.dy=20,.w=80,.h=64}:a->frames[0];VisualPose pose=game_visual_pose(g, e);
+        SpriteFrame f=e->effect?(SpriteFrame){.dx=40,.dy=20,.w=80,.h=64}:sprite_body_frame(a->frames[0]);VisualPose pose=game_visual_pose(g, e);
         float angle=pose.angle*(float)(PI/180),c=cosf(angle),s=sinf(angle);
         float dx=p.x-pose.p.x,dy=p.y-pose.p.y,lx=c*dx-s*dy,ly=s*dx+c*dy;
         if (lx>=-f.dx-6 && lx<=f.w-f.dx+6 && ly>=-f.dy-6 && ly<=f.h-f.dy+6) {
@@ -455,7 +441,7 @@ void game_render(Game *g)
     int hover=game_hovered_object(g);
     if (!g->paused && (hover>=0 || g->build_menu>=0)) {
         int selected=g->build_menu>=0?g->build_menu:hover;Entity *e=&g->objects[selected];
-        Animation *a=animation_find(game_sprite_name(e->anim));float w=a?fmaxf(65,a->frames[0].w+24):100;
+        Animation *a=animation_find(game_sprite_name(e->anim));float w=a?fmaxf(65,sprite_body_frame(a->frames[0]).w+24):100;
         w=fminf(w,170);float h=w*.62f;
         int state=(e->kind==BASE || game_reachable(g, selected)) && game_affordable(g, game_job_cost(g, e)) &&
             (!g->early || e->transport==ON_FOOT || g->gas>=10)?1:0;

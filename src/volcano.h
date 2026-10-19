@@ -12,7 +12,14 @@
 #define MAX_MAP_VISUALS 1024
 
 typedef struct { float x,y; } Vec2;
-typedef struct { float dx,dy,u,v,cu,cv,w,h; } SpriteFrame;
+typedef struct {
+    float dx,dy,u,v,cu,cv,w,h;
+    float body_dx,body_dy,body_w,body_h; /* Optional bounds excluding baked shadow padding. */
+} SpriteFrame;
+static inline SpriteFrame sprite_body_frame(SpriteFrame f) {
+    if (f.body_w>0) { f.dx=f.body_dx;f.dy=f.body_dy;f.w=f.body_w;f.h=f.body_h; }
+    return f;
+}
 typedef struct Animation {
     char name[128], texture[PATH_CAPACITY];
     SpriteFrame *frames;
@@ -58,7 +65,6 @@ Animation *animation_find(const char *name);
 int animation_count(void);
 bool draw_sprite(const char *name,float x,float y,double time,int frame,float alpha);
 bool draw_sprite_rotated(const char *name,float x,float y,double time,int frame,float alpha,float angle);
-bool draw_sprite_shadow(const char *name,float x,float y,double time,int frame,float alpha,float angle,float cast);
 bool draw_sprite_tinted(const char *name,float x,float y,double time,int frame,SDL_Color tint);
 bool draw_image(const char *relative,float x,float y,float w,float h,const char *alpha);
 bool draw_image_file(const char *path,float x,float y,float w,float h);
