@@ -28,6 +28,10 @@
         70,
         575,
         314
+      ],
+      "pivot": [
+        435.0,
+        252.4
       ]
     },
     {
@@ -39,6 +43,10 @@
         72,
         845,
         310
+      ],
+      "pivot": [
+        714.0,
+        252.36
       ]
     },
     {
@@ -50,6 +58,10 @@
         70,
         1114,
         307
+      ],
+      "pivot": [
+        986.5,
+        250.9
       ]
     },
     {
@@ -61,6 +73,10 @@
         321,
         277,
         564
+      ],
+      "pivot": [
+        142.0,
+        504.6
       ]
     },
     {
@@ -72,6 +88,10 @@
         333,
         568,
         570
+      ],
+      "pivot": [
+        429.0,
+        508.84
       ]
     },
     {
@@ -83,6 +103,10 @@
         335,
         848,
         568
+      ],
+      "pivot": [
+        713.0,
+        508.6
       ]
     },
     {
@@ -94,6 +118,10 @@
         333,
         1117,
         571
+      ],
+      "pivot": [
+        987.5,
+        514.02
       ]
     },
     {
@@ -105,6 +133,10 @@
         586,
         285,
         842
+      ],
+      "pivot": [
+        146.0,
+        780.84
       ]
     },
     {
@@ -116,6 +148,10 @@
         588,
         589,
         854
+      ],
+      "pivot": [
+        438.5,
+        787.78
       ]
     },
     {
@@ -127,6 +163,10 @@
         583,
         860,
         854
+      ],
+      "pivot": [
+        719.5,
+        792.18
       ]
     },
     {
@@ -138,6 +178,10 @@
         577,
         1116,
         847
+      ],
+      "pivot": [
+        984.5,
+        789.14
       ]
     },
     {
@@ -149,6 +193,10 @@
         860,
         285,
         1133
+      ],
+      "pivot": [
+        146.0,
+        1071.84
       ]
     },
     {
@@ -160,6 +208,10 @@
         880,
         565,
         1133
+      ],
+      "pivot": [
+        429.0,
+        1073.16
       ]
     },
     {
@@ -171,6 +223,10 @@
         878,
         851,
         1129
+      ],
+      "pivot": [
+        712.5,
+        1068.06
       ]
     },
     {
@@ -182,6 +238,10 @@
         875,
         1118,
         1130
+      ],
+      "pivot": [
+        987.5,
+        1072.58
       ]
     },
     {
@@ -193,6 +253,10 @@
         1137,
         281,
         1394
+      ],
+      "pivot": [
+        143.0,
+        1333.28
       ]
     },
     {
@@ -512,6 +576,10 @@
         1153,
         574,
         1373
+      ],
+      "pivot": [
+        432.0,
+        1263.0
       ]
     },
     {
@@ -525,7 +593,11 @@
         484
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        307.0,
+        374.64
+      ]
     },
     {
       "animation": "burger1_br",
@@ -538,7 +610,11 @@
         457
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        774.5,
+        365.02
+      ]
     },
     {
       "animation": "burger1",
@@ -551,7 +627,11 @@
         464
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        1292.0,
+        370.04
+      ]
     },
     {
       "animation": "burger2_br",
@@ -564,7 +644,11 @@
         962
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        287.5,
+        844.06
+      ]
     },
     {
       "animation": "burger2_br",
@@ -577,7 +661,11 @@
         953
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        801.5,
+        845.18
+      ]
     },
     {
       "animation": "burger2",
@@ -590,7 +678,11 @@
         975
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        1283.0,
+        864.76
+      ]
     },
     {
       "animation": "sawmill1_br",
@@ -603,7 +695,11 @@
         472
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        263.5,
+        359.34
+      ]
     },
     {
       "animation": "sawmill1_br",
@@ -616,7 +712,11 @@
         477
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        772.5,
+        367.86
+      ]
     },
     {
       "animation": "sawmill1",
@@ -629,7 +729,11 @@
         464
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        1279.5,
+        357.06
+      ]
     },
     {
       "animation": "sawmill2_br",
@@ -642,7 +746,11 @@
         966
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        260.5,
+        852.02
+      ]
     },
     {
       "animation": "sawmill2_br",
@@ -655,7 +763,11 @@
         956
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        780.0,
+        844.0
+      ]
     },
     {
       "animation": "sawmill2",
@@ -668,7 +780,11 @@
         954
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        1286.5,
+        846.62
+      ]
     },
     {
       "animation": "house1_br",
@@ -681,7 +797,11 @@
         470
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        292.5,
+        357.78
+      ]
     },
     {
       "animation": "house1_br",
@@ -694,7 +814,11 @@
         468
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        805.0,
+        358.64
+      ]
     },
     {
       "animation": "house1",
@@ -707,7 +831,11 @@
         455
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        1298.5,
+        362.58
+      ]
     },
     {
       "animation": "house2_br",
@@ -720,7 +848,11 @@
         970
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        283.5,
+        854.26
+      ]
     },
     {
       "animation": "house2_br",
@@ -733,7 +865,11 @@
         977
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        811.0,
+        864.12
+      ]
     },
     {
       "animation": "house2",
@@ -746,7 +882,11 @@
         980
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        1297.0,
+        879.88
+      ]
     },
     {
       "animation": "gas1_br",
@@ -759,7 +899,11 @@
         485
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        263.0,
+        374.32
+      ]
     },
     {
       "animation": "gas1_br",
@@ -772,7 +916,11 @@
         478
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        777.5,
+        372.38
+      ]
     },
     {
       "animation": "gas1",
@@ -785,7 +933,11 @@
         480
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        1294.0,
+        376.36
+      ]
     },
     {
       "animation": "gas2_br",
@@ -798,7 +950,11 @@
         978
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        267.0,
+        863.36
+      ]
     },
     {
       "animation": "gas2_br",
@@ -811,7 +967,11 @@
         978
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        779.0,
+        854.36
+      ]
     },
     {
       "animation": "gas2",
@@ -824,7 +984,11 @@
         978
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        1288.5,
+        869.74
+      ]
     },
     {
       "animation": "police_br",
@@ -837,7 +1001,11 @@
         300
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        171.5,
+        227.82
+      ]
     },
     {
       "animation": "police_br",
@@ -850,7 +1018,11 @@
         290
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        487.5,
+        222.66
+      ]
     },
     {
       "animation": "police_br",
@@ -863,7 +1035,11 @@
         298
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        795.5,
+        227.58
+      ]
     },
     {
       "animation": "police",
@@ -876,7 +1052,11 @@
         303
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        1102.5,
+        236.98
+      ]
     },
     {
       "animation": "firestation_br",
@@ -889,7 +1069,11 @@
         644
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        173.5,
+        569.18
+      ]
     },
     {
       "animation": "firestation_br",
@@ -902,7 +1086,11 @@
         631
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        497.0,
+        562.12
+      ]
     },
     {
       "animation": "firestation_br",
@@ -915,7 +1103,11 @@
         642
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        805.5,
+        574.66
+      ]
     },
     {
       "animation": "firestation",
@@ -928,7 +1120,11 @@
         639
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        1112.0,
+        575.4
+      ]
     },
     {
       "animation": "hospital_br",
@@ -941,7 +1137,11 @@
         951
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        176.0,
+        875.52
+      ]
     },
     {
       "animation": "hospital_br",
@@ -954,7 +1154,11 @@
         947
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        501.5,
+        868.66
+      ]
     },
     {
       "animation": "hospital_br",
@@ -967,7 +1171,11 @@
         947
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        802.0,
+        864.12
+      ]
     },
     {
       "animation": "hospital",
@@ -980,7 +1188,11 @@
         945
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        1106.0,
+        879.64
+      ]
     },
     {
       "animation": "heliport_br",
@@ -993,7 +1205,11 @@
         1216
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        167.0,
+        1094.5
+      ]
     },
     {
       "animation": "heliport_br",
@@ -1006,7 +1222,11 @@
         1200
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        487.5,
+        1091.0
+      ]
     },
     {
       "animation": "heliport_br",
@@ -1019,7 +1239,11 @@
         1201
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        791.5,
+        1091.5
+      ]
     },
     {
       "animation": "heliport",
@@ -1032,7 +1256,11 @@
         1204
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        1103.0,
+        1093.0
+      ]
     },
     {
       "animation": "seaport_br",
@@ -1045,7 +1273,11 @@
         359
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        182.0,
+        280.44
+      ]
     },
     {
       "animation": "seaport_br",
@@ -1058,7 +1290,11 @@
         372
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        541.5,
+        296.74
+      ]
     },
     {
       "animation": "seaport_br",
@@ -1071,7 +1307,11 @@
         375
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        904.5,
+        298.42
+      ]
     },
     {
       "animation": "seaport",
@@ -1084,7 +1324,11 @@
         375
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        1268.0,
+        299.52
+      ]
     },
     {
       "animation": "railstation0_br",
@@ -1097,7 +1341,11 @@
         700
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        183.0,
+        619.24
+      ]
     },
     {
       "animation": "railstation0_br",
@@ -1110,7 +1358,11 @@
         700
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        540.0,
+        621.88
+      ]
     },
     {
       "animation": "railstation0_br",
@@ -1123,7 +1375,11 @@
         711
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        901.0,
+        626.48
+      ]
     },
     {
       "animation": "railstation0",
@@ -1136,7 +1392,11 @@
         711
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        1263.5,
+        630.02
+      ]
     },
     {
       "animation": "garage0_br",
@@ -1149,7 +1409,11 @@
         1033
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        187.5,
+        953.78
+      ]
     },
     {
       "animation": "garage0_br",
@@ -1162,7 +1426,11 @@
         1024
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        542.0,
+        947.64
+      ]
     },
     {
       "animation": "garage0_br",
@@ -1175,7 +1443,11 @@
         1024
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        898.0,
+        945.44
+      ]
     },
     {
       "animation": "garage0",
@@ -1188,7 +1460,11 @@
         1036
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        1258.5,
+        957.66
+      ]
     },
     {
       "animation": "base1",
@@ -1201,7 +1477,11 @@
         579
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        289.5,
+        457.1
+      ]
     },
     {
       "animation": "base2",
@@ -1214,7 +1494,11 @@
         561
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        806.0,
+        455.6
+      ]
     },
     {
       "animation": "base3",
@@ -1227,7 +1511,11 @@
         573
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        1295.0,
+        467.6
+      ]
     },
     {
       "animation": "finish_base0",
@@ -1240,7 +1528,11 @@
         978
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        248.5,
+        947.7
+      ]
     },
     {
       "animation": "delivery_place0",
@@ -1253,7 +1545,11 @@
         947
       ],
       "extraction": "rect",
-      "shadow": "authored"
+      "shadow": "authored",
+      "pivot": [
+        783.5,
+        813.0
+      ]
     },
     {
       "animation": "base_flag",
@@ -1593,5 +1889,6 @@
       "extraction": "rect",
       "shadow": "none"
     }
-  ]
+  ],
+  "pivot_convention": "Building pivots mark the center of the painted ground footprint, in top-left source-sheet pixels; flat landing pads and lots use footprint centers."
 }

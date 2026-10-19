@@ -139,7 +139,11 @@ prompt are `assets/hd-static/buildings-hq-rounded.*`; the original sheet remains
 available. Only the HQ uses the revised sheet. Its `extraction: "rect"` region
 retains all scattered props, including detached pieces; other entries use the
 original connected-alpha extraction. Frames
-without an explicit pivot retain their original placement and bounds.
+without an explicit pivot retain their original placement and bounds. Every
+building state now has an explicit ground-footprint pivot, so the painted base
+is centered on its selection circle across damage, construction and upgrade
+states. Flat landing pads use their footprint center; tall buildings use their
+ground base rather than the center of their roof or full image rectangle.
 The eight `buildings-{cafes,sawmills,houses,fuel,services,transport,bases,overlays}`
 source sheets add 83 frames using built-in ImageGen. Each family and all of its
 states were authored together; exact prompts sit beside the sheets.

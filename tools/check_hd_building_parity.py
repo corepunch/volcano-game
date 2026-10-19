@@ -28,6 +28,7 @@ def declarations(path):
 
 def check(assets, output):
     inventory = building_inventory(assets)
+    categories = {e["animation"]: e["category"] for e in inventory}
     frames = json.loads((output / "hd-static-report.json").read_text())
     report = {(e["animation"], e["frame"]): e for e in frames}
     if len(report) != len(frames):
@@ -47,6 +48,8 @@ def check(assets, output):
                 entry = report.get((name, index))
                 if entry is None or entry["original_size"] != [old["w"], old["h"]]:
                     raise ValueError(f"missing or resized building body: {name}[{index}]")
+                if categories[name] == "building" and not entry["source_pivot"]:
+                    raise ValueError(f"missing authored ground-footprint pivot: {name}[{index}]")
                 if not entry["source_pivot"] and entry["body_pivot"] != [old["dx"], old["dy"]]:
                     raise ValueError(f"retail pivot changed: {name}[{index}]")
                 x, y, w, h = entry["atlas_region"]
