@@ -1,0 +1,770 @@
+{
+  "$schema": "../docs/level-source.schema.json",
+  "format": "volcano-level-1",
+  "_comment": "Twisted Tracks: collapsed roller coaster rescue. Ten people including a park technician and two animals. Separate overlook, service road and coaster-plaza gates. Start with two workers and 40 food; renew food, wood and money by repairing park services. Coaster and all forest shadows remain baked scenery. Coordinates are bottom-left world pixels.",
+  "background": "@twisted-tracks.png",
+  "mission": {
+    "food": 40,
+    "wood": 0,
+    "money": 0,
+    "fuel": 0,
+    "rescue_goal": 10,
+    "basin_goal": 0,
+    "allow_cafe": true
+  },
+  "objects": [
+    {
+      "type": "traffic",
+      "id": 1,
+      "layer": 4,
+      "points": [
+        [
+          165.0,
+          203.0
+        ],
+        [
+          193.75,
+          206.75
+        ],
+        [
+          222.5,
+          210.5
+        ],
+        [
+          251.25,
+          214.25
+        ],
+        [
+          280.0,
+          218.0
+        ],
+        [
+          306.67,
+          223.0
+        ],
+        [
+          333.33,
+          228.0
+        ],
+        [
+          360.0,
+          233.0
+        ],
+        [
+          385.0,
+          233.0
+        ],
+        [
+          410.0,
+          233.0
+        ],
+        [
+          435.0,
+          233.0
+        ],
+        [
+          460.0,
+          233.0
+        ],
+        [
+          488.75,
+          233.0
+        ],
+        [
+          517.5,
+          233.0
+        ],
+        [
+          546.25,
+          233.0
+        ],
+        [
+          575.0,
+          233.0
+        ],
+        [
+          603.75,
+          233.0
+        ],
+        [
+          632.5,
+          233.0
+        ],
+        [
+          661.25,
+          233.0
+        ],
+        [
+          690.0,
+          233.0
+        ],
+        [
+          718.18,
+          233.0
+        ],
+        [
+          746.36,
+          233.0
+        ],
+        [
+          774.55,
+          233.0
+        ],
+        [
+          802.73,
+          233.0
+        ],
+        [
+          830.91,
+          233.0
+        ],
+        [
+          859.09,
+          233.0
+        ],
+        [
+          887.27,
+          233.0
+        ],
+        [
+          915.45,
+          233.0
+        ],
+        [
+          943.64,
+          233.0
+        ],
+        [
+          971.82,
+          233.0
+        ],
+        [
+          1000.0,
+          233.0
+        ],
+        [
+          1026.67,
+          231.33
+        ],
+        [
+          1053.33,
+          229.67
+        ],
+        [
+          1080.0,
+          228.0
+        ],
+        [
+          1106.67,
+          226.33
+        ],
+        [
+          1133.33,
+          224.67
+        ],
+        [
+          1160.0,
+          223.0
+        ],
+        [
+          1186.67,
+          221.33
+        ],
+        [
+          1213.33,
+          219.67
+        ],
+        [
+          1240.0,
+          218.0
+        ],
+        [
+          342.5,
+          253.0
+        ],
+        [
+          325.0,
+          273.0
+        ],
+        [
+          324.0,
+          299.75
+        ],
+        [
+          323.0,
+          326.5
+        ],
+        [
+          460.0,
+          263.0
+        ],
+        [
+          460.0,
+          293.0
+        ],
+        [
+          460.0,
+          323.0
+        ],
+        [
+          460.0,
+          353.0
+        ],
+        [
+          490.0,
+          353.0
+        ],
+        [
+          520.0,
+          353.0
+        ],
+        [
+          550.0,
+          353.0
+        ],
+        [
+          580.0,
+          353.0
+        ],
+        [
+          610.0,
+          353.0
+        ],
+        [
+          640.0,
+          353.0
+        ],
+        [
+          670.0,
+          353.0
+        ],
+        [
+          700.0,
+          353.0
+        ],
+        [
+          730.0,
+          353.0
+        ],
+        [
+          760.0,
+          353.0
+        ],
+        [
+          790.0,
+          353.0
+        ],
+        [
+          820.0,
+          353.0
+        ],
+        [
+          850.0,
+          353.0
+        ],
+        [
+          880.0,
+          353.0
+        ],
+        [
+          910.0,
+          353.0
+        ],
+        [
+          940.0,
+          353.0
+        ],
+        [
+          970.0,
+          353.0
+        ],
+        [
+          1000.0,
+          353.0
+        ],
+        [
+          1029.0,
+          353.0
+        ],
+        [
+          1058.0,
+          353.0
+        ],
+        [
+          1087.0,
+          353.0
+        ],
+        [
+          1116.0,
+          353.0
+        ],
+        [
+          1145.0,
+          353.0
+        ],
+        [
+          1174.0,
+          353.0
+        ],
+        [
+          1203.0,
+          353.0
+        ],
+        [
+          1232.0,
+          353.0
+        ],
+        [
+          1261.0,
+          353.0
+        ],
+        [
+          1290.0,
+          353.0
+        ],
+        [
+          460.0,
+          373.0
+        ],
+        [
+          460.0,
+          393.0
+        ],
+        [
+          440.0,
+          408.0
+        ],
+        [
+          420.0,
+          423.0
+        ],
+        [
+          400.0,
+          438.0
+        ],
+        [
+          381.67,
+          451.33
+        ],
+        [
+          363.33,
+          464.67
+        ],
+        [
+          345.0,
+          478.0
+        ],
+        [
+          342.5,
+          503.0
+        ],
+        [
+          340.0,
+          528.0
+        ],
+        [
+          340.0,
+          551.33
+        ],
+        [
+          340.0,
+          574.67
+        ],
+        [
+          340.0,
+          598.0
+        ],
+        [
+          690.0,
+          211.33
+        ],
+        [
+          690.0,
+          189.67
+        ],
+        [
+          690.0,
+          168.0
+        ],
+        [
+          690.17,
+          146.0
+        ],
+        [
+          690.33,
+          124.0
+        ],
+        [
+          690.5,
+          102.0
+        ],
+        [
+          1005.0,
+          205.5
+        ],
+        [
+          1010.0,
+          178.0
+        ],
+        [
+          1016.0,
+          153.33
+        ],
+        [
+          1022.0,
+          128.67
+        ],
+        [
+          1028.0,
+          104.0
+        ],
+        [
+          1006.67,
+          374.67
+        ],
+        [
+          1013.33,
+          396.33
+        ],
+        [
+          1020.0,
+          418.0
+        ],
+        [
+          1035.0,
+          438.0
+        ],
+        [
+          1050.0,
+          458.0
+        ],
+        [
+          1072.5,
+          460.5
+        ],
+        [
+          1095.0,
+          463.0
+        ],
+        [
+          1117.5,
+          465.5
+        ],
+        [
+          1140.0,
+          468.0
+        ],
+        [
+          1168.33,
+          469.67
+        ],
+        [
+          1196.67,
+          471.33
+        ],
+        [
+          1225.0,
+          473.0
+        ]
+      ]
+    },
+    {
+      "type": "base",
+      "id": 2,
+      "layer": 5,
+      "x": 170,
+      "y": 203
+    },
+    {
+      "type": "worker",
+      "id": 3,
+      "layer": 6,
+      "x": 170,
+      "y": 203
+    },
+    {
+      "type": "worker",
+      "id": 4,
+      "layer": 6,
+      "x": 190,
+      "y": 203
+    },
+    {
+      "type": "barrier",
+      "id": 20,
+      "layer": 5,
+      "x": 460,
+      "y": 288,
+      "params": "tree00",
+      "_comment": "Fallen park tree: north walkway access and 20 wood for food recovery."
+    },
+    {
+      "type": "barrier",
+      "id": 21,
+      "layer": 5,
+      "x": 342,
+      "y": 503,
+      "params": "stone00",
+      "_comment": "Carousel overlook tourists remain gated after opening the first walkway."
+    },
+    {
+      "type": "barrier",
+      "id": 22,
+      "layer": 5,
+      "x": 600,
+      "y": 233,
+      "params": "stone00",
+      "_comment": "Service road gate: repair caches, sawmill and park office beyond."
+    },
+    {
+      "type": "barrier",
+      "id": 23,
+      "layer": 5,
+      "x": 850,
+      "y": 353,
+      "params": "stone_big00",
+      "_comment": "Coaster enclosure access costs 40 food and 100 money."
+    },
+    {
+      "type": "barrier",
+      "id": 24,
+      "layer": 5,
+      "x": 1150,
+      "y": 353,
+      "params": "broken_road0",
+      "_comment": "Last group needs 20 wood for damaged visitor paving; sawmill renews timber."
+    },
+    {
+      "type": "barrier",
+      "id": 25,
+      "layer": 5,
+      "x": 1100,
+      "y": 464,
+      "params": "stone00",
+      "_comment": "Upper coaster evacuation plaza has its own rubble gate."
+    },
+    {
+      "type": "building",
+      "id": 30,
+      "layer": 5,
+      "x": 323,
+      "y": 326.5,
+      "params": "burger",
+      "extra": "1;0",
+      "_comment": "Measured pad center (325,430) with original damaged/repaired pivot."
+    },
+    {
+      "type": "resource",
+      "id": 31,
+      "layer": 5,
+      "x": 340,
+      "y": 275,
+      "params": "food1",
+      "link_id": 30
+    },
+    {
+      "type": "building",
+      "id": 32,
+      "layer": 5,
+      "x": 690.5,
+      "y": 102,
+      "params": "sawmill",
+      "extra": "1;0"
+    },
+    {
+      "type": "resource",
+      "id": 33,
+      "layer": 5,
+      "x": 690,
+      "y": 183,
+      "params": "wood1",
+      "link_id": 32
+    },
+    {
+      "type": "building",
+      "id": 34,
+      "layer": 5,
+      "x": 1028,
+      "y": 104,
+      "params": "house",
+      "extra": "1;0"
+    },
+    {
+      "type": "resource",
+      "id": 35,
+      "layer": 5,
+      "x": 1030,
+      "y": 203,
+      "params": "money1",
+      "link_id": 34
+    },
+    {
+      "type": "resource",
+      "id": 40,
+      "layer": 5,
+      "x": 650,
+      "y": 233,
+      "params": "wood2"
+    },
+    {
+      "type": "resource",
+      "id": 41,
+      "layer": 5,
+      "x": 780,
+      "y": 233,
+      "params": "wood2"
+    },
+    {
+      "type": "resource",
+      "id": 42,
+      "layer": 5,
+      "x": 865,
+      "y": 233,
+      "params": "money2"
+    },
+    {
+      "type": "resource",
+      "id": 43,
+      "layer": 5,
+      "x": 940,
+      "y": 233,
+      "params": "wood2"
+    },
+    {
+      "type": "civilian",
+      "id": 50,
+      "layer": 6,
+      "x": 320,
+      "y": 613
+    },
+    {
+      "type": "civilian",
+      "id": 51,
+      "layer": 6,
+      "x": 350,
+      "y": 593
+    },
+    {
+      "type": "civilian",
+      "id": 52,
+      "layer": 6,
+      "x": 375,
+      "y": 618
+    },
+    {
+      "type": "civilian",
+      "id": 54,
+      "layer": 6,
+      "x": 1190,
+      "y": 488
+    },
+    {
+      "type": "civilian",
+      "id": 55,
+      "layer": 6,
+      "x": 1220,
+      "y": 468
+    },
+    {
+      "type": "civilian",
+      "id": 56,
+      "layer": 6,
+      "x": 1250,
+      "y": 488
+    },
+    {
+      "type": "civilian",
+      "id": 57,
+      "layer": 6,
+      "x": 1235,
+      "y": 363
+    },
+    {
+      "type": "civilian",
+      "id": 58,
+      "layer": 6,
+      "x": 1265,
+      "y": 338
+    },
+    {
+      "type": "civilian",
+      "id": 59,
+      "layer": 6,
+      "x": 1295,
+      "y": 363
+    },
+    {
+      "type": "worker",
+      "id": 53,
+      "layer": 6,
+      "x": 340,
+      "y": 563,
+      "_comment": "Stranded park technician joins crew and counts toward ten people."
+    },
+    {
+      "type": "animal",
+      "id": 60,
+      "layer": 6,
+      "x": 385,
+      "y": 573,
+      "params": "cat"
+    },
+    {
+      "type": "animal",
+      "id": 61,
+      "layer": 6,
+      "x": 1260,
+      "y": 448,
+      "params": "dog"
+    },
+    {
+      "type": "effect",
+      "id": 100,
+      "layer": 3,
+      "x": 155,
+      "y": 473,
+      "params": "sparkles;width=65;height=25;rate=4;opacity=.6"
+    },
+    {
+      "type": "effect",
+      "id": 101,
+      "layer": 3,
+      "x": 180,
+      "y": 438,
+      "params": "sparkles;width=55;height=25;rate=4;opacity=.6"
+    },
+    {
+      "type": "effect",
+      "id": 102,
+      "layer": 3,
+      "x": 106,
+      "y": 491,
+      "params": "foam;width=18;rate=14",
+      "_comment": "Measured ornamental waterfall impact on left pond."
+    },
+    {
+      "type": "effect",
+      "id": 103,
+      "layer": 5,
+      "x": 840,
+      "y": 273,
+      "params": "insects;animation=butterfly;width=50;height=25;count=2;speed=.7"
+    },
+    {
+      "type": "effect",
+      "id": 104,
+      "layer": 5,
+      "x": 550,
+      "y": 178,
+      "params": "insects;animation=butterfly;width=45;height=30;count=2;speed=.8"
+    },
+    {
+      "type": "effect",
+      "id": 105,
+      "layer": 5,
+      "x": 800,
+      "y": 488,
+      "params": "motes;width=85;height=45;count=4;speed=.5;opacity=.25"
+    }
+  ]
+}

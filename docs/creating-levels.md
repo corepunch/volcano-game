@@ -94,6 +94,25 @@ opening and automatic queue recovery, three production repair orders, all nine
 people and both animals, pause and restart. The editable source, built-in
 ImageGen background and exact generation prompt are `levels/ancient-echoes.*`.
 
+## Twisted Tracks
+
+`make twisted-tracks` plays the collapsed amusement-park roller coaster mission.
+Rescue nine visitors and one stranded park technician, plus two animals. The
+overlook, upper evacuation plaza and eastern visitor walkway are separately
+gated. Two workers start with 40 food. The first fallen tree yields the cafe's
+repair timber; clearing the southern service road unlocks three timber caches,
+the sawmill and park-office house. Food production restores an exhausted crew,
+house income finances the 100-money rockfall, and the sawmill replenishes wood
+for the broken visitor walkway. The red coaster, bent yellow supports and empty
+derailed train remain painted scenery, with sparse pond and garden animations.
+
+`make twisted-tracks-app` creates `build/Twisted Tracks.app`, a local macOS
+launcher. `make test-twisted-tracks` verifies the ten-person mission through the
+same ordinary-input recovery, three repair-order, gating, pause and restart
+checks as Ancient Echoes. Source, built-in ImageGen art and exact prompt are
+`levels/twisted-tracks.*`; compiled levels and all required images/rules live
+under `build/levels/`.
+
 ## Source fields
 
 JSON uses double quotes and disallows comments and trailing commas. `_comment`

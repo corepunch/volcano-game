@@ -245,10 +245,13 @@ static bool play_production_mission(const char *path,bool mayday)
     game_key(SDLK_r);
     return check(!game.won && !game.time && game.food==40 && game.wood==0,"mission restart resets puzzle");
 }
-/* These IDs are authored explicitly by Ancient Echoes. Exercise the actual
+/* These IDs are shared deliberately by the two disaster missions. Exercise the actual
  * UI, route graph and economy; no inventory grants or completion shortcuts. */
-static bool play_ancient_echoes(const char *path)
+static bool play_disaster_mission(const char *path,bool coaster)
 {
+    const char *name=coaster?"Twisted Tracks":"Ancient Echoes";
+    const char *slug=coaster?"twisted-tracks":"ancient-echoes";
+    int goal=coaster?10:9;char shot[80];
     if (!game_init_file(path)) return false;
     test_click_entity(test_entity(20));test_click_entity(test_entity(22));
     for (int tick=0;tick<1200;tick++) game_update(.1);
@@ -270,15 +273,17 @@ static bool play_ancient_echoes(const char *path)
     const uint32_t orders[3][3]={{30,32,34},{34,30,32},{32,34,30}};
     for (int order=0;order<3;order++) {
         if (!game_init_file(path)) return false;
-        if (!check(game.local_background && game.goal==9 && game.animals==2 && game.worker_count==3 &&
-                   game.food==40 && game.wood==0 && game.money==0,"Ancient Echoes initial mission")) return false;
+        if (!check(game.local_background && game.goal==goal && game.animals==2 && game.worker_count==3 &&
+                   game.workers[0].phase==IDLE && game.workers[1].phase==IDLE && game.workers[2].phase==STRANDED &&
+                   game.food==40 && game.wood==0 && game.money==0,"disaster mission starting crew, recruit and supplies")) return false;
         for (uint32_t seed=50;seed<=61;seed++) {
-            if (seed==59) continue;
+            if (seed==59 && !coaster) continue;
             int i=test_entity(seed);float length;int count;Vec2 points[MAX_PATH];
             if (!check(i>=0 && !game_route_to(game_current(),&game.workers[0],game.objects[i].p,-1,points,&count,&length),
                        "every tourist, recruit and animal starts gated")) return false;
         }
-        if (!order && !test_frame("ancient-echoes-start")) return false;
+        snprintf(shot,sizeof shot,"%s-start",slug);
+        if (!order && !test_frame(shot)) return false;
         bool repaired=false,paid=false;
         for (int tick=0;tick<7500 && !game.won;tick++) {
             if (tick%10==0) {
@@ -301,24 +306,26 @@ static bool play_ancient_echoes(const char *path)
             if (!check(game.food>=0 && game.wood>=0 && game.money>=0,"nonnegative rescue budget")) return false;
             if (!order && !repaired && game.objects[test_entity(30)].operational &&
                 game.objects[test_entity(32)].operational && game.objects[test_entity(34)].operational) {
-                if (!test_frame("ancient-echoes-repaired")) return false;
+                snprintf(shot,sizeof shot,"%s-repaired",slug);
+                if (!test_frame(shot)) return false;
                 repaired=true;
             }
         }
-        if (!check(game.won && game.rescued==9 && game.animals_rescued==2 && game.worker_count==3 && paid,
-                   "Ancient Echoes completes all objectives through ordinary clicks")) {
+        if (!check(game.won && game.rescued==goal && game.animals_rescued==2 && game.worker_count==3 && paid,
+                   "disaster mission completes every objective through ordinary clicks")) {
             fprintf(stderr,"order=%d rescued=%d animals=%d food=%d wood=%d money=%d time=%.1f\n",
                     order,game.rescued,game.animals_rescued,game.food,game.wood,game.money,game.time);
             return false;
         }
-        if (!order && !test_frame("ancient-echoes-complete")) return false;
-        printf("PASS: Ancient Echoes repair order %d rescues nine people and two animals in %.1fs.\n",order+1,game.time);
+        snprintf(shot,sizeof shot,"%s-complete",slug);
+        if (!order && !test_frame(shot)) return false;
+        printf("PASS: %s repair order %d rescues %d people and two animals in %.1fs.\n",name,order+1,goal,game.time);
     }
     game_key(SDLK_r);game_key(SDLK_p);game_update(1);
-    if (!check(game.time==0 && game.paused,"Ancient Echoes pause")) return false;
+    if (!check(game.time==0 && game.paused,"disaster mission pause")) return false;
     game_key(SDLK_r);
     return check(!game.paused && !game.won && game.time==0 && game.food==40 && game.wood==0 && game.rescued==0,
-                 "Ancient Echoes restart restores all initial settings");
+                 "disaster mission restart restores all initial settings");
 }
 int main(int argc,char **argv)
 {
@@ -329,7 +336,7 @@ int main(int argc,char **argv)
         }
         free(level);printf("Production C reader accepted %d compiled binaries\n",argc-2);return 0;
     }
-    if ((argc!=3 && argc!=4) || (argc==4 && strcmp(argv[3],"--emerald") && strcmp(argv[3],"--mayday") && strcmp(argv[3],"--ancient")) || strlen(argv[1])>=sizeof asset_root) return 2;
+    if ((argc!=3 && argc!=4) || (argc==4 && strcmp(argv[3],"--emerald") && strcmp(argv[3],"--mayday") && strcmp(argv[3],"--ancient") && strcmp(argv[3],"--coaster")) || strlen(argv[1])>=sizeof asset_root) return 2;
     strcpy(asset_root,argv[1]);
     if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER)) return 2;
     SDL_Surface *surface=SDL_CreateRGBSurfaceWithFormat(0,GAME_WIDTH,GAME_HEIGHT,32,SDL_PIXELFORMAT_RGBA32);
@@ -337,7 +344,8 @@ int main(int argc,char **argv)
     bool ok=renderer && resources_init();
     if (ok) {
         SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_BLEND);
-        ok=argc==4?(!strcmp(argv[3],"--ancient")?play_ancient_echoes(argv[2]):
+        ok=argc==4?((!strcmp(argv[3],"--ancient") || !strcmp(argv[3],"--coaster"))?
+            play_disaster_mission(argv[2],!strcmp(argv[3],"--coaster")):
             play_production_mission(argv[2],!strcmp(argv[3],"--mayday"))):play(argv[2]);
     }
     if (!ok) fprintf(stderr,"%s\n",last_error);

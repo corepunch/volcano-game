@@ -16,6 +16,7 @@ HD_ASSETS = build/hd-assets
 .PHONY: all app run run-emerald-falls run-forest-mayday test test-levels level-example emerald-falls forest-mayday forest-mayday-app analyze-levels sanitize clean
 .PHONY: hd-assets hd-levels hd-app run-emerald-falls-hd run-forest-mayday-hd test-hd character-assets
 .PHONY: ancient-echoes ancient-echoes-app test-ancient-echoes
+.PHONY: twisted-tracks twisted-tracks-app test-twisted-tracks
 all: build/volcano
 build/volcano: $(SOURCES) $(HEADERS) vendor/stb_image.h
 	@mkdir -p build
@@ -71,6 +72,16 @@ ancient-echoes-app: all build/levels/ancient-echoes.lvl.rules build/levels/ancie
 	python3 tools/package_custom_level.py "Ancient Echoes" build/levels/ancient-echoes.lvl "$(ASSETS)"
 test-ancient-echoes: build/check_custom_level build/levels/ancient-echoes.lvl.rules build/levels/ancient-echoes.png
 	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(ASSETS)" build/levels/ancient-echoes.lvl --ancient
+build/levels/twisted-tracks.lvl: levels/twisted-tracks.level.json levels/twisted-tracks.png tools/level_source.py
+	python3 tools/level_source.py compile $< $@
+build/levels/twisted-tracks.lvl.rules build/levels/twisted-tracks.png: build/levels/twisted-tracks.lvl
+	@test -f "$@" || python3 tools/level_source.py compile levels/twisted-tracks.level.json build/levels/twisted-tracks.lvl
+twisted-tracks: all build/levels/twisted-tracks.lvl.rules build/levels/twisted-tracks.png
+	./build/volcano --assets "$(ASSETS)" --level-file build/levels/twisted-tracks.lvl
+twisted-tracks-app: all build/levels/twisted-tracks.lvl.rules build/levels/twisted-tracks.png
+	python3 tools/package_custom_level.py "Twisted Tracks" build/levels/twisted-tracks.lvl "$(ASSETS)"
+test-twisted-tracks: build/check_custom_level build/levels/twisted-tracks.lvl.rules build/levels/twisted-tracks.png
+	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(ASSETS)" build/levels/twisted-tracks.lvl --coaster
 hd-assets:
 	python3 tools/build_hd_assets.py --assets "$(ASSETS)" --output "$(HD_ASSETS)"
 	python3 tools/pack_rescue_characters.py --assets "$(HD_ASSETS)" --output "$(HD_ASSETS)"
@@ -91,7 +102,7 @@ test-hd: all hd-assets hd-levels build/check_custom_level
 	SDL_VIDEODRIVER=dummy ./build/volcano --assets "$(HD_ASSETS)" --software --hidden --self-test
 analyze-levels:
 	python3 tools/level_source.py analyze "$(ASSETS)/level" build/level-analysis.json
-test-levels: all test-ancient-echoes build/check_custom_level build/levels/first-rescue.lvl.rules build/levels/emerald-falls.lvl.rules build/levels/emerald-falls.png build/levels/forest-mayday.lvl.rules build/levels/forest-mayday.png
+test-levels: all test-ancient-echoes test-twisted-tracks build/check_custom_level build/levels/first-rescue.lvl.rules build/levels/emerald-falls.lvl.rules build/levels/emerald-falls.png build/levels/forest-mayday.lvl.rules build/levels/forest-mayday.png
 	RESCUE_TEAM_ASSETS="$(ASSETS)" python3 -m unittest discover -s tests -p 'test_level_source.py'
 	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(ASSETS)" build/levels/first-rescue.lvl
 	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(ASSETS)" build/levels/emerald-falls.lvl --emerald
