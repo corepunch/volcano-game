@@ -1,0 +1,17 @@
+Use case: stylized-concept.
+Asset type: ONE transparent PNG sprite atlas, 2048 x 1536 canvas, exactly 4 equal columns and 3 equal rows, each cell 512 x 512. One complete coordinated set of urban rescue site props for a high aerial/isometric Rescue Team management game. Reference image is the new background for STYLE, MATERIALS and CAMERA only. Generate all twelve cells together in this one atlas; background genuinely alpha transparent, no solid backdrop, no grid or text. Every sprite fully isolated, centered in its cell, generous transparent margin of at least 55px, subtle local contact shadow only. No ground tiles, large dirt patches or opaque base plates.
+Camera: high aerial view with modest visible south/east-facing sides, matching the background. Painterly detailed casual-PC-game 3D objects, daylight upper left, believable muted colors; pale dusty concrete, rust-red steel, navy/white field equipment. Sharp readable silhouettes suitable for downscaling to 80–145 game pixels. All props sit on the same ground plane. Contact baseline for each sprite approximately y=410 within its 512 cell; visible width about 350 pixels, height <=330. Matching damaged/repaired pairs must have identical size, camera and ground anchor; authored repaired artwork is complete, no procedural state variations.
+CELL CONTENTS LEFT TO RIGHT, TOP TO BOTTOM:
+Row 1 col 1: operational compact rescue COMMAND POST, white/navy canvas shelter with small communications table, antenna, rolled maps and two orange cones, no lettering, no people.
+Row 1 col 2: DAMAGED field kitchen station: compact white/navy aid tent with torn awning, toppled stainless food containers and tilted serving bench. Clearly repairable, intact overall footprint.
+Row 1 col 3: REPAIRED SAME field kitchen: orderly white/navy tent, upright serving bench, sealed water and food containers, restored awning.
+Row 1 col 4: DAMAGED salvage supply station: compact steel tool canopy with bent frame and disordered stack of clean sawn timber under cover, damaged tool rack. No sawmill house or forest.
+Row 2 col 1: REPAIRED SAME salvage supply station, straight canopy, neatly stacked sawn timber, organized hand tools and safety cones.
+Row 2 col 2: DAMAGED logistics station: small portable white/navy site office with bent awning and displaced storage crates, no lettering.
+Row 2 col 3: REPAIRED SAME logistics station: restored awning, orderly sealed crates, portable radio and work desk.
+Row 2 col 4: low removable pile of snapped dusty TIMBER SHORING planks with a few rusty metal connectors, broad horizontal silhouette, salvageable lumber, not a tree/log.
+Row 3 col 1: low removable rubble pile of broken pale gray CONCRETE floor slabs with short exposed rebar, compact broad silhouette.
+Row 3 col 2: large removable HEAVY STEEL debris cluster: several bent rust-red I-beams tangled with concrete slab pieces. Broad horizontal shape; no upright building fragment.
+Row 3 col 3: removable BROKEN PAVING task sprite: a short dusty damaged asphalt slab section, cracked edges, shallow exposed gap and two small safety cones, no large ground patch. Compact enough to span a 45px road when scaled.
+Row 3 col 4: second distinct removable CONCRETE debris pile, smaller masonry chunks with a broken steel mesh panel, broad low silhouette.
+No people, bodies, blood, flames, readable text, UI icons, labels, numbers, watermarks or extra cells. Transparent all around each object.
