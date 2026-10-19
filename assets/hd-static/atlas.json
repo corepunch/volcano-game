@@ -7,7 +7,7 @@
       "animation": "base0",
       "frame": 0,
       "sheet": "buildings-hq-rounded.generated.png",
-      "pivot": [164, 242],
+      "pivot": [148, 242],
       "extraction": "rect",
       "region": [
         0,
