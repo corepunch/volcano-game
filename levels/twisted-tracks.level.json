@@ -19,8 +19,8 @@
       "layer": 4,
       "points": [
         [
-          135.5,
-          173.0
+          150.5,
+          160
         ],
         [
           157.75,
@@ -659,8 +659,8 @@
           119.75
         ],
         [
-          473,
-          101.5
+          489,
+          109.5
         ],
         [
           900.0,
@@ -679,8 +679,8 @@
           94.0
         ],
         [
-          905.5,
-          75
+          935.5,
+          82
         ],
         [
           1114.0,
@@ -699,8 +699,8 @@
           112.0
         ],
         [
-          1118,
-          89
+          1135,
+          114
         ]
       ]
     },
@@ -708,22 +708,22 @@
       "type": "base",
       "id": 2,
       "layer": 5,
-      "x": 135.5,
-      "y": 173
+      "x": 150.5,
+      "y": 160
     },
     {
       "type": "worker",
       "id": 3,
       "layer": 6,
-      "x": 135.5,
-      "y": 173
+      "x": 150.5,
+      "y": 160
     },
     {
       "type": "worker",
       "id": 4,
       "layer": 6,
-      "x": 155.5,
-      "y": 173
+      "x": 170.5,
+      "y": 160
     },
     {
       "type": "barrier",
@@ -939,18 +939,18 @@
       "type": "building",
       "id": 30,
       "layer": 5,
-      "x": 473,
-      "y": 101.5,
+      "x": 489,
+      "y": 109.5,
       "params": "burger",
       "extra": "1;0",
-      "_comment": "Original cafe pivot; painted lower-left service pad."
+      "_comment": "Cafe footprint centered in measured lower-left clearing; original atlas pivot retained."
     },
     {
       "type": "resource",
       "id": 31,
       "layer": 5,
-      "x": 520,
-      "y": 168,
+      "x": 555,
+      "y": 155,
       "params": "food1",
       "link_id": 30
     },
@@ -958,11 +958,11 @@
       "type": "building",
       "id": 32,
       "layer": 5,
-      "x": 905.5,
-      "y": 75,
+      "x": 935.5,
+      "y": 82,
       "params": "sawmill",
       "extra": "1;0",
-      "_comment": "Original sawmill pivot; measured lower-middle pad."
+      "_comment": "Sawmill footprint centered in measured lower-middle clearing; original atlas pivot retained."
     },
     {
       "type": "resource",
@@ -977,11 +977,11 @@
       "type": "building",
       "id": 34,
       "layer": 5,
-      "x": 1118,
-      "y": 89,
+      "x": 1135,
+      "y": 114,
       "params": "house",
       "extra": "1;0",
-      "_comment": "Original house pivot; lower-right pad."
+      "_comment": "Park-office footprint centered in measured lower-right clearing; original atlas pivot retained."
     },
     {
       "type": "resource",
