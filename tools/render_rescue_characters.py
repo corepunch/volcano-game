@@ -29,7 +29,11 @@ scene.render.engine='CYCLES';scene.cycles.samples=12;scene.cycles.use_denoising=
 scene.render.resolution_x=128;scene.render.resolution_y=160;scene.render.resolution_percentage=100
 scene.render.film_transparent=True
 scene.render.image_settings.file_format='PNG';scene.render.image_settings.color_mode='RGBA'
-scene.render.use_persistent_data=True
+# Rebuild Cycles state across pose/direction changes; stale cached shader data
+# can otherwise leave valid-alpha silhouettes with no texture color.
+scene.render.use_persistent_data=False
+atlas=bpy.data.images.get('Rescue worker atlas')
+if atlas:atlas.reload()
 # Retain the native sixteen-frame run; slower work motions use twenty-four or
 # thirty-two poses. The asset installer resamples these to retail frame counts.
 jobs=[]
@@ -58,6 +62,7 @@ for job in jobs:
         for index in frames:
             dest=folder/f'{direction}-{index:03}.png'
             scene.frame_set(index+1)
+            bpy.context.view_layer.update()
             # A life ring is shared by worker/civilian sink poses. Our civilian
             # skin has no baked gear, so just show the same weighted ring there.
             if dest.is_file():continue

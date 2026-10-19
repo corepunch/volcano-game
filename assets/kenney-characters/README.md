@@ -32,7 +32,7 @@ The scheduler selects axe work for trees, pickaxe work for rocks, hammering for 
 
 `make hd-assets` installs the character atlases after building the HD static art. Existing `make run-emerald-falls-hd`, `make run-forest-mayday-hd` and `make hd-app` targets use them. `make character-assets` creates `build/kenney-assets` with the new characters over the retail environment. The source resource directory is preserved.
 
-The sprite installer retains each original animation's frame count and FPS. It resamples the baked source poses to those frames; Transparent 128×160 renders (160×160 for wide tool swings) supply 2× texture resolution. It trims alpha and computes pivots from the projected world origin, so changing poses and eight-direction turns stay attached to the same ground point. Directions follow the game's convention: E, NE, N, NW, W, SW, S, SE. Retail shadow sprites remain in use.
+The sprite installer retains each original animation's frame count and FPS. It resamples the baked source poses to those frames; Transparent 128×160 renders (160×160 for wide tool swings) supply 2× texture resolution. Packing rejects empty, clipped or unlit frames. It trims alpha and computes pivots from the projected world origin, so changing poses and eight-direction turns stay attached to the same ground point. Directions follow the game's convention: E, NE, N, NW, W, SW, S, SE. Retail shadow sprites remain in use.
 
 ## Rebuild through Blender MCP
 

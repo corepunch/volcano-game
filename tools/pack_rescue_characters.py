@@ -14,7 +14,7 @@ import re
 import shutil
 import subprocess
 from pathlib import Path
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageStat
 
 ROOT=Path(__file__).resolve().parents[1]
 ART=ROOT/'assets/kenney-characters'
@@ -38,6 +38,9 @@ def pack():
                 if image.size!=(width,height):raise ValueError(f'wrong render size: {path}')
                 box=image.getchannel('A').getbbox()
                 if box is None:raise ValueError(f'empty render: {path}')
+                opaque=image.getchannel('A').point(lambda a:255 if a>128 else 0)
+                if max(ImageStat.Stat(image.convert('RGB'),opaque).mean)<10:
+                    raise ValueError(f'unlit or missing-texture render: {path}')
                 if box[0]==0 or box[1]==0 or box[2]==width or box[3]==height:
                     raise ValueError(f'clipped character: {path} {box}')
                 left,top,right,bottom=box;scale=manifest['texture_scale'];ax,ay=clip['anchor']
