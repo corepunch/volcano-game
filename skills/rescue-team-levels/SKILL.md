@@ -43,6 +43,9 @@ them with live code if the engine changes.
    and rescue clearings on a 1366×768 canvas. Art briefs use top-left screen
    coordinates; source records use bottom-left world coordinates. Keep important
    content clear of the HUD. Keep unrelated routes at least 50 world pixels apart.
+   For wreck/disaster maps, read [interior roads and themed obstacles](references/level-design.md).
+   Arrange the wreck around playable interior branches; do not leave most of the
+   center inaccessible while confining jobs and rescues to perimeter trails.
 
 3. **Create/select the background.** Read [art and effects](references/art-and-effects.md).
    For new painted artwork use the available imagegen skill and built-in image tool.
