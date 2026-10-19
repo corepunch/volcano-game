@@ -39,3 +39,17 @@ Current placements and routes are in
 [`twisted-tracks.level.json`](../twisted-tracks.level.json). Measure any newly
 generated output again before reusing those coordinates. Update the archive and
 manifest when adding later image stages; do not silently change a recorded stage.
+
+## Rejected real-site collapse background
+
+The first collapse mission was rejected for copying the real-site composition,
+using aerial scale/perspective incompatible with the game, and replacing the HQ.
+Its unchanged painting, exact prompt and design record are preserved here as
+`ground-zero-rejected.png`, `ground-zero-rejected.prompt.txt` and
+`ground-zero-rejected.design.txt`. These files are authoring history and are not
+loaded by the current mission.
+
+The replacement is `../library-rescue.png`: an original fictional teal/ochre
+library, generated anew using only two real photographs for structural/material
+observations. Its prompt and reference links are saved alongside the current
+level. The original game HQ sprite is restored.

@@ -12,13 +12,14 @@ HEADERS = $(CORE_HEADERS) tests/game_test.h
 AUDIT_BINARY ?= build/audit_levels
 SOURCES = src/main.c $(CORE_SOURCES) $(TEST_SOURCES)
 HD_ASSETS = build/hd-assets
+CHARACTER_ASSETS = build/kenney-assets
 
 .PHONY: all app run run-emerald-falls run-forest-mayday test test-levels level-example emerald-falls forest-mayday forest-mayday-app analyze-levels sanitize clean
 .PHONY: hd-assets hd-levels hd-app run-emerald-falls-hd run-forest-mayday-hd test-hd character-assets
 .PHONY: hd-pivot-previews
 .PHONY: ancient-echoes ancient-echoes-app test-ancient-echoes
 .PHONY: twisted-tracks twisted-tracks-app test-twisted-tracks
-.PHONY: run-ancient-echoes run-twisted-tracks ground-zero ground-zero-app run-ground-zero test-ground-zero
+.PHONY: run-ancient-echoes run-twisted-tracks library-rescue library-rescue-app run-library-rescue test-library-rescue
 all: build/volcano
 build/volcano: $(SOURCES) $(HEADERS) vendor/stb_image.h
 	@mkdir -p build
@@ -37,7 +38,7 @@ run-emerald-falls: emerald-falls
 run-forest-mayday: forest-mayday
 run-ancient-echoes: ancient-echoes
 run-twisted-tracks: twisted-tracks
-run-ground-zero: ground-zero
+run-library-rescue: library-rescue
 test: all test-levels
 	SDL_VIDEODRIVER=dummy ./build/volcano --software --hidden --self-test
 build/check_custom_level: tests/check_custom_level.c $(CORE_SOURCES) $(TEST_SOURCES) $(HEADERS)
@@ -92,23 +93,23 @@ build/check_coaster_debris: tests/check_coaster_debris.c $(CORE_SOURCES) $(TEST_
 test-twisted-tracks: build/check_custom_level build/check_coaster_debris build/levels/twisted-tracks.lvl.rules build/levels/twisted-tracks-interior.png build/levels/twisted-tracks-debris.png
 	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(ASSETS)" build/levels/twisted-tracks.lvl --coaster
 	SDL_VIDEODRIVER=dummy ./build/check_coaster_debris "$(ASSETS)" build/levels/twisted-tracks.lvl
-build/levels/ground-zero.lvl: levels/ground-zero.level.json levels/ground-zero.png levels/ground-zero-props.png tools/level_source.py
+build/levels/library-rescue.lvl: levels/library-rescue.level.json levels/library-rescue.png levels/library-rescue-props.png tools/level_source.py
 	python3 tools/level_source.py compile $< $@
-build/levels/ground-zero.lvl.rules build/levels/ground-zero.png build/levels/ground-zero-props.png: build/levels/ground-zero.lvl
-	@test -f "$@" || python3 tools/level_source.py compile levels/ground-zero.level.json build/levels/ground-zero.lvl
-ground-zero: all build/levels/ground-zero.lvl.rules build/levels/ground-zero.png build/levels/ground-zero-props.png
-	./build/volcano --assets "$(ASSETS)" --level-file build/levels/ground-zero.lvl
-ground-zero-app: all build/levels/ground-zero.lvl.rules build/levels/ground-zero.png build/levels/ground-zero-props.png
-	python3 tools/package_custom_level.py "Ground Zero" build/levels/ground-zero.lvl "$(ASSETS)"
-test-ground-zero: build/check_custom_level build/levels/ground-zero.lvl.rules build/levels/ground-zero.png build/levels/ground-zero-props.png
-	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(ASSETS)" build/levels/ground-zero.lvl --ground-zero
+build/levels/library-rescue.lvl.rules build/levels/library-rescue.png build/levels/library-rescue-props.png: build/levels/library-rescue.lvl
+	@test -f "$@" || python3 tools/level_source.py compile levels/library-rescue.level.json build/levels/library-rescue.lvl
+library-rescue: character-assets all build/levels/library-rescue.lvl.rules build/levels/library-rescue.png build/levels/library-rescue-props.png
+	./build/volcano --assets "$(CHARACTER_ASSETS)" --level-file build/levels/library-rescue.lvl
+library-rescue-app: character-assets all build/levels/library-rescue.lvl.rules build/levels/library-rescue.png build/levels/library-rescue-props.png
+	python3 tools/package_custom_level.py "Library Rescue" build/levels/library-rescue.lvl "$(CHARACTER_ASSETS)"
+test-library-rescue: character-assets build/check_custom_level build/levels/library-rescue.lvl.rules build/levels/library-rescue.png build/levels/library-rescue-props.png
+	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(CHARACTER_ASSETS)" build/levels/library-rescue.lvl --library-rescue
 hd-assets:
 	python3 tools/build_hd_assets.py --assets "$(ASSETS)" --output "$(HD_ASSETS)"
 	python3 tools/pack_rescue_characters.py --assets "$(HD_ASSETS)" --output "$(HD_ASSETS)"
 hd-pivot-previews: hd-assets
 	python3 tools/preview_hd_pivots.py --assets "$(HD_ASSETS)"
 character-assets:
-	python3 tools/pack_rescue_characters.py --assets "$(ASSETS)" --output build/kenney-assets
+	python3 tools/pack_rescue_characters.py --assets "$(ASSETS)" --output "$(CHARACTER_ASSETS)"
 hd-levels:
 	python3 tools/build_hd_levels.py
 hd-app: all hd-assets hd-levels
@@ -124,7 +125,7 @@ test-hd: all hd-assets hd-levels build/check_custom_level
 	SDL_VIDEODRIVER=dummy ./build/volcano --assets "$(HD_ASSETS)" --software --hidden --self-test
 analyze-levels:
 	python3 tools/level_source.py analyze "$(ASSETS)/level" build/level-analysis.json
-test-levels: all test-ancient-echoes test-twisted-tracks test-ground-zero build/check_custom_level build/levels/first-rescue.lvl.rules build/levels/emerald-falls.lvl.rules build/levels/emerald-falls.png build/levels/forest-mayday.lvl.rules build/levels/forest-mayday.png
+test-levels: all test-ancient-echoes test-twisted-tracks test-library-rescue build/check_custom_level build/levels/first-rescue.lvl.rules build/levels/emerald-falls.lvl.rules build/levels/emerald-falls.png build/levels/forest-mayday.lvl.rules build/levels/forest-mayday.png
 	RESCUE_TEAM_ASSETS="$(ASSETS)" python3 -m unittest discover -s tests -p 'test_level_source.py'
 	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(ASSETS)" build/levels/first-rescue.lvl
 	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(ASSETS)" build/levels/emerald-falls.lvl --emerald

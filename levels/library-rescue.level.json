@@ -1,8 +1,8 @@
 {
   "$schema": "../docs/level-source.schema.json",
   "format": "volcano-level-1",
-  "_comment": "Ground Zero: fictional rescue mission inspired by September 2001 aerial photographs. Three interior search lanes through steel/concrete rubble, nine civilians and a stranded rescue worker, two animals. Original mechanics, authored urban prop presentation. Source positions measured against the generated plate; bottom-left world coordinates. See ground-zero.design.txt for sources and budget.",
-  "background": "@ground-zero.png",
+  "_comment": "Library Rescue: original fictional collapsed two-storey civic library with teal roofing, ochre walls and tiled interior passages. New orthographic background uses only real collapse photos for structural observations, not composition. Original base0 HQ is retained. Nine civilians, one recruit and two animals; measured routes and original economy.",
+  "background": "@library-rescue.png",
   "mission": {
     "food": 40,
     "wood": 0,
@@ -19,488 +19,520 @@
       "layer": 4,
       "points": [
         [
-          165.0,
-          220.0
+          210.0,
+          248.0
         ],
         [
-          191.36,
-          220.0
+          237.5,
+          245.5
         ],
         [
-          217.73,
-          220.0
+          265.0,
+          243.0
         ],
         [
-          244.09,
-          220.0
+          292.5,
+          240.5
         ],
         [
-          270.45,
-          220.0
+          320.0,
+          238.0
         ],
         [
-          296.82,
-          220.0
+          347.5,
+          235.5
         ],
         [
-          323.18,
-          220.0
+          375.0,
+          233.0
         ],
         [
-          349.55,
-          220.0
+          402.5,
+          230.5
         ],
         [
-          375.91,
-          220.0
+          430.0,
+          228.0
         ],
         [
-          402.27,
-          220.0
+          457.14,
+          222.71
         ],
         [
-          428.64,
-          220.0
+          484.29,
+          217.43
         ],
         [
-          455.0,
-          220.0
+          511.43,
+          212.14
         ],
         [
-          476.25,
-          220.0
+          538.57,
+          206.86
         ],
         [
-          497.5,
-          220.0
+          565.71,
+          201.57
         ],
         [
-          518.75,
-          220.0
+          592.86,
+          196.29
         ],
         [
-          540.0,
-          220.0
-        ],
-        [
-          566.5,
-          220.0
-        ],
-        [
-          593.0,
-          220.0
-        ],
-        [
-          619.5,
-          220.0
+          620.0,
+          191.0
         ],
         [
           646.0,
-          220.0
+          189.7
         ],
         [
-          672.5,
-          220.0
+          672.0,
+          188.4
         ],
         [
-          699.0,
-          220.0
+          698.0,
+          187.1
         ],
         [
-          725.5,
-          220.0
+          724.0,
+          185.8
         ],
         [
-          752.0,
-          220.0
+          750.0,
+          184.5
         ],
         [
-          777.33,
-          220.0
+          776.0,
+          183.2
         ],
         [
-          802.67,
-          220.0
+          802.0,
+          181.9
         ],
         [
           828.0,
-          220.0
+          180.6
         ],
         [
-          853.33,
-          220.0
+          854.0,
+          179.3
         ],
         [
-          878.67,
-          220.0
+          880.0,
+          178.0
         ],
         [
-          904.0,
-          220.0
+          907.22,
+          179.11
         ],
         [
-          929.33,
-          220.0
+          934.44,
+          180.22
         ],
         [
-          954.67,
-          220.0
+          961.67,
+          181.33
         ],
         [
-          980.0,
-          220.0
+          988.89,
+          182.44
         ],
         [
-          1005.0,
-          220.0
+          1016.11,
+          183.56
         ],
         [
-          1030.0,
-          220.0
+          1043.33,
+          184.67
         ],
         [
-          1055.0,
-          220.0
+          1070.56,
+          185.78
         ],
         [
-          1080.0,
-          220.0
+          1097.78,
+          186.89
         ],
         [
-          1105.0,
-          220.0
+          1125.0,
+          188.0
         ],
         [
-          1130.0,
-          220.0
+          207.5,
+          223.0
         ],
         [
-          456.67,
-          244.33
+          205.0,
+          198.0
         ],
         [
-          458.33,
-          268.67
+          200.0,
+          174.67
         ],
         [
-          460.0,
-          293.0
+          195.0,
+          151.33
         ],
         [
-          461.67,
-          318.0
-        ],
-        [
-          463.33,
-          343.0
-        ],
-        [
-          465.0,
-          368.0
-        ],
-        [
-          467.33,
-          388.0
-        ],
-        [
-          469.67,
-          408.0
-        ],
-        [
-          472.0,
-          428.0
-        ],
-        [
-          459.0,
-          443.0
-        ],
-        [
-          446.0,
-          458.0
-        ],
-        [
-          428.5,
-          471.0
-        ],
-        [
-          411.0,
-          484.0
-        ],
-        [
-          408.0,
-          501.0
-        ],
-        [
-          405.0,
-          518.0
-        ],
-        [
-          412.5,
-          543.0
-        ],
-        [
-          420.0,
-          568.0
-        ],
-        [
-          415.0,
-          590.5
-        ],
-        [
-          410.0,
-          613.0
-        ],
-        [
-          445.0,
-          368.0
-        ],
-        [
-          425.0,
-          368.0
-        ],
-        [
-          405.0,
-          368.0
-        ],
-        [
-          378.33,
-          368.0
-        ],
-        [
-          351.67,
-          368.0
-        ],
-        [
-          325.0,
-          368.0
-        ],
-        [
-          312.5,
-          355.5
-        ],
-        [
-          300.0,
-          343.0
+          190.0,
+          128.0
         ],
         [
           285.0,
-          340.5
+          241.0
         ],
         [
-          270.0,
-          338.0
+          285.0,
+          264.5
         ],
         [
-          752.0,
-          245.6
+          285.0,
+          288.0
         ],
         [
-          752.0,
-          271.2
+          292.5,
+          305.5
         ],
         [
-          752.0,
-          296.8
+          300.0,
+          323.0
         ],
         [
-          752.0,
-          322.4
+          272.5,
+          325.5
         ],
         [
-          752.0,
-          348.0
-        ],
-        [
-          749.33,
-          371.33
-        ],
-        [
-          746.67,
-          394.67
-        ],
-        [
-          744.0,
-          418.0
-        ],
-        [
-          757.0,
-          435.5
-        ],
-        [
-          770.0,
-          453.0
-        ],
-        [
-          781.0,
-          478.0
-        ],
-        [
-          792.0,
-          503.0
-        ],
-        [
-          791.33,
-          526.33
-        ],
-        [
-          790.67,
-          549.67
-        ],
-        [
-          790.0,
-          573.0
-        ],
-        [
-          765.0,
-          578.0
-        ],
-        [
-          740.0,
-          583.0
-        ],
-        [
-          1130.0,
-          241.5
-        ],
-        [
-          1130.0,
-          263.0
-        ],
-        [
-          1128.33,
-          284.67
-        ],
-        [
-          1126.67,
-          306.33
-        ],
-        [
-          1125.0,
+          245.0,
           328.0
         ],
         [
-          1125.0,
+          431.67,
+          251.33
+        ],
+        [
+          433.33,
+          274.67
+        ],
+        [
+          435.0,
+          298.0
+        ],
+        [
+          439.0,
+          323.0
+        ],
+        [
+          443.0,
           348.0
         ],
         [
-          1125.0,
+          449.0,
           368.0
         ],
         [
-          1110.0,
-          391.33
+          439.33,
+          384.67
         ],
         [
-          1095.0,
-          414.67
+          429.67,
+          401.33
         ],
         [
-          1080.0,
-          438.0
+          420.0,
+          418.0
         ],
         [
-          1090.0,
-          454.67
+          406.67,
+          431.33
         ],
         [
-          1100.0,
-          471.33
+          393.33,
+          444.67
         ],
         [
-          1110.0,
-          488.0
+          380.0,
+          458.0
         ],
         [
-          1126.67,
-          504.67
+          365.0,
+          478.0
         ],
         [
-          1143.33,
-          521.33
+          350.0,
+          498.0
         ],
         [
-          1160.0,
+          357.5,
+          518.0
+        ],
+        [
+          365.0,
           538.0
         ],
         [
-          1185.0,
-          550.5
+          357.5,
+          558.0
         ],
         [
-          1210.0,
+          350.0,
+          578.0
+        ],
+        [
+          340.0,
+          593.0
+        ],
+        [
+          330.0,
+          608.0
+        ],
+        [
+          735.0,
+          185.0
+        ],
+        [
+          735.0,
+          212.67
+        ],
+        [
+          735.0,
+          240.33
+        ],
+        [
+          735.0,
+          268.0
+        ],
+        [
+          735.0,
+          288.0
+        ],
+        [
+          735.0,
+          308.0
+        ],
+        [
+          735.0,
+          328.0
+        ],
+        [
+          735.0,
+          355.5
+        ],
+        [
+          735.0,
+          383.0
+        ],
+        [
+          730.0,
+          403.0
+        ],
+        [
+          725.0,
+          423.0
+        ],
+        [
+          722.5,
+          440.5
+        ],
+        [
+          720.0,
+          458.0
+        ],
+        [
+          715.0,
+          475.5
+        ],
+        [
+          710.0,
+          493.0
+        ],
+        [
+          710.0,
+          518.0
+        ],
+        [
+          710.0,
+          543.0
+        ],
+        [
+          710.0,
+          570.5
+        ],
+        [
+          710.0,
+          598.0
+        ],
+        [
+          1125.0,
+          213.0
+        ],
+        [
+          1125.0,
+          238.0
+        ],
+        [
+          1125.0,
+          253.0
+        ],
+        [
+          1125.0,
+          268.0
+        ],
+        [
+          1123.33,
+          288.0
+        ],
+        [
+          1121.67,
+          308.0
+        ],
+        [
+          1120.0,
+          328.0
+        ],
+        [
+          1110.0,
+          346.33
+        ],
+        [
+          1100.0,
+          364.67
+        ],
+        [
+          1090.0,
+          383.0
+        ],
+        [
+          1077.5,
+          408.0
+        ],
+        [
+          1065.0,
+          433.0
+        ],
+        [
+          1057.5,
+          450.5
+        ],
+        [
+          1050.0,
+          468.0
+        ],
+        [
+          1067.5,
+          480.5
+        ],
+        [
+          1085.0,
+          493.0
+        ],
+        [
+          1102.5,
+          513.0
+        ],
+        [
+          1120.0,
+          533.0
+        ],
+        [
+          1140.0,
+          548.0
+        ],
+        [
+          1160.0,
           563.0
         ],
         [
-          1152.5,
-          368.0
+          1180.0,
+          578.0
+        ],
+        [
+          1185.0,
+          598.0
+        ],
+        [
+          1190.0,
+          618.0
+        ],
+        [
+          1140.0,
+          328.0
+        ],
+        [
+          1160.0,
+          328.0
         ],
         [
           1180.0,
-          368.0
+          328.0
         ],
         [
-          1203.33,
-          368.0
+          1201.67,
+          336.33
         ],
         [
-          1226.67,
-          368.0
+          1223.33,
+          344.67
         ],
         [
-          1250.0,
-          368.0
+          1245.0,
+          353.0
         ],
         [
-          640.0,
-          220.0
+          600.0,
+          195.0
         ],
         [
-          640.0,
-          199.0
+          600.0,
+          171.5
         ],
         [
-          640.0,
-          178.0
+          600.0,
+          148.0
         ],
         [
-          640.0,
-          156.75
+          600.0,
+          123.0
         ],
         [
-          640.0,
-          135.5
+          600.0,
+          98.0
         ],
         [
-          640.0,
-          114.25
+          600.0,
+          73.0
         ],
         [
-          640.0,
+          600.0,
+          48.0
+        ],
+        [
+          970.0,
+          182.0
+        ],
+        [
+          970.0,
+          160.0
+        ],
+        [
+          970.0,
+          138.0
+        ],
+        [
+          970.0,
+          115.5
+        ],
+        [
+          970.0,
           93.0
         ],
         [
-          980.0,
-          199.0
+          970.0,
+          70.5
         ],
         [
-          980.0,
-          178.0
-        ],
-        [
-          980.0,
-          156.75
-        ],
-        [
-          980.0,
-          135.5
-        ],
-        [
-          980.0,
-          114.25
-        ],
-        [
-          980.0,
-          93.0
+          970.0,
+          48.0
         ]
       ]
     },
@@ -508,83 +540,83 @@
       "type": "base",
       "id": 2,
       "layer": 5,
-      "x": 165,
-      "y": 220
+      "x": 190,
+      "y": 128
     },
     {
       "type": "worker",
       "id": 3,
       "layer": 6,
-      "x": 165,
-      "y": 220
+      "x": 190,
+      "y": 128
     },
     {
       "type": "worker",
       "id": 4,
       "layer": 6,
-      "x": 185,
-      "y": 220
+      "x": 210,
+      "y": 128
     },
     {
       "type": "barrier",
       "id": 20,
       "layer": 5,
-      "x": 460,
-      "y": 293,
+      "x": 435,
+      "y": 298,
       "params": "tree00",
-      "_comment": "Salvageable timber shoring: 20 food yields 20 wood, opens kitchen approach."
+      "_comment": "Fallen timber shoring on western entrance; 20 food yields 20 wood."
     },
     {
       "type": "barrier",
       "id": 21,
       "layer": 5,
-      "x": 405,
-      "y": 513,
+      "x": 359,
+      "y": 521,
       "params": "stone00",
-      "_comment": "Western search pocket concrete gate."
+      "_comment": "Collapsed slabs gate the north-west library courtyard."
     },
     {
       "type": "barrier",
       "id": 22,
       "layer": 5,
-      "x": 540,
-      "y": 220,
+      "x": 530,
+      "y": 208.53,
       "params": "stone00",
-      "_comment": "South street debris gates the caches and supply stations."
+      "_comment": "Service-drive rubble gates repair caches and the other two producers."
     },
     {
       "type": "barrier",
       "id": 23,
       "layer": 5,
-      "x": 1130,
-      "y": 263,
+      "x": 1125,
+      "y": 238,
       "params": "stone_big00",
-      "_comment": "Heavy eastern steel and concrete: 40 food and 100 money."
+      "_comment": "Heavy beams across eastern entrance; 40 food and 100 money."
     },
     {
       "type": "barrier",
       "id": 24,
       "layer": 5,
       "x": 1180,
-      "y": 368,
+      "y": 328,
       "params": "broken_road0",
-      "_comment": "Restore existing broken paving to east-side search pocket for 20 wood."
+      "_comment": "Repair existing paving into eastern courtyard for 20 wood."
     },
     {
       "type": "barrier",
       "id": 25,
       "layer": 5,
-      "x": 752,
-      "y": 348,
+      "x": 720,
+      "y": 458,
       "params": "stone00",
-      "_comment": "Concrete gate on interior central search lane."
+      "_comment": "Reading-hall concrete slabs block the central interior corridor."
     },
     {
       "type": "building",
       "id": 30,
       "layer": 5,
-      "x": 270,
-      "y": 338,
+      "x": 245,
+      "y": 328,
       "params": "burger",
       "extra": "1;0"
     },
@@ -592,8 +624,8 @@
       "type": "resource",
       "id": 31,
       "layer": 5,
-      "x": 350,
-      "y": 368,
+      "x": 320,
+      "y": 323,
       "params": "food1",
       "link_id": 30
     },
@@ -601,8 +633,8 @@
       "type": "building",
       "id": 32,
       "layer": 5,
-      "x": 640,
-      "y": 93,
+      "x": 600,
+      "y": 48,
       "params": "sawmill",
       "extra": "1;0"
     },
@@ -610,8 +642,8 @@
       "type": "resource",
       "id": 33,
       "layer": 5,
-      "x": 670,
-      "y": 220,
+      "x": 680,
+      "y": 188,
       "params": "wood1",
       "link_id": 32
     },
@@ -619,8 +651,8 @@
       "type": "building",
       "id": 34,
       "layer": 5,
-      "x": 980,
-      "y": 93,
+      "x": 970,
+      "y": 48,
       "params": "house",
       "extra": "1;0"
     },
@@ -628,8 +660,8 @@
       "type": "resource",
       "id": 35,
       "layer": 5,
-      "x": 1020,
-      "y": 220,
+      "x": 1030,
+      "y": 184,
       "params": "money1",
       "link_id": 34
     },
@@ -638,118 +670,118 @@
       "id": 40,
       "layer": 5,
       "x": 600,
-      "y": 220,
+      "y": 195,
       "params": "wood2"
     },
     {
       "type": "resource",
       "id": 41,
       "layer": 5,
-      "x": 790,
-      "y": 220,
+      "x": 800,
+      "y": 182,
       "params": "wood2"
     },
     {
       "type": "resource",
       "id": 42,
       "layer": 5,
-      "x": 850,
-      "y": 220,
+      "x": 875,
+      "y": 178,
       "params": "money2"
     },
     {
       "type": "resource",
       "id": 43,
       "layer": 5,
-      "x": 935,
-      "y": 220,
+      "x": 960,
+      "y": 181,
       "params": "wood2"
     },
     {
       "type": "civilian",
       "id": 50,
       "layer": 6,
-      "x": 385,
-      "y": 613
+      "x": 300,
+      "y": 608
     },
     {
       "type": "civilian",
       "id": 51,
       "layer": 6,
-      "x": 415,
+      "x": 335,
       "y": 598
     },
     {
       "type": "civilian",
       "id": 52,
       "layer": 6,
-      "x": 445,
+      "x": 370,
       "y": 613
     },
     {
       "type": "civilian",
       "id": 54,
       "layer": 6,
-      "x": 720,
-      "y": 588
+      "x": 675,
+      "y": 603
     },
     {
       "type": "civilian",
       "id": 55,
       "layer": 6,
-      "x": 750,
-      "y": 578
+      "x": 710,
+      "y": 588
     },
     {
       "type": "civilian",
       "id": 56,
       "layer": 6,
-      "x": 775,
-      "y": 603
+      "x": 745,
+      "y": 608
     },
     {
       "type": "civilian",
       "id": 57,
       "layer": 6,
-      "x": 1210,
-      "y": 563
+      "x": 1180,
+      "y": 618
     },
     {
       "type": "civilian",
       "id": 58,
       "layer": 6,
-      "x": 1235,
-      "y": 378
+      "x": 1220,
+      "y": 363
     },
     {
       "type": "civilian",
       "id": 59,
       "layer": 6,
-      "x": 1265,
-      "y": 353
+      "x": 1260,
+      "y": 343
     },
     {
       "type": "worker",
       "id": 53,
       "layer": 6,
-      "x": 405,
-      "y": 573,
+      "x": 335,
+      "y": 568,
       "_comment": "Fictional stranded rescue worker; counted in ten-person objective."
     },
     {
       "type": "animal",
       "id": 60,
       "layer": 6,
-      "x": 430,
-      "y": 578,
+      "x": 365,
+      "y": 568,
       "params": "cat"
     },
     {
       "type": "animal",
       "id": 61,
       "layer": 6,
-      "x": 750,
-      "y": 548,
+      "x": 720,
+      "y": 558,
       "params": "dog"
     },
     {
@@ -760,7 +792,7 @@
       "y": 768,
       "link_id": 30,
       "name": "Field kitchen",
-      "params": "sprite;image=@ground-zero-props.png;rect=380,110,345,280;pivot=0.5,0.93;state=default",
+      "params": "sprite;image=@library-rescue-props.png;rect=380,110,345,280;pivot=0.5,0.93;state=default",
       "scale_x": 0.34,
       "scale_y": 0.34
     },
@@ -772,7 +804,7 @@
       "y": 768,
       "link_id": 30,
       "name": "Field kitchen",
-      "params": "sprite;image=@ground-zero-props.png;rect=745,110,345,280;pivot=0.5,0.93;state=operational",
+      "params": "sprite;image=@library-rescue-props.png;rect=745,110,345,280;pivot=0.5,0.93;state=operational",
       "scale_x": 0.34,
       "scale_y": 0.34
     },
@@ -784,7 +816,7 @@
       "y": 768,
       "link_id": 32,
       "name": "Salvage supply station",
-      "params": "sprite;image=@ground-zero-props.png;rect=1095,110,350,290;pivot=0.5,0.93;state=default",
+      "params": "sprite;image=@library-rescue-props.png;rect=1095,110,350,290;pivot=0.5,0.93;state=default",
       "scale_x": 0.36,
       "scale_y": 0.36
     },
@@ -796,7 +828,7 @@
       "y": 768,
       "link_id": 32,
       "name": "Salvage supply station",
-      "params": "sprite;image=@ground-zero-props.png;rect=10,430,350,290;pivot=0.5,0.93;state=operational",
+      "params": "sprite;image=@library-rescue-props.png;rect=10,430,350,290;pivot=0.5,0.93;state=operational",
       "scale_x": 0.36,
       "scale_y": 0.36
     },
@@ -808,7 +840,7 @@
       "y": 768,
       "link_id": 34,
       "name": "Logistics station",
-      "params": "sprite;image=@ground-zero-props.png;rect=375,425,350,285;pivot=0.5,0.93;state=default",
+      "params": "sprite;image=@library-rescue-props.png;rect=375,425,350,285;pivot=0.5,0.93;state=default",
       "scale_x": 0.36,
       "scale_y": 0.36
     },
@@ -820,7 +852,7 @@
       "y": 768,
       "link_id": 34,
       "name": "Logistics station",
-      "params": "sprite;image=@ground-zero-props.png;rect=740,425,350,285;pivot=0.5,0.93;state=operational",
+      "params": "sprite;image=@library-rescue-props.png;rect=740,425,350,285;pivot=0.5,0.93;state=operational",
       "scale_x": 0.36,
       "scale_y": 0.36
     },
@@ -832,7 +864,7 @@
       "y": 768,
       "link_id": 20,
       "name": "Timber shoring",
-      "params": "sprite;image=@ground-zero-props.png;rect=1095,510,345,200;pivot=0.5,0.7;state=default",
+      "params": "sprite;image=@library-rescue-props.png;rect=1095,510,345,200;pivot=0.5,0.7;state=default",
       "scale_x": 0.26,
       "scale_y": 0.26
     },
@@ -844,7 +876,7 @@
       "y": 768,
       "link_id": 21,
       "name": "Concrete slabs",
-      "params": "sprite;image=@ground-zero-props.png;rect=15,785,350,250;pivot=0.5,0.7;state=default",
+      "params": "sprite;image=@library-rescue-props.png;rect=15,785,350,250;pivot=0.5,0.7;state=default",
       "scale_x": 0.25,
       "scale_y": 0.25
     },
@@ -856,7 +888,7 @@
       "y": 768,
       "link_id": 22,
       "name": "Street debris",
-      "params": "sprite;image=@ground-zero-props.png;rect=1095,800,340,225;pivot=0.5,0.7;state=default",
+      "params": "sprite;image=@library-rescue-props.png;rect=1095,800,340,225;pivot=0.5,0.7;state=default",
       "scale_x": 0.25,
       "scale_y": 0.25
     },
@@ -868,7 +900,7 @@
       "y": 768,
       "link_id": 23,
       "name": "Heavy steel debris",
-      "params": "sprite;image=@ground-zero-props.png;rect=375,790,365,240;pivot=0.5,0.7;state=default",
+      "params": "sprite;image=@library-rescue-props.png;rect=375,790,365,240;pivot=0.5,0.7;state=default",
       "scale_x": 0.3,
       "scale_y": 0.3
     },
@@ -880,7 +912,7 @@
       "y": 768,
       "link_id": 24,
       "name": "Broken paving",
-      "params": "sprite;image=@ground-zero-props.png;rect=745,830,345,200;pivot=0.5,0.5;state=default",
+      "params": "sprite;image=@library-rescue-props.png;rect=745,830,345,200;pivot=0.5,0.5;state=default",
       "scale_x": 0.25,
       "scale_y": 0.25
     },
@@ -892,7 +924,7 @@
       "y": 768,
       "link_id": 25,
       "name": "Concrete slabs",
-      "params": "sprite;image=@ground-zero-props.png;rect=15,785,350,250;pivot=0.5,0.7;state=default",
+      "params": "sprite;image=@library-rescue-props.png;rect=15,785,350,250;pivot=0.5,0.7;state=default",
       "scale_x": 0.25,
       "scale_y": 0.25
     },
@@ -900,16 +932,16 @@
       "type": "effect",
       "id": 100,
       "layer": 5,
-      "x": 600,
-      "y": 403,
+      "x": 690,
+      "y": 438,
       "params": "motes;width=130;height=70;count=5;speed=.25;opacity=.16"
     },
     {
       "type": "effect",
       "id": 101,
       "layer": 5,
-      "x": 950,
-      "y": 498,
+      "x": 1085,
+      "y": 488,
       "params": "motes;width=100;height=60;count=4;speed=.3;opacity=.14"
     }
   ]

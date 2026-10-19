@@ -133,29 +133,42 @@ Both have exact built-in ImageGen prompts saved alongside. The original
 background and concept history remain preserved. Compiled binaries, sidecars,
 copied images, screenshots and launcher live under `build/`.
 
-## Ground Zero
+## Library Rescue
 
-`make ground-zero` plays a fictional rescue mission inspired by September 2001
-aerial photographs of the World Trade Center site. Three search lanes pass
-through steel/concrete rubble to nine civilians, a stranded rescue worker and
-two animals. The surrounding city, cranes and large facade remnants are painted
-scenery; six discrete clearing/repair jobs gate the actual roads. A field kitchen,
-salvage supply station and logistics station use the existing cafe, sawmill and
-house economy with new authored artwork. Two workers start with 40 food.
+`make library-rescue` plays an original fictional collapsed civic library with
+teal roofing, ochre walls and tiled interior corridors. The background uses a
+fixed parallel three-quarter projection and human-scale doors/wall fragments.
+Real collapse photographs informed roof/slab failure, without copying their
+buildings, footprints or camera views. The earlier real-site recreation was
+rejected and is retained only as authoring history under
+`levels/background-history/ground-zero-rejected.*`.
 
-`make ground-zero-app` creates `build/Ground Zero.app`; `make test-ground-zero`
-checks all rescue gates, the depleted-food opening, automatic queue recovery,
-three repair orders, authored click bounds, complete debris removal, pause and
-restart. `make test` includes this mission. The mission's people and rescue
-counts are invented, not a record of historical rescues.
+The project's existing custom blue-uniform workers and male/female civilian
+atlases are installed automatically for this mission's run, launcher and test
+targets through `make character-assets`. Its launcher uses `build/kenney-assets`;
+it does not select the original character declarations.
 
-Editable source/art and exact built-in ImageGen prompts are in
-`levels/ground-zero.level.json`, `levels/ground-zero.png`,
-`levels/ground-zero.prompt.txt`, `levels/ground-zero-props.png` and
-`levels/ground-zero-props.prompt.txt`. The props, including damaged/repaired
-station states, were generated together in one transparent atlas. Measured
-rectangles select the authored pixels without deriving new visual states.
-`levels/ground-zero.design.txt` records the photo links and measured layout.
+The original `base0` blue headquarters is used without a presentation override
+or scale change. Nine civilians, one stranded worker and two animals occupy the
+three interior search routes and an eastern courtyard. The existing resource
+puzzle and ordinary worker/queue rules remain: two starting workers, 40 food,
+repairable food/timber/money producers and six paid route jobs.
+
+`make library-rescue-app` creates `build/Library Rescue.app`.
+`make test-library-rescue` checks every initial rescue gate, the depleted-food
+opening, automatic queue recovery, three repair orders, original HQ artwork,
+authored prop bounds, custom worker/civilian atlas selection, complete debris
+removal, pause and restart. `make test`
+includes this mission.
+
+Editable source, current background, saved prompt, retained prop atlas and its
+original prompt are `levels/library-rescue.level.json`,
+`levels/library-rescue.png`, `levels/library-rescue.prompt.txt`,
+`levels/library-rescue-props.png` and `levels/library-rescue-props.prompt.txt`.
+`levels/library-rescue.design.txt` records reference photos, scale constraints
+and the measured final layout. The atlas's first HQ cell is deliberately unused;
+all other authored props/station states are reused directly. The new background
+was generated from the two real photographs only, with no generated-image input.
 
 ## Source fields
 

@@ -250,8 +250,8 @@ static bool play_production_mission(const char *path,bool mayday)
 static bool play_disaster_mission(const char *path,int variant)
 {
     bool coaster=variant==1,site=variant==2;
-    const char *name=site?"Ground Zero":coaster?"Twisted Tracks":"Ancient Echoes";
-    const char *slug=site?"ground-zero":coaster?"twisted-tracks":"ancient-echoes";
+    const char *name=site?"Library Rescue":coaster?"Twisted Tracks":"Ancient Echoes";
+    const char *slug=site?"library-rescue":coaster?"twisted-tracks":"ancient-echoes";
     int goal=coaster || site?10:9;char shot[80];
     if (!game_init_file(path)) return false;
     test_click_entity(test_entity(20));test_click_entity(test_entity(22));
@@ -284,6 +284,13 @@ static bool play_disaster_mission(const char *path,int variant)
                        "every tourist, recruit and animal starts gated")) return false;
         }
         if (site) {
+            Animation *worker_art=animation_find("worker_wait0");
+            Animation *civilian_art=animation_find("man_idle0");
+            Animation *female_art=animation_find("wman_idle0");
+            if (!check(worker_art && strstr(worker_art->texture,"kenney-worker-") &&
+                       civilian_art && strstr(civilian_art->texture,"kenney-male-") &&
+                       female_art && strstr(female_art->texture,"kenney-female-"),
+                       "library mission uses the project's own worker and civilian atlases")) return false;
             Entity *base=&game.objects[test_entity(2)];
             if (!check(base->visual<0 && !strcmp(base->anim,"base0"),
                        "original headquarters sprite is retained")) return false;
@@ -306,14 +313,14 @@ static bool play_disaster_mission(const char *path,int variant)
             game_pointer(station->p.x-59,GAME_HEIGHT-station->p.y-35,false);
             if (!check(game_hovered_object(game_current())==test_entity(32),
                        "authored field-station footprint is clickable")) return false;
-            if (!order && !test_frame("ground-zero-station-hover")) return false;
+            if (!order && !test_frame("library-rescue-station-hover")) return false;
             game_pointer(-100,-100,false);
         }
         snprintf(shot,sizeof shot,"%s-start",slug);
         if (!order && !test_frame(shot)) return false;
         if (site && !order) {
             game_key(SDLK_F1);
-            if (!test_frame("ground-zero-routes")) return false;
+            if (!test_frame("library-rescue-routes")) return false;
             game_key(SDLK_F1);
         }
         bool repaired=false,paid=false;
@@ -372,7 +379,7 @@ int main(int argc,char **argv)
         }
         free(level);printf("Production C reader accepted %d compiled binaries\n",argc-2);return 0;
     }
-    if ((argc!=3 && argc!=4) || (argc==4 && strcmp(argv[3],"--emerald") && strcmp(argv[3],"--mayday") && strcmp(argv[3],"--ancient") && strcmp(argv[3],"--coaster") && strcmp(argv[3],"--ground-zero")) || strlen(argv[1])>=sizeof asset_root) return 2;
+    if ((argc!=3 && argc!=4) || (argc==4 && strcmp(argv[3],"--emerald") && strcmp(argv[3],"--mayday") && strcmp(argv[3],"--ancient") && strcmp(argv[3],"--coaster") && strcmp(argv[3],"--library-rescue")) || strlen(argv[1])>=sizeof asset_root) return 2;
     strcpy(asset_root,argv[1]);
     if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER)) return 2;
     SDL_Surface *surface=SDL_CreateRGBSurfaceWithFormat(0,GAME_WIDTH,GAME_HEIGHT,32,SDL_PIXELFORMAT_RGBA32);
@@ -380,8 +387,8 @@ int main(int argc,char **argv)
     bool ok=renderer && resources_init();
     if (ok) {
         SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_BLEND);
-        ok=argc==4?((!strcmp(argv[3],"--ancient") || !strcmp(argv[3],"--coaster") || !strcmp(argv[3],"--ground-zero"))?
-            play_disaster_mission(argv[2],!strcmp(argv[3],"--ground-zero")?2:!strcmp(argv[3],"--coaster")?1:0):
+        ok=argc==4?((!strcmp(argv[3],"--ancient") || !strcmp(argv[3],"--coaster") || !strcmp(argv[3],"--library-rescue"))?
+            play_disaster_mission(argv[2],!strcmp(argv[3],"--library-rescue")?2:!strcmp(argv[3],"--coaster")?1:0):
             play_production_mission(argv[2],!strcmp(argv[3],"--mayday"))):play(argv[2]);
     }
     if (!ok) fprintf(stderr,"%s\n",last_error);
