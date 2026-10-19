@@ -1,0 +1,130 @@
+{
+  "image": "twisted-tracks-debris.png",
+  "size": [
+    1774,
+    887
+  ],
+  "generation": "One built-in ImageGen call; unchanged RGBA artwork, alpha-measured regions only.",
+  "sprites": {
+    "track": {
+      "rect": [
+        23,
+        88,
+        419,
+        321
+      ],
+      "pivot": [
+        0.5,
+        0.65
+      ],
+      "scale": 0.200477,
+      "width": 84,
+      "job": "coaster_track"
+    },
+    "support": {
+      "rect": [
+        468,
+        74,
+        410,
+        334
+      ],
+      "pivot": [
+        0.5,
+        0.65
+      ],
+      "scale": 0.2,
+      "width": 82,
+      "job": "coaster_support"
+    },
+    "fence": {
+      "rect": [
+        897,
+        99,
+        429,
+        302
+      ],
+      "pivot": [
+        0.5,
+        0.65
+      ],
+      "scale": 0.191142,
+      "width": 82,
+      "job": "coaster_fence"
+    },
+    "cables": {
+      "rect": [
+        1349,
+        80,
+        419,
+        329
+      ],
+      "pivot": [
+        0.5,
+        0.65
+      ],
+      "scale": 0.171838,
+      "width": 72,
+      "job": "coaster_cables"
+    },
+    "car": {
+      "rect": [
+        16,
+        495,
+        413,
+        334
+      ],
+      "pivot": [
+        0.5,
+        0.7
+      ],
+      "scale": 0.213075,
+      "width": 88,
+      "job": "coaster_car"
+    },
+    "concrete": {
+      "rect": [
+        451,
+        490,
+        423,
+        346
+      ],
+      "pivot": [
+        0.5,
+        0.65
+      ],
+      "scale": 0.179669,
+      "width": 76,
+      "job": "coaster_concrete"
+    },
+    "wheels": {
+      "rect": [
+        904,
+        501,
+        426,
+        326
+      ],
+      "pivot": [
+        0.5,
+        0.65
+      ],
+      "scale": 0.173709,
+      "width": 74,
+      "job": "coaster_wheels"
+    },
+    "panels": {
+      "rect": [
+        1351,
+        520,
+        407,
+        296
+      ],
+      "pivot": [
+        0.5,
+        0.65
+      ],
+      "scale": 0.201474,
+      "width": 82,
+      "job": "coaster_panels"
+    }
+  }
+}
