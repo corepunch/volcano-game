@@ -10,10 +10,12 @@ TEST_SOURCES = tests/game_selftest.c tests/game_architecture.c
 CORE_HEADERS = src/volcano.h src/game_internal.h
 HEADERS = $(CORE_HEADERS) tests/game_test.h
 AUDIT_BINARY ?= build/audit_levels
-SOURCES = src/main.c $(CORE_SOURCES) $(TEST_SOURCES)
+SOURCES = src/main.c $(CORE_SOURCES)
+TEST_PACK = build/packs/test
 HD_ASSETS = build/hd-assets
 CHARACTER_ASSETS = build/kenney-assets
 
+.PHONY: test-retail test-missions
 .PHONY: all app run run-emerald-falls run-forest-mayday test test-levels level-example emerald-falls forest-mayday forest-mayday-app analyze-levels sanitize clean
 .PHONY: hd-assets hd-levels hd-app run-emerald-falls-hd run-forest-mayday-hd test-hd character-assets
 .PHONY: hd-pivot-previews
@@ -21,7 +23,7 @@ CHARACTER_ASSETS = build/kenney-assets
 .PHONY: twisted-tracks twisted-tracks-app test-twisted-tracks
 .PHONY: run-ancient-echoes run-twisted-tracks library-rescue library-rescue-app run-library-rescue test-library-rescue
 all: build/volcano
-build/volcano: $(SOURCES) $(HEADERS) vendor/stb_image.h
+build/volcano: $(SOURCES) $(CORE_HEADERS) vendor/stb_image.h
 	@mkdir -p build
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(SOURCES) -o $@ $(LDFLAGS) $(LDLIBS)
 app: build/volcano
@@ -39,8 +41,18 @@ run-forest-mayday: forest-mayday
 run-ancient-echoes: ancient-echoes
 run-twisted-tracks: twisted-tracks
 run-library-rescue: library-rescue
-test: all test-levels
-	SDL_VIDEODRIVER=dummy ./build/volcano --software --hidden --self-test
+test: all test-levels test-retail
+test-retail: build/test_retail
+	SDL_VIDEODRIVER=dummy ./build/test_retail "$(ASSETS)"
+build/test_retail: tests/retail_main.c $(CORE_SOURCES) $(TEST_SOURCES) $(HEADERS)
+	@mkdir -p build
+	$(CC) $(CPPFLAGS) $(CFLAGS) tests/retail_main.c $(CORE_SOURCES) $(TEST_SOURCES) -o $@ $(LDFLAGS) $(LDLIBS)
+$(TEST_PACK): tools/make_test_pack.py
+	python3 tools/make_test_pack.py --output $@
+	@touch $@
+# Retail-free regression suite: placeholder art, the project's own missions.
+test-missions: $(TEST_PACK)
+	$(MAKE) test-levels ASSETS="$(TEST_PACK)"
 build/check_custom_level: tests/check_custom_level.c $(CORE_SOURCES) $(TEST_SOURCES) $(HEADERS)
 	@mkdir -p build
 	$(CC) $(CPPFLAGS) $(CFLAGS) tests/check_custom_level.c $(CORE_SOURCES) $(TEST_SOURCES) -o $@ $(LDFLAGS) $(LDLIBS)
@@ -118,11 +130,11 @@ run-emerald-falls-hd: all hd-assets hd-levels
 	./build/volcano --assets "$(HD_ASSETS)" --level-file build/hd-levels/emerald-falls.lvl
 run-forest-mayday-hd: all hd-assets hd-levels
 	./build/volcano --assets "$(HD_ASSETS)" --level-file build/hd-levels/forest-mayday.lvl
-test-hd: all hd-assets hd-levels build/check_custom_level
+test-hd: all hd-assets hd-levels build/check_custom_level build/test_retail
 	$(MAKE) test-levels ASSETS="$(HD_ASSETS)"
 	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(HD_ASSETS)" build/hd-levels/emerald-falls.lvl --emerald
 	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(HD_ASSETS)" build/hd-levels/forest-mayday.lvl --mayday
-	SDL_VIDEODRIVER=dummy ./build/volcano --assets "$(HD_ASSETS)" --software --hidden --self-test
+	SDL_VIDEODRIVER=dummy ./build/test_retail "$(HD_ASSETS)"
 analyze-levels:
 	python3 tools/level_source.py analyze "$(ASSETS)/level" build/level-analysis.json
 test-levels: all test-ancient-echoes test-twisted-tracks test-library-rescue build/check_custom_level build/levels/first-rescue.lvl.rules build/levels/emerald-falls.lvl.rules build/levels/emerald-falls.png build/levels/forest-mayday.lvl.rules build/levels/forest-mayday.png
@@ -130,14 +142,14 @@ test-levels: all test-ancient-echoes test-twisted-tracks test-library-rescue bui
 	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(ASSETS)" build/levels/first-rescue.lvl
 	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(ASSETS)" build/levels/emerald-falls.lvl --emerald
 	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(ASSETS)" build/levels/forest-mayday.lvl --mayday
-build/volcano-sanitize: $(SOURCES) $(HEADERS) vendor/stb_image.h
+build/test_retail-sanitize: tests/retail_main.c $(CORE_SOURCES) $(TEST_SOURCES) $(HEADERS) vendor/stb_image.h
 	@mkdir -p build
-	$(CC) $(CPPFLAGS) $(CFLAGS) -O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer $(SOURCES) -o $@ $(LDFLAGS) $(LDLIBS)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer tests/retail_main.c $(CORE_SOURCES) $(TEST_SOURCES) -o $@ $(LDFLAGS) $(LDLIBS)
 build/check_custom_level-sanitize: tests/check_custom_level.c $(CORE_SOURCES) $(TEST_SOURCES) $(HEADERS)
 	@mkdir -p build
 	$(CC) $(CPPFLAGS) $(CFLAGS) -O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer tests/check_custom_level.c $(CORE_SOURCES) $(TEST_SOURCES) -o $@ $(LDFLAGS) $(LDLIBS)
-sanitize: build/volcano-sanitize build/check_custom_level-sanitize build/levels/first-rescue.lvl.rules build/levels/emerald-falls.lvl.rules build/levels/emerald-falls.png build/levels/forest-mayday.lvl.rules build/levels/forest-mayday.png
-	SDL_VIDEODRIVER=dummy ./build/volcano-sanitize --software --hidden --self-test
+sanitize: build/test_retail-sanitize build/check_custom_level-sanitize build/levels/first-rescue.lvl.rules build/levels/emerald-falls.lvl.rules build/levels/emerald-falls.png build/levels/forest-mayday.lvl.rules build/levels/forest-mayday.png
+	SDL_VIDEODRIVER=dummy ./build/test_retail-sanitize "$(ASSETS)"
 	SDL_VIDEODRIVER=dummy ./build/check_custom_level-sanitize "$(ASSETS)" build/levels/first-rescue.lvl
 	SDL_VIDEODRIVER=dummy ./build/check_custom_level-sanitize "$(ASSETS)" build/levels/emerald-falls.lvl --emerald
 	SDL_VIDEODRIVER=dummy ./build/check_custom_level-sanitize "$(ASSETS)" build/levels/forest-mayday.lvl --mayday

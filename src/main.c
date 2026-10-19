@@ -37,7 +37,7 @@ static void default_assets(void) {
 }
 int main(int argc,char **argv) {
     const char *assets=getenv("RESCUE_TEAM_ASSETS"),*shot=NULL,*level_file=NULL;
-    int frames=0,level=-1,campaign=1,result=1;bool hidden=false,software=false,selftest=false,inspect=false;
+    int frames=0,level=-1,campaign=1,result=1;bool hidden=false,software=false;
     SDL_Window *window=NULL;
     if(assets)snprintf(asset_root,sizeof(asset_root),"%s",assets);
     else default_assets();
@@ -51,13 +51,11 @@ int main(int argc,char **argv) {
             else if(!integer(value,!strcmp(arg,"--frames")?&frames:!strcmp(arg,"--campaign")?&campaign:&level)){fprintf(stderr,"Invalid number for %s\n",arg);return 1;}
         }else if(!strcmp(arg,"--hidden"))hidden=true;
         else if(!strcmp(arg,"--software"))software=true;
-        else if(!strcmp(arg,"--self-test"))selftest=true;
-        else if(!strcmp(arg,"--inspect"))inspect=true;
         else if(!strcmp(arg,"--help")){
             puts("Volcano SDL2 - C-only Rescue Team 5 restoration\n"
                  "Usage: volcano [--assets ORIGINAL_FOLDER] [--campaign 1..50 | --level SOURCE_INDEX | --level-file FILE.lvl]\n"
                  "               [--frames N] [--screenshot FILE.bmp] [--hidden]\n"
-                 "               [--software] [--self-test] [--inspect]\n"
+                 "               [--software]\n"
                  "Resources default to $RESCUE_TEAM_ASSETS or reference/rescue-team/.\n"
                  "Defaults to campaign level 1. --level uses the original file index.\n"
                  "Custom files load optional FILE.lvl.rules mission settings.\n"
@@ -75,11 +73,6 @@ int main(int argc,char **argv) {
     if(!renderer){snprintf(last_error,sizeof(last_error),"%s",SDL_GetError());goto done;}
     SDL_RenderSetLogicalSize(renderer,GAME_WIDTH,GAME_HEIGHT);SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_BLEND);
     if(!resources_init())goto done;
-    if(inspect&&!resources_selftest())goto done;
-    if(selftest){
-        if(!resources_selftest()||!level_selftest(asset_root)||!game_selftest())goto done;
-        frames=1;
-    }
     if (level_file) {
         if (!game_init_file(level_file)) goto done;
     } else {
