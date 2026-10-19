@@ -10,6 +10,7 @@ from array import array
 from collections import defaultdict
 import hashlib
 import json
+import math
 from pathlib import Path
 import re
 import subprocess
@@ -20,6 +21,26 @@ ROOT = Path(__file__).resolve().parents[1]
 DECL = re.compile(r"texinfo\s*=\s*createTextureInfoEx\('([^']+)'\)")
 FRAMES = re.compile(r"frames\s*=\s*\{(.*?)\}\s*(addTextureInfoExNodes\(texinfo, )'([^']+)'(, frames, [\d.]+\))", re.S)
 FIELD = re.compile(r"\b(dx|dy|u|v|cu|cv|w|h)\s*=\s*([\d.eE+-]+)")
+
+
+def anchored_frame(original, pivot, source_box, sprite_size):
+    """Map an authored sheet-space pivot through trimming and 2x packing.
+
+    Sheet coordinates use a top-left origin; runtime dx/dy use bottom-left
+    world units. Shadow padding is applied afterwards by BakedShadows.
+    """
+    if pivot is None:
+        return original
+    left, top, right, bottom = source_box
+    if (not isinstance(pivot, list) or len(pivot) != 2 or
+            any(type(v) not in (int, float) or not math.isfinite(v) for v in pivot) or
+            not (left <= pivot[0] <= right and top <= pivot[1] <= bottom)):
+        raise ValueError("sprite pivot must be a finite point inside its source crop")
+    bw, bh = sprite_size
+    fw, fh = round(original["w"] * 2), round(original["h"] * 2)
+    x = (fw - bw) // 2 + (pivot[0] - left) * bw / (right - left)
+    y = (fh - bh) // 2 + (pivot[1] - top) * bh / (bottom - top)
+    return dict(original, dx=x / 2, dy=(fh - y) / 2)
 
 
 class BakedShadows:
@@ -142,6 +163,7 @@ def extract_regions(path, regions, threshold):
         mask = mask.filter(ImageFilter.MaxFilter(7))
         sprite = image.crop(box)
         sprite.putalpha(ImageChops.multiply(alpha.crop(box), mask))
+        sprite.info["source_box"] = box
         result[key] = sprite
     return result
 
@@ -194,12 +216,14 @@ def build(assets, output, art):
             for index, frame in enumerate(original):
                 entry = selected[name][index]
                 sprite = extracted[entry["sheet"]][tuple(entry["region"])]
+                source_box = sprite.info["source_box"]
                 w, h = round(frame["w"] * 2), round(frame["h"] * 2)
                 ratio = min((w - 2) / sprite.width, (h - 2) / sprite.height)
                 if ratio > 1:
                     raise ValueError(f"source artwork too small for true 2x: {name}[{index}]")
                 sprite = sprite.resize((max(1, round(sprite.width * ratio)),
                                         max(1, round(sprite.height * ratio))), Image.Resampling.LANCZOS)
+                frame = anchored_frame(frame, entry.get("pivot"), source_box, sprite.size)
                 sprite, padded, body_offset = shadows.compose(name, index, frame, sprite)
                 w, h = sprite.size
                 if cursor_x + w + 4 > atlas.width:
@@ -217,6 +241,7 @@ def build(assets, output, art):
                                    texture_size=[w, h],
                                    pivot=[padded["dx"], padded["dy"]],
                                    body_pivot=[frame["dx"], frame["dy"]],
+                                   source_pivot=entry.get("pivot"),
                                    body_offset=body_offset, shadow="baked-northwest-45",
                                    atlas_region=[cursor_x, cursor_y, w, h]))
                 cursor_x += w + 4
@@ -244,7 +269,7 @@ def build(assets, output, art):
     (output / "hd-static-report.json").write_text(json.dumps(report, indent=2) + "\n")
     print(f"HD assets: {len(selected)} static sprites, {len(report)} authored states at exact 2x texture resolution.")
     print(f"Ground shadows: {len(report)} authored footprints baked into their object frames; no separate layer.")
-    print(f"Body placement, click bounds, frame order and FPS preserved. Output: {output}")
+    print(f"Authored pivots applied to artwork and click bounds; frame order and FPS preserved. Output: {output}")
 
 
 def main():

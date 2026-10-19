@@ -7,6 +7,7 @@
       "animation": "base0",
       "frame": 0,
       "sheet": "buildings.generated.png",
+      "pivot": [162, 235],
       "region": [
         6,
         7,

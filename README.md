@@ -125,7 +125,13 @@ The ImageGen source sheets, exact prompts and extraction manifest live in
 [`assets/hd-static`](assets/hd-static). `tools/build_hd_assets.py` requires Pillow
 and packs the authored frames into `build/hd-assets/texture/lazy/volcano-static.png`.
 Texture regions have two pixels per world unit, including padding for shadows;
-body placement, interaction bounds, frame order and frame rates stay unchanged.
+frame order and frame rates stay unchanged. Optional per-frame `pivot: [x,y]`
+points in `atlas.json` use top-left source-sheet pixels. The packer maps them
+through trimming, resizing and shadow padding into the existing `dx,dy` fields;
+click bounds follow the artwork while the ground highlight and level positions
+stay fixed. Headquarters uses an authored ground pivot to raise its tent about
+18 world pixels, centering its footprint within the selection circle. Frames
+without an explicit pivot retain their original placement and bounds.
 Body artwork is only downsampled when packing, with no enlargement or
 script-generated work states.
 Original resources under `reference/rescue-team` stay untouched. macOS windows
