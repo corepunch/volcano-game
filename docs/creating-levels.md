@@ -77,6 +77,23 @@ completes the mission through ordinary clicks with three production repair order
 without adding resources. Tune costs by choosing supported barrier/building types,
 then verify the full mission again after changing routes or supplies.
 
+## Ancient Echoes
+
+`make ancient-echoes` plays the collapsed ancient temple tourist-site mission.
+Rescue eight tourists and a stranded rescue worker, plus a cat and dog. The
+olive-terrace trail, service court and two temple approaches have separate gates.
+Clearing the first log and service-court stone spends all 40 starting food;
+the log and three timber caches fund the cafe, sawmill and visitor-centre house.
+The cafe restores food and the house earns the 100 money needed at the main
+rockfall. The final broken paving needs 20 wood. All scenery and ancient masonry
+remain in the painted background; only authored jobs block movement.
+
+`make ancient-echoes-app` creates `build/Ancient Echoes.app`, a local macOS
+launcher. `make test-ancient-echoes` checks every initial rescue gate, a zero-food
+opening and automatic queue recovery, three production repair orders, all nine
+people and both animals, pause and restart. The editable source, built-in
+ImageGen background and exact generation prompt are `levels/ancient-echoes.*`.
+
 ## Source fields
 
 JSON uses double quotes and disallows comments and trailing commas. `_comment`

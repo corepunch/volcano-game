@@ -245,6 +245,81 @@ static bool play_production_mission(const char *path,bool mayday)
     game_key(SDLK_r);
     return check(!game.won && !game.time && game.food==40 && game.wood==0,"mission restart resets puzzle");
 }
+/* These IDs are authored explicitly by Ancient Echoes. Exercise the actual
+ * UI, route graph and economy; no inventory grants or completion shortcuts. */
+static bool play_ancient_echoes(const char *path)
+{
+    if (!game_init_file(path)) return false;
+    test_click_entity(test_entity(20));test_click_entity(test_entity(22));
+    for (int tick=0;tick<1200;tick++) game_update(.1);
+    if (!check(game.objects[test_entity(20)].done && game.objects[test_entity(22)].done && game.food==0,
+               "two plausible opening jobs exhaust food")) return false;
+    const uint32_t caches[]={40,41,43};
+    for (int j=0;j<3;j++) test_click_entity(test_entity(caches[j]));
+    for (int tick=0;tick<1200;tick++) game_update(.1);
+    if (!check(game.wood==80 && game.food==0,"delivered timber finances food recovery")) return false;
+    test_click_entity(test_entity(21));test_click_entity(test_entity(23));
+    if (!check(game.objects[test_entity(21)].queued && !game.objects[test_entity(21)].assigned,
+               "food-starved clearing job waits in queue")) return false;
+    test_click_entity(test_entity(30));
+    if (!check(game.objects[test_entity(30)].assigned && game.wood==60,
+               "affordable cafe repair dispatches past blocked jobs")) return false;
+    for (int tick=0;tick<1600 && !game.objects[test_entity(21)].done;tick++) game_update(.1);
+    if (!check(game.objects[test_entity(30)].operational && game.objects[test_entity(21)].done,
+               "renewable food resumes queued tourist rescue without another click")) return false;
+    const uint32_t orders[3][3]={{30,32,34},{34,30,32},{32,34,30}};
+    for (int order=0;order<3;order++) {
+        if (!game_init_file(path)) return false;
+        if (!check(game.local_background && game.goal==9 && game.animals==2 && game.worker_count==3 &&
+                   game.food==40 && game.wood==0 && game.money==0,"Ancient Echoes initial mission")) return false;
+        for (uint32_t seed=50;seed<=61;seed++) {
+            if (seed==59) continue;
+            int i=test_entity(seed);float length;int count;Vec2 points[MAX_PATH];
+            if (!check(i>=0 && !game_route_to(game_current(),&game.workers[0],game.objects[i].p,-1,points,&count,&length),
+                       "every tourist, recruit and animal starts gated")) return false;
+        }
+        if (!order && !test_frame("ancient-echoes-start")) return false;
+        bool repaired=false,paid=false;
+        for (int tick=0;tick<7500 && !game.won;tick++) {
+            if (tick%10==0) {
+                for (int i=0;i<game.object_count;i++) {
+                    Entity *e=&game.objects[i];
+                    if (e->kind==RESOURCE && !e->hidden && !e->done && !e->assigned && !e->queued) test_click_entity(i);
+                }
+                for (int j=0;j<3;j++) {
+                    int i=test_entity(orders[order][j]);Entity *e=&game.objects[i];
+                    if (!e->operational && !e->assigned && !e->queued) test_click_entity(i);
+                }
+                for (int i=0;i<game.object_count;i++) {
+                    Entity *e=&game.objects[i];
+                    if ((e->kind==BARRIER || e->kind==ANIMAL) && !e->done && !e->hidden && !e->assigned && !e->queued)
+                        test_click_entity(i);
+                }
+            }
+            game_update(.1);
+            if (game.objects[test_entity(23)].assigned) paid=true;
+            if (!check(game.food>=0 && game.wood>=0 && game.money>=0,"nonnegative rescue budget")) return false;
+            if (!order && !repaired && game.objects[test_entity(30)].operational &&
+                game.objects[test_entity(32)].operational && game.objects[test_entity(34)].operational) {
+                if (!test_frame("ancient-echoes-repaired")) return false;
+                repaired=true;
+            }
+        }
+        if (!check(game.won && game.rescued==9 && game.animals_rescued==2 && game.worker_count==3 && paid,
+                   "Ancient Echoes completes all objectives through ordinary clicks")) {
+            fprintf(stderr,"order=%d rescued=%d animals=%d food=%d wood=%d money=%d time=%.1f\n",
+                    order,game.rescued,game.animals_rescued,game.food,game.wood,game.money,game.time);
+            return false;
+        }
+        if (!order && !test_frame("ancient-echoes-complete")) return false;
+        printf("PASS: Ancient Echoes repair order %d rescues nine people and two animals in %.1fs.\n",order+1,game.time);
+    }
+    game_key(SDLK_r);game_key(SDLK_p);game_update(1);
+    if (!check(game.time==0 && game.paused,"Ancient Echoes pause")) return false;
+    game_key(SDLK_r);
+    return check(!game.paused && !game.won && game.time==0 && game.food==40 && game.wood==0 && game.rescued==0,
+                 "Ancient Echoes restart restores all initial settings");
+}
 int main(int argc,char **argv)
 {
     if (argc>2 && !strcmp(argv[1],"--decode")) {
@@ -254,13 +329,17 @@ int main(int argc,char **argv)
         }
         free(level);printf("Production C reader accepted %d compiled binaries\n",argc-2);return 0;
     }
-    if ((argc!=3 && argc!=4) || (argc==4 && strcmp(argv[3],"--emerald") && strcmp(argv[3],"--mayday")) || strlen(argv[1])>=sizeof asset_root) return 2;
+    if ((argc!=3 && argc!=4) || (argc==4 && strcmp(argv[3],"--emerald") && strcmp(argv[3],"--mayday") && strcmp(argv[3],"--ancient")) || strlen(argv[1])>=sizeof asset_root) return 2;
     strcpy(asset_root,argv[1]);
     if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER)) return 2;
     SDL_Surface *surface=SDL_CreateRGBSurfaceWithFormat(0,GAME_WIDTH,GAME_HEIGHT,32,SDL_PIXELFORMAT_RGBA32);
     renderer=surface?SDL_CreateSoftwareRenderer(surface):NULL;
     bool ok=renderer && resources_init();
-    if (ok) {SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_BLEND);ok=argc==4?play_production_mission(argv[2],!strcmp(argv[3],"--mayday")):play(argv[2]);}
+    if (ok) {
+        SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_BLEND);
+        ok=argc==4?(!strcmp(argv[3],"--ancient")?play_ancient_echoes(argv[2]):
+            play_production_mission(argv[2],!strcmp(argv[3],"--mayday"))):play(argv[2]);
+    }
     if (!ok) fprintf(stderr,"%s\n",last_error);
     else puts("PASS: custom source mission, dependency gates, exact budget, automatic rescue, victory, pause and restart.");
     game_destroy();resources_destroy();SDL_DestroyRenderer(renderer);SDL_FreeSurface(surface);SDL_Quit();

@@ -1,0 +1,652 @@
+{
+  "$schema": "../docs/level-source.schema.json",
+  "format": "volcano-level-1",
+  "_comment": "Ancient Echoes: collapsed temple tourist site. Nine people including one stranded worker, two animals. Bare paths and pads measured from the generated painting. Renewable food, timber and visitor-centre income. Source coordinates are bottom-left world pixels.",
+  "background": "@ancient-echoes.png",
+  "mission": {
+    "food": 40,
+    "wood": 0,
+    "money": 0,
+    "fuel": 0,
+    "rescue_goal": 9,
+    "basin_goal": 0,
+    "allow_cafe": true
+  },
+  "objects": [
+    {
+      "type": "traffic",
+      "id": 1,
+      "layer": 4,
+      "points": [
+        [
+          150.0,
+          298.0
+        ],
+        [
+          178.18,
+          298.0
+        ],
+        [
+          206.36,
+          298.0
+        ],
+        [
+          234.55,
+          298.0
+        ],
+        [
+          262.73,
+          298.0
+        ],
+        [
+          290.91,
+          298.0
+        ],
+        [
+          319.09,
+          298.0
+        ],
+        [
+          347.27,
+          298.0
+        ],
+        [
+          375.45,
+          298.0
+        ],
+        [
+          403.64,
+          298.0
+        ],
+        [
+          431.82,
+          298.0
+        ],
+        [
+          460.0,
+          298.0
+        ],
+        [
+          488.12,
+          298.0
+        ],
+        [
+          516.25,
+          298.0
+        ],
+        [
+          544.38,
+          298.0
+        ],
+        [
+          572.5,
+          298.0
+        ],
+        [
+          600.62,
+          298.0
+        ],
+        [
+          628.75,
+          298.0
+        ],
+        [
+          656.88,
+          298.0
+        ],
+        [
+          685.0,
+          298.0
+        ],
+        [
+          714.44,
+          298.0
+        ],
+        [
+          743.89,
+          298.0
+        ],
+        [
+          773.33,
+          298.0
+        ],
+        [
+          802.78,
+          298.0
+        ],
+        [
+          832.22,
+          298.0
+        ],
+        [
+          861.67,
+          298.0
+        ],
+        [
+          891.11,
+          298.0
+        ],
+        [
+          920.56,
+          298.0
+        ],
+        [
+          950.0,
+          298.0
+        ],
+        [
+          978.12,
+          298.0
+        ],
+        [
+          1006.25,
+          298.0
+        ],
+        [
+          1034.38,
+          298.0
+        ],
+        [
+          1062.5,
+          298.0
+        ],
+        [
+          1090.62,
+          298.0
+        ],
+        [
+          1118.75,
+          298.0
+        ],
+        [
+          1146.88,
+          298.0
+        ],
+        [
+          1175.0,
+          298.0
+        ],
+        [
+          460.0,
+          328.0
+        ],
+        [
+          460.0,
+          358.0
+        ],
+        [
+          460.0,
+          388.0
+        ],
+        [
+          460.0,
+          418.0
+        ],
+        [
+          460.0,
+          443.0
+        ],
+        [
+          460.0,
+          468.0
+        ],
+        [
+          460.0,
+          493.0
+        ],
+        [
+          460.0,
+          518.0
+        ],
+        [
+          473.33,
+          533.0
+        ],
+        [
+          486.67,
+          548.0
+        ],
+        [
+          500.0,
+          563.0
+        ],
+        [
+          522.5,
+          570.5
+        ],
+        [
+          545.0,
+          578.0
+        ],
+        [
+          436.67,
+          418.0
+        ],
+        [
+          413.33,
+          418.0
+        ],
+        [
+          390.0,
+          418.0
+        ],
+        [
+          362.67,
+          414.17
+        ],
+        [
+          335.33,
+          410.33
+        ],
+        [
+          308.0,
+          406.5
+        ],
+        [
+          685.0,
+          272.0
+        ],
+        [
+          685.0,
+          246.0
+        ],
+        [
+          685.0,
+          220.0
+        ],
+        [
+          685.0,
+          194.0
+        ],
+        [
+          685.0,
+          168.0
+        ],
+        [
+          660.0,
+          168.0
+        ],
+        [
+          635.0,
+          168.0
+        ],
+        [
+          610.0,
+          168.0
+        ],
+        [
+          585.17,
+          159.33
+        ],
+        [
+          560.33,
+          150.67
+        ],
+        [
+          535.5,
+          142.0
+        ],
+        [
+          706.67,
+          161.33
+        ],
+        [
+          728.33,
+          154.67
+        ],
+        [
+          750.0,
+          148.0
+        ],
+        [
+          777.67,
+          145.0
+        ],
+        [
+          805.33,
+          142.0
+        ],
+        [
+          833.0,
+          139.0
+        ],
+        [
+          963.33,
+          319.67
+        ],
+        [
+          976.67,
+          341.33
+        ],
+        [
+          990.0,
+          363.0
+        ],
+        [
+          1010.0,
+          380.5
+        ],
+        [
+          1030.0,
+          398.0
+        ],
+        [
+          1055.83,
+          398.83
+        ],
+        [
+          1081.67,
+          399.67
+        ],
+        [
+          1107.5,
+          400.5
+        ],
+        [
+          1133.33,
+          401.33
+        ],
+        [
+          1159.17,
+          402.17
+        ],
+        [
+          1185.0,
+          403.0
+        ],
+        [
+          1213.33,
+          403.0
+        ],
+        [
+          1241.67,
+          403.0
+        ],
+        [
+          1270.0,
+          403.0
+        ]
+      ]
+    },
+    {
+      "type": "base",
+      "id": 2,
+      "layer": 5,
+      "x": 155,
+      "y": 298
+    },
+    {
+      "type": "worker",
+      "id": 3,
+      "layer": 6,
+      "x": 155,
+      "y": 298
+    },
+    {
+      "type": "worker",
+      "id": 4,
+      "layer": 6,
+      "x": 173,
+      "y": 288
+    },
+    {
+      "type": "barrier",
+      "id": 20,
+      "layer": 5,
+      "x": 460,
+      "y": 358,
+      "params": "tree00",
+      "_comment": "North access: 20 food yields the 20 wood cafe repair."
+    },
+    {
+      "type": "barrier",
+      "id": 21,
+      "layer": 5,
+      "x": 460,
+      "y": 488,
+      "params": "stone00",
+      "_comment": "Tourists on the olive terrace require renewed food."
+    },
+    {
+      "type": "barrier",
+      "id": 22,
+      "layer": 5,
+      "x": 685,
+      "y": 238,
+      "params": "stone00",
+      "_comment": "South service court holds repair timber and visitor-centre income."
+    },
+    {
+      "type": "barrier",
+      "id": 23,
+      "layer": 5,
+      "x": 850,
+      "y": 298,
+      "params": "stone_big00",
+      "_comment": "Collapsed access: 40 food and 100 money; no bypass."
+    },
+    {
+      "type": "barrier",
+      "id": 24,
+      "layer": 5,
+      "x": 1110,
+      "y": 298,
+      "params": "tree00"
+    },
+    {
+      "type": "barrier",
+      "id": 25,
+      "layer": 5,
+      "x": 1110,
+      "y": 401,
+      "params": "broken_road0"
+    },
+    {
+      "type": "building",
+      "id": 30,
+      "layer": 5,
+      "x": 308,
+      "y": 406.5,
+      "params": "burger",
+      "extra": "1;0",
+      "_comment": "Visible cafe center (310,350); measured retail pivot."
+    },
+    {
+      "type": "resource",
+      "id": 31,
+      "layer": 5,
+      "x": 390,
+      "y": 408,
+      "params": "food1",
+      "link_id": 30
+    },
+    {
+      "type": "building",
+      "id": 32,
+      "layer": 5,
+      "x": 535.5,
+      "y": 142,
+      "params": "sawmill",
+      "extra": "1;0"
+    },
+    {
+      "type": "resource",
+      "id": 33,
+      "layer": 5,
+      "x": 610,
+      "y": 143,
+      "params": "wood1",
+      "link_id": 32
+    },
+    {
+      "type": "building",
+      "id": 34,
+      "layer": 5,
+      "x": 833,
+      "y": 139,
+      "params": "house",
+      "extra": "1;0"
+    },
+    {
+      "type": "resource",
+      "id": 35,
+      "layer": 5,
+      "x": 740,
+      "y": 118,
+      "params": "money1",
+      "link_id": 34
+    },
+    {
+      "type": "resource",
+      "id": 40,
+      "layer": 5,
+      "x": 650,
+      "y": 183,
+      "params": "wood2"
+    },
+    {
+      "type": "resource",
+      "id": 41,
+      "layer": 5,
+      "x": 700,
+      "y": 153,
+      "params": "wood2"
+    },
+    {
+      "type": "resource",
+      "id": 42,
+      "layer": 5,
+      "x": 730,
+      "y": 183,
+      "params": "money2"
+    },
+    {
+      "type": "resource",
+      "id": 43,
+      "layer": 5,
+      "x": 610,
+      "y": 198,
+      "params": "wood2"
+    },
+    {
+      "type": "civilian",
+      "id": 50,
+      "layer": 6,
+      "x": 510,
+      "y": 583
+    },
+    {
+      "type": "civilian",
+      "id": 51,
+      "layer": 6,
+      "x": 540,
+      "y": 563
+    },
+    {
+      "type": "civilian",
+      "id": 52,
+      "layer": 6,
+      "x": 565,
+      "y": 593
+    },
+    {
+      "type": "civilian",
+      "id": 54,
+      "layer": 6,
+      "x": 1200,
+      "y": 423
+    },
+    {
+      "type": "civilian",
+      "id": 55,
+      "layer": 6,
+      "x": 1230,
+      "y": 403
+    },
+    {
+      "type": "civilian",
+      "id": 56,
+      "layer": 6,
+      "x": 1260,
+      "y": 418
+    },
+    {
+      "type": "civilian",
+      "id": 57,
+      "layer": 6,
+      "x": 1190,
+      "y": 313
+    },
+    {
+      "type": "civilian",
+      "id": 58,
+      "layer": 6,
+      "x": 1220,
+      "y": 288
+    },
+    {
+      "type": "worker",
+      "id": 53,
+      "layer": 6,
+      "x": 505,
+      "y": 543,
+      "_comment": "Stranded guide recruited into the rescue crew; counts toward nine people."
+    },
+    {
+      "type": "animal",
+      "id": 60,
+      "layer": 6,
+      "x": 575,
+      "y": 553,
+      "params": "cat"
+    },
+    {
+      "type": "animal",
+      "id": 61,
+      "layer": 6,
+      "x": 1255,
+      "y": 278,
+      "params": "dog"
+    },
+    {
+      "type": "effect",
+      "id": 100,
+      "layer": 3,
+      "x": 165,
+      "y": 568,
+      "params": "sparkles;width=42;height=20;rate=4;opacity=.6"
+    },
+    {
+      "type": "effect",
+      "id": 101,
+      "layer": 3,
+      "x": 160,
+      "y": 533,
+      "params": "sparkles;width=40;height=20;rate=3;opacity=.6"
+    },
+    {
+      "type": "effect",
+      "id": 102,
+      "layer": 5,
+      "x": 365,
+      "y": 513,
+      "params": "insects;animation=butterfly;width=50;height=35;count=2;speed=.7"
+    },
+    {
+      "type": "effect",
+      "id": 103,
+      "layer": 5,
+      "x": 980,
+      "y": 148,
+      "params": "insects;animation=butterfly;width=45;height=25;count=2;speed=.8"
+    },
+    {
+      "type": "effect",
+      "id": 104,
+      "layer": 5,
+      "x": 790,
+      "y": 478,
+      "params": "motes;width=110;height=60;count=5;speed=.5;opacity=.25"
+    }
+  ]
+}
