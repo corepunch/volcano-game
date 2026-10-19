@@ -108,6 +108,10 @@ the sawmill and park-office house. Food production restores an exhausted crew,
 house income finances the 100-money rockfall, and the sawmill replenishes wood
 for the broken visitor walkway. The red coaster, bent yellow supports and empty
 derailed train remain painted scenery, with sparse pond and garden animations.
+The enlarged coaster wreck fills the middle and east as well as the upper map.
+Makeshift dirt access follows broken fencing beside the train, then climbs
+between collapsed supports to the two eastern rescue pockets. The production
+buildings occupy small rough service clearings along the southern edge.
 
 `make twisted-tracks-app` creates `build/Twisted Tracks.app`, a local macOS
 launcher. `make test-twisted-tracks` verifies the ten-person mission through the
