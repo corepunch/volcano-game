@@ -1,0 +1,12 @@
+{
+  "kenney_body_unchanged": true,
+  "original_vertex_positions_weights_topology_and_uvs_preserved": true,
+  "body_vertices": 804,
+  "body_triangles": 1604,
+  "uniform_mesh_pieces": 0,
+  "helmet_vertices": 62,
+  "static_triangles_before": 3516,
+  "static_triangles_after": 1724,
+  "texture_atlas": "assets/kenney-characters/textures/rescue-worker.png",
+  "actions": 18
+}

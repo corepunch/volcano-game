@@ -4,6 +4,8 @@ The source is [Kenney Animated Characters Survivors](https://kenney.nl/assets/an
 
 Open `blender/rescue-characters.blend` in Blender 5.2 or newer. It contains the worker, male and female civilian meshes, packed textures, an orthographic sprite camera and editable, baked `Rescue_*` actions. The selected action automatically shows its equipment. The rig's `character` custom property selects `0` worker, `1` male or `2` female.
 
+The uniform is painted into `textures/rescue-worker.png`: vest, reflective tape, pockets, zipper, belt, buckle, sleeves, gloves and boots. This single atlas also supplies the hard hat and tool colors. Kenney's body remains exactly **804 vertices / 1,604 triangles**, with its original positions, topology, skin weights and `UVMap` preserved. A second UV layer fits that layout into the shared atlas. There are no added clothing meshes. The helmet is one **62-vertex / 120-triangle** silhouette with painted ridge and sticker details. The standing worker now has 1,724 triangles instead of 3,516. `textures/model-check.json` records the comparison against the original FBX.
+
 | Action | Game animation names | Equipment / behavior |
 | --- | --- | --- |
 | Stand / Look | `worker_wait0..2`, civilian `*_idle0..2` | Breathing and looking around |
@@ -52,4 +54,4 @@ make hd-assets
 
 The render cache is under `build/kenney-character-frames`. A changed blend file or render script invalidates the cache. A first-time full rebuild after an interrupted preview can be forced by removing that generated cache directory. The saved `sprites/` PNG atlases and catalog make normal game builds independent of Blender.
 
-The FBX clips have different rest poses. The authoring script transfers each clip through its exported Targeting Pose before baking, rather than copying incompatible local quaternion tracks. New work actions are authored on the retargeted rig. Tool and clothing geometry follows weighted bones; there is no frame-by-frame image generation or derived artwork.
+The FBX clips have different rest poses. The authoring script transfers each clip through its exported Targeting Pose before baking, rather than copying incompatible local quaternion tracks. New work actions are authored on the retargeted rig. Uniform details follow the existing skinned body through its texture. Only the helmet and props add geometry. `tools/texture_rescue_uniform.py` authors the flat-color paint and bakes it onto the original UV layout in Blender; no raised tape, pockets or belt pieces are created.

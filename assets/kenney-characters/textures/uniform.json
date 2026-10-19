@@ -1,0 +1,14 @@
+{
+  "body_vertices": 804,
+  "body_triangles": 1604,
+  "helmet_vertices": 62,
+  "helmet_triangles": 120,
+  "uniform_mesh_pieces": 0,
+  "worker_texture": "textures/rescue-worker.png",
+  "texture_size": [
+    1024,
+    1280
+  ],
+  "body_uv": "Original Kenney UVMap retained, affine atlas layout in RescueAtlas",
+  "worker_materials": 2
+}

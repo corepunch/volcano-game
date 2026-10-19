@@ -7,6 +7,8 @@ motions are authored on that rig; all gear follows weighted bones.
 import bpy
 import json
 import math
+import sys
+import importlib
 from pathlib import Path
 from mathutils import Matrix, Quaternion, Vector
 
@@ -15,10 +17,17 @@ ART = ROOT / 'assets/kenney-characters'
 SOURCE = ART / 'source/survivors'
 OUT = ART / 'blender'
 OUT.mkdir(parents=True, exist_ok=True)
+sys.path.insert(0,str(ROOT/'tools'))
+import texture_rescue_uniform
+importlib.reload(texture_rescue_uniform)
+from texture_rescue_uniform import simple_helmet, bake_uniform
 
 # This script runs only in our isolated Blender MCP process.
+bpy.ops.wm.read_homefile(use_empty=True,use_factory_startup=True)
 for obj in list(bpy.data.objects):
     bpy.data.objects.remove(obj, do_unlink=True)
+for mat in list(bpy.data.materials):
+    bpy.data.materials.remove(mat)
 for action in list(bpy.data.actions):
     bpy.data.actions.remove(action)
 bpy.ops.import_scene.fbx(filepath=str(SOURCE / 'Model/characterMedium.fbx'))
@@ -274,7 +283,7 @@ def weight(obj,bone,prop=None):
     return obj
 
 
-def cube(name,loc,scale,mat,bone='Chest',prop=None,bevel=.035):
+def cube(name,loc,scale,mat,bone='Chest',prop=None,bevel=0):
     bpy.ops.mesh.primitive_cube_add(size=1,location=loc);o=bpy.context.object;o.name=name;o.scale=scale
     bpy.ops.object.transform_apply(location=False,rotation=False,scale=True)
     # Store geometry in armature rest coordinates so modifiers animate naturally.
@@ -286,31 +295,10 @@ def cube(name,loc,scale,mat,bone='Chest',prop=None,bevel=.035):
     return weight(o,bone,prop)
 
 
-def mesh_obj(name,verts,faces,mat,bone,prop=None):
-    me=bpy.data.meshes.new(name);me.from_pydata(verts,[],faces);me.update();o=bpy.data.objects.new(name,me);bpy.context.collection.objects.link(o);o.data.materials.append(mat)
-    return weight(o,bone,prop)
-
-# Hard hat: a rounded dome with a broad brim and central reinforcing ridge.
-verts=[];faces=[];segments=24;rings=8
-for ring in range(rings+1):
-    phi=(ring/rings)*math.pi/2
-    for j in range(segments):
-        a=j/segments*2*math.pi;verts.append((.56*math.cos(phi)*math.cos(a),.03+.65*math.cos(phi)*math.sin(a),3.47+.57*math.sin(phi)))
-for k in range(rings):
-    for j in range(segments):
-        n=(j+1)%segments;faces.append((k*segments+j,k*segments+n,(k+1)*segments+n,(k+1)*segments+j))
-helmet=mesh_obj('Hard hat dome',verts,faces,orange,'Head')
-for p in helmet.data.polygons:p.use_smooth=True
-bpy.ops.mesh.primitive_cylinder_add(vertices=32,radius=1,depth=.065,location=(0,-.06,3.48));brim=bpy.context.object;brim.name='Hard hat brim';brim.scale=(.65,.8,1);bpy.ops.object.transform_apply(location=True,rotation=True,scale=True);brim.data.materials.append(orange);weight(brim,'Head')
-cube('Hard hat ridge',(0,.03,3.93),(.085,.6,.11),orange,'Head')
-# Vest bands sit over the torso on both sides, following the same torso bones.
-for y in [-.292,.228]:
-    for x in [-.18,.18]:
-        cube('Vest yellow edging',(x,y,2.16),(.12,.03,.6),lime,'Chest',bevel=.008)
-        cube('Vest reflective stripe',(x,y+(-.018 if y<0 else .018),2.16),(.065,.018,.6),white,'Chest',bevel=.005)
-    cube('Vest waist band',(0,y,1.92),(.58,.035,.1),white,'Spine',bevel=.008)
-cube('Utility belt',(0,-.01,1.53),(.7,.53,.1),black,'Hips')
-cube('Belt buckle',(0,-.3,1.53),(.13,.05,.1),steel,'Hips')
+# The body remains Kenney's original mesh. Uniform details are baked into its
+# existing UV layout, and the helmet adds just one low-poly silhouette.
+helmet=simple_helmet(rig,bpy.context.collection)
+worker_parts.append(helmet)
 
 # Build props in right-hand bone coordinates so every tool stays in the grip.
 hand=rig.data.bones['RightHand'].matrix_local
@@ -345,10 +333,17 @@ female=civilian.copy();female.data=civilian.data.copy();female.name='Civilian_Fe
 fskin=skin.copy();fskin.name='Kenney female skin';ftex=next(n for n in fskin.node_tree.nodes if n.type=='TEX_IMAGE');ftex.image=bpy.data.images.load(str(SOURCE/'Skins/survivorFemaleA.png'),check_existing=True);female.data.materials[0]=fskin
 female.hide_render=True;female.hide_set(True)
 
+uniform_report=bake_uniform(rig,body,helmet,worker_parts,ART,dict(
+    orange=tuple(orange.diffuse_color),navy=tuple(navy.diffuse_color),
+    silver=tuple(white.diffuse_color),lime=tuple(lime.diffuse_color),
+    black=tuple(black.diffuse_color),steel=tuple(steel.diffuse_color),
+    wood=tuple(wood.diffuse_color),canvas=tuple(canvas.diffuse_color),red=tuple(red.diffuse_color)))
+
 scene=bpy.context.scene;scene.render.engine='CYCLES';scene.cycles.samples=12;scene.cycles.use_denoising=True
 scene.render.resolution_x=160;scene.render.resolution_y=160;scene.render.resolution_percentage=100
 scene.render.image_settings.file_format='PNG';scene.render.image_settings.color_mode='RGBA';scene.render.film_transparent=True
 scene.render.fps=24
+if scene.world is None:scene.world=bpy.data.worlds.new('Sprite world')
 scene.world.color=(.35,.35,.35)
 scene.world.use_nodes=True;scene.world.node_tree.nodes['Background'].inputs[0].default_value=(.68,.76,.86,1);scene.world.node_tree.nodes['Background'].inputs[1].default_value=.7
 scene.view_settings.view_transform='Standard'
@@ -414,4 +409,4 @@ bpy.ops.file.pack_all()
 bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'rescue-characters.blend'))
 metadata={'source':'https://kenney.nl/assets/animated-characters-survivors','license':'CC0-1.0','actions':{a.name:{'frames':int(a['frames']),'fps':int(a['fps']),'origin':a.get('origin',''),'props':json.loads(a.get('props','[]'))} for a in bpy.data.actions if 'frames' in a},'directions':['E','NE','N','NW','W','SW','S','SE']}
 (ART/'actions.json').write_text(json.dumps(metadata,indent=2)+'\n')
-result={'blend':str(OUT/'rescue-characters.blend'),'actions':list(metadata['actions']),'objects':len(bpy.data.objects)}
+result={'blend':str(OUT/'rescue-characters.blend'),'actions':list(metadata['actions']),'objects':len(bpy.data.objects),'uniform':uniform_report}
