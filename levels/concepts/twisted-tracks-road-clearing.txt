@@ -1,0 +1,69 @@
+Twisted Tracks: clear the park roads
+
+Current design direction: classic ground-road obstacle clearing.
+This supersedes the vertical-rescue and construction-kit concepts as a proposed
+gameplay direction. Those earlier drawings remain archived for visual reference.
+Concept only: no game code, level routes, production art or animation is changed.
+
+Generation
+Built-in ImageGen edit using levels/background-history/twisted-tracks-expanded.png
+as the primary environment, with twisted-tracks-vertical-rescue-v2.png as a style
+reference only. Exact prompt is saved alongside this concept. Keep the dense
+coaster wreck, red/yellow structures, blue train, pond, carousel and lush planting.
+
+Core loop
+An existing park road is blocked by a discrete fallen coaster component.
+Click the obstruction, send a worker, pay the ordinary resource cost, complete
+the timed clearing job and reopen the road. Survivors leave along the cleared
+ground route. Different objects use the same familiar interaction.
+
+Four themed obstacles
+- Short detached red track panel, visibly snapped from the surrounding coaster.
+- Compact broken yellow support section with a cracked concrete collar.
+- Bent fence and torn gate, continuing from the park enclosure beside the road.
+- Detached blue car and wheel assembly, separate from the static background train.
+Small jobs can use the ordinary light-obstruction economy; heavier support/car
+jobs can use the existing costly-obstruction pattern. Exact costs are undecided.
+Do not add a parts resource, specialist inventory, construction menu or vehicle
+dependency just to distinguish these obstacle appearances.
+
+Geography and art rules
+- Everyone travels at ground level on established visitor and maintenance roads.
+- Keep perimeter paths and add access only where an old lane can plausibly
+  continue between the existing foundations and wreckage.
+- Show road edges on both sides of each blocker. Clearing it reveals the same
+  road underneath rather than creating a new road over the wreck.
+- A blocker fills the narrow lane; adjacent wreckage/fencing prevents bypasses.
+- A short track piece can be a job; a whole loop or support tower stays scenery.
+- Overhead track may remain where real clearance is obvious, but the prototype
+  should favor visually open lanes and avoid complex foreground occlusion.
+- Survivors stand in ground pockets connected to roads, not on rails or cars.
+- Match obstacle paint, lighting and shadows to nearby static debris. Keep torn
+  rail ends, bolts and concrete chips beside roads to explain each fallen piece.
+- Runtime obstacles must ultimately be separate from the background; once
+  cleared, their visible footprint must expose clean underlying road artwork.
+- No ladders, catwalks, elevated routes, construction kits or new-road building.
+
+First playable prototype scope
+Retain the existing worker queue, clearing and rescue formula. Start with one
+short road branch and two coaster-themed blockers, then add visual variants and
+further rescue pockets after checking route gating, costs and removal artwork.
+Any production prop/state artwork must follow the project's single-atlas rule.
+The concept's small obstacle studies are visual references, not extracted assets.
+
+Visual review
+The generated image preserves the dense red/yellow coaster, blue train, pond
+and carousel, removes elevated rescue structures, and depicts four themed
+clearance jobs with matching small studies in the same generated sheet.
+Workers and the visible visitor pockets are at ground level. The support job
+is placed among rubble from the ride, the fence joins the enclosure, and the
+detached car matches the main train. This remains a conceptual layout: final
+lane widths, all survivor approaches and obstacle bypasses need measurement
+and gameplay checks before using it as a production background.
+
+Validation for future implementation
+Check the actual painting, not requested coordinates; keep working positions on
+the reachable side, prevent unintended graph bypasses, and verify survivors can
+return after each gate opens. Check that clearing a job removes its whole visible
+blockage without erasing neighboring background wreckage. Retain sufficient
+reachable resources to finish mandatory gates in reasonable spending orders.
