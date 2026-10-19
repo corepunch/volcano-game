@@ -1,7 +1,7 @@
 {
   "$schema": "../docs/level-source.schema.json",
   "format": "volcano-level-1",
-  "_comment": "Emerald Falls: north forest, southern supply lane, eastern river crossing. Seven people (including one recruit) and two animals. Start with 40 food. Timber can repair food, wood or money production; production keeps alternate spending orders recoverable. Background generated with ImageGen.",
+  "_comment": "Emerald Falls: baked forest lighting and shadows, independent water sparkles, original Rescue Team butterflies and six precisely placed white foam patches. Three-branch resource puzzle and seven people/two animals.",
   "background": "@emerald-falls.png",
   "mission": {
     "food": 40,
@@ -656,6 +656,213 @@
       "x": 1181.5,
       "y": 96.1,
       "_comment": "Foam center aligned to a red X in the 08.44.28 reference screenshot. Direct center placement; no waterfall-height offset."
+    },
+    {
+      "type": "effect",
+      "id": 370,
+      "layer": 3,
+      "name": "sparkles",
+      "params": "sparkles;width=38;height=55;rate=5;speed=.8;opacity=.7",
+      "x": 1099,
+      "y": 722
+    },
+    {
+      "type": "effect",
+      "id": 371,
+      "layer": 3,
+      "name": "sparkles",
+      "params": "sparkles;width=35;height=30;rate=5;speed=.8;opacity=.7",
+      "x": 1116,
+      "y": 646
+    },
+    {
+      "type": "effect",
+      "id": 372,
+      "layer": 3,
+      "name": "sparkles",
+      "params": "sparkles;width=34;height=38;rate=5;speed=.8;opacity=.7",
+      "x": 1117,
+      "y": 565
+    },
+    {
+      "type": "effect",
+      "id": 373,
+      "layer": 3,
+      "name": "sparkles",
+      "params": "sparkles;width=27;height=70;rate=5;speed=.8;opacity=.7",
+      "x": 1110,
+      "y": 499
+    },
+    {
+      "type": "effect",
+      "id": 374,
+      "layer": 3,
+      "name": "sparkles",
+      "params": "sparkles;width=26;height=24;rate=5;speed=.8;opacity=.7",
+      "x": 1110,
+      "y": 415
+    },
+    {
+      "type": "effect",
+      "id": 375,
+      "layer": 3,
+      "name": "sparkles",
+      "params": "sparkles;width=26;height=46;rate=5;speed=.8;opacity=.7",
+      "x": 1111,
+      "y": 337
+    },
+    {
+      "type": "effect",
+      "id": 376,
+      "layer": 3,
+      "name": "sparkles",
+      "params": "sparkles;width=38;height=42;rate=5;speed=.8;opacity=.7",
+      "x": 1105,
+      "y": 278
+    },
+    {
+      "type": "effect",
+      "id": 377,
+      "layer": 3,
+      "name": "sparkles",
+      "params": "sparkles;width=34;height=55;rate=5;speed=.8;opacity=.7",
+      "x": 1143,
+      "y": 202
+    },
+    {
+      "type": "effect",
+      "id": 378,
+      "layer": 3,
+      "name": "sparkles",
+      "params": "sparkles;width=42;height=45;rate=5;speed=.8;opacity=.7",
+      "x": 1187,
+      "y": 124
+    },
+    {
+      "type": "effect",
+      "id": 379,
+      "layer": 3,
+      "name": "sparkles",
+      "params": "sparkles;width=64;height=34;rate=5;speed=.8;opacity=.7",
+      "x": 1216,
+      "y": 44
+    },
+    {
+      "type": "effect",
+      "id": 380,
+      "layer": 3,
+      "name": "insects",
+      "params": "insects;animation=butterfly;width=54;height=32;count=2;speed=1;opacity=.9",
+      "x": 130,
+      "y": 560
+    },
+    {
+      "type": "effect",
+      "id": 381,
+      "layer": 3,
+      "name": "insects",
+      "params": "insects;animation=butterfly;width=54;height=32;count=2;speed=1;opacity=.9",
+      "x": 340,
+      "y": 480
+    },
+    {
+      "type": "effect",
+      "id": 382,
+      "layer": 3,
+      "name": "insects",
+      "params": "insects;animation=butterfly;width=54;height=32;count=2;speed=1;opacity=.9",
+      "x": 680,
+      "y": 510
+    },
+    {
+      "type": "effect",
+      "id": 383,
+      "layer": 3,
+      "name": "insects",
+      "params": "insects;animation=butterfly;width=54;height=32;count=2;speed=1;opacity=.9",
+      "x": 920,
+      "y": 485
+    },
+    {
+      "type": "effect",
+      "id": 384,
+      "layer": 3,
+      "name": "insects",
+      "params": "insects;animation=butterfly;width=54;height=32;count=2;speed=1;opacity=.9",
+      "x": 320,
+      "y": 280
+    },
+    {
+      "type": "effect",
+      "id": 385,
+      "layer": 3,
+      "name": "insects",
+      "params": "insects;animation=butterfly;width=54;height=32;count=2;speed=1;opacity=.9",
+      "x": 150,
+      "y": 170
+    },
+    {
+      "type": "effect",
+      "id": 386,
+      "layer": 3,
+      "name": "insects",
+      "params": "insects;animation=butterfly;width=54;height=32;count=2;speed=1;opacity=.9",
+      "x": 680,
+      "y": 115
+    },
+    {
+      "type": "effect",
+      "id": 387,
+      "layer": 3,
+      "name": "insects",
+      "params": "insects;animation=butterfly;width=54;height=32;count=2;speed=1;opacity=.9",
+      "x": 990,
+      "y": 570
+    },
+    {
+      "type": "effect",
+      "id": 388,
+      "layer": 3,
+      "name": "insects",
+      "params": "insects;animation=butterfly;width=54;height=32;count=2;speed=1;opacity=.9",
+      "x": 1310,
+      "y": 250
+    },
+    {
+      "type": "effect",
+      "id": 389,
+      "layer": 3,
+      "name": "motes",
+      "params": "motes;width=110;height=65;count=8;speed=.7;opacity=.45",
+      "x": 280,
+      "y": 590
+    },
+    {
+      "type": "effect",
+      "id": 390,
+      "layer": 3,
+      "name": "motes",
+      "params": "motes;width=110;height=65;count=8;speed=.7;opacity=.45",
+      "x": 750,
+      "y": 495
+    },
+    {
+      "type": "effect",
+      "id": 391,
+      "layer": 3,
+      "name": "motes",
+      "params": "motes;width=110;height=65;count=8;speed=.7;opacity=.45",
+      "x": 220,
+      "y": 270
+    },
+    {
+      "type": "effect",
+      "id": 392,
+      "layer": 3,
+      "name": "motes",
+      "params": "motes;width=110;height=65;count=8;speed=.7;opacity=.45",
+      "x": 820,
+      "y": 80
     }
   ]
 }

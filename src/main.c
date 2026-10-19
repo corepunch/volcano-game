@@ -68,7 +68,7 @@ int main(int argc,char **argv) {
     if(shot&&!frames)frames=1;
     if(SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER)){snprintf(last_error,sizeof(last_error),"%s",SDL_GetError());goto done;}
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY,"1");
-    window=SDL_CreateWindow("Volcano - Rescue Team 5 - SDL2 / C",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,GAME_WIDTH,GAME_HEIGHT,SDL_WINDOW_RESIZABLE|(hidden?SDL_WINDOW_HIDDEN:0));
+    window=SDL_CreateWindow("Volcano - Rescue Team 5 - SDL2 / C",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,GAME_WIDTH,GAME_HEIGHT,SDL_WINDOW_RESIZABLE|SDL_WINDOW_ALLOW_HIGHDPI|(hidden?SDL_WINDOW_HIDDEN:0));
     if(!window){snprintf(last_error,sizeof(last_error),"%s",SDL_GetError());goto done;}
     renderer=SDL_CreateRenderer(window,-1,software?SDL_RENDERER_SOFTWARE:SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
     if(!renderer)renderer=SDL_CreateRenderer(window,-1,SDL_RENDERER_SOFTWARE);
@@ -112,5 +112,5 @@ int main(int argc,char **argv) {
     result=0;
 done:
     if(result)fprintf(stderr,"Volcano: %s\n",last_error[0]?last_error:"Operation failed");
-    resources_destroy();if(renderer)SDL_DestroyRenderer(renderer);if(window)SDL_DestroyWindow(window);SDL_Quit();return result;
+    game_destroy();resources_destroy();if(renderer)SDL_DestroyRenderer(renderer);if(window)SDL_DestroyWindow(window);SDL_Quit();return result;
 }

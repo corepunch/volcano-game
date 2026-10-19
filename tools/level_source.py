@@ -331,14 +331,28 @@ def write_json(path, value):
 
 
 def copy_background(source, input_path, output_path):
-    if source["background"].startswith("@"):
-        name = source["background"][1:]
+    # All local scene images travel with the binary/source, including atlases.
+    references = {source["background"]} if source["background"].startswith("@") else set()
+    for obj in source["objects"]:
+        if obj["type"] not in {5, "effect"}:
+            continue
+        parts = obj.get("params", "").replace("\r", ";").replace("\n", ";").split(";")
+        if parts[0] != "sprite":
+            continue
+        params = {k.strip(): v.strip() for k, v in (p.split("=", 1) for p in parts[1:] if "=" in p)}
+        require("image" in params and params["image"].startswith("@"), f"visual {obj['id']}: sprite image must be @FILENAME")
+        references.add(params["image"])
+    pending = []
+    for reference in sorted(references):
+        name = reference[1:]
         require(bool(name) and "/" not in name and "\\" not in name and Path(name).suffix.lower() in {".png", ".jpg", ".jpeg"}, "custom background must be @FILENAME.png or .jpg beside the source")
         origin, target = input_path.parent / name, output_path.parent / name
-        data = origin.read_bytes()  # Validate the dependency even when already in place.
+        data = origin.read_bytes()  # Validate every dependency before copying any.
         if origin.resolve() != target.resolve():
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(data)
+            pending.append((target, data))
+    for target, data in pending:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(data)
 
 
 def main(argv=None):

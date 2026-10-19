@@ -1,0 +1,60 @@
+Use case: stylized-concept
+Asset type: production transparent game sprite atlas, original high-resolution replacement static objects for a top-down rescue management game.
+Input image: reference contact sheet of original sprites, ONLY for camera angle, order, footprint and state progression. Create NEW authored artwork with a cohesive premium painterly 3D casual PC game style: crisp bevels, detailed timber grain, stone, roof shingles, warm ivory walls, turquoise/teal and brick red roofs, natural warm sunlight from upper left, delicate contact shadows, no heavy black outline. Highly readable at small sizes, higher material detail than the reference.
+Canvas exactly 3072x2304 pixels, 8 columns and 6 rows of equal 384x384 cells, 48 cells total. True transparent RGBA background, no checkerboard, no text, no labels, no numbers, no cell borders. Each sprite isolated and entirely inside its own cell, at least 32 pixels padding to cell edges. Center each object in its cell. Fill about 280-310 pixels width or height for buildings; props around 200-260 pixels. Preserve original three-quarter high overhead camera, front and right walls visible, no horizon. Transparent air around every object, no ground tiles or scenic bases.
+Generate ALL 46 artwork entries TOGETHER in this single atlas, row-major left-to-right. Building states must depict the SAME new building in the same camera angle, progressively repaired. Debris stages must show genuinely fewer logs/rocks, NOT opacity changes or scaling the same drawing. Bridge states must add actual missing planks progressively. No UI buttons or warning signs baked into buildings. No people or animals.
+Row 1 cells 0-7:
+0 rescue headquarters: compact blue-roof timber field station with radio antenna, side equipment chest and open entrance (new design, not original tent).
+1 cafe badly damaged, cream walls and red scalloped awning, broken roof and rubble.
+2 same cafe partially repaired, roof patched, awning still torn.
+3 same cafe nearly repaired, roof complete, awning slightly damaged.
+4 same cafe fully working, clean roof and intact red awning, small serving counter, no sign text.
+5 sawmill workshop badly damaged, teal plank roof with missing boards and broken timber wall, stacked cut logs.
+6 same sawmill partially repaired.
+7 same sawmill nearly repaired.
+Row 2 cells 8-15:
+8 same sawmill fully repaired with intact teal roof, saw bench and logs.
+9 two-storey warm cream ranger lodge with red clay tile roof badly damaged, large roof hole and broken porch.
+10 same lodge partially repaired.
+11 same lodge nearly repaired.
+12 same lodge fully repaired, intact tile roof, timber porch.
+13 small turquoise-roof fuel station badly damaged, broken canopy, two red pumps.
+14 same fuel station partly repaired.
+15 same fuel station nearly repaired.
+Row 3 cells 16-23:
+16 same fuel station fully repaired.
+17 dense tangle of fallen brown logs, snapped branches, a little green foliage.
+18 same log obstacle with about 70 percent of the wood remaining.
+19 same log obstacle with about 45 percent of the wood remaining.
+20 same log obstacle with just two short logs remaining.
+21 small pile of mossy gray stones, six rocks.
+22 same small rock pile, four rocks.
+23 same small rock pile, three rocks.
+Row 4 cells 24-31:
+24 same small rock pile, two rocks.
+25 large rockfall of angular gray granite boulders, six large boulders.
+26 same large rockfall, five boulders.
+27 same large rockfall, three boulders.
+28 same large rockfall, two boulders.
+29 short horizontal wooden arched footbridge viewed from above, damaged, handrails and several deck planks missing, transparent gap between supports.
+30 same bridge partly repaired, fewer missing planks.
+31 same bridge almost repaired, one missing plank.
+Row 5 cells 32-39:
+32 same bridge fully repaired, intact golden timber deck and side handrails.
+33 broken road pothole: irregular crumbled gray asphalt edge, dark earthen hole, no ground tile.
+34 same pothole partly filled, smaller dark hole.
+35 same pothole nearly filled, small dark opening and gravel.
+36 same pothole last tiny opening surrounded by repaired gray stones.
+37 small food supply: woven basket with bread, red apple, cheese, no lettering.
+38 large food supply: two fuller matching baskets with bread, apples, cheese and vegetables.
+39 small timber resource: tidy stack of three fresh sawn planks.
+Row 6 cells 40-47:
+40 large timber resource: tidy stack of seven matching sawn planks.
+41 small money resource: neat bundle of green banknotes with paper band, no readable text.
+42 large money resource: three matching banknote bundles with a few gold coins.
+43 small fuel resource: red metal jerrycan.
+44 large fuel resource: red steel fuel drum with small jerrycan beside it.
+45 building construction site: low rectangular timber stakes and beams with stacked boards and a small ladder, no signs or icons.
+46 empty transparent cell.
+47 empty transparent cell.
+Constraints: precise 8 by 6 regular grid is essential for extraction. Keep each object separate. All buildings and props and EVERY state must be newly illustrated together, no duplication of original artwork. Do not add labels, borders, checkerboard, backdrop, UI, people, animals or watermark.

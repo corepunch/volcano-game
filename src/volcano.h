@@ -9,6 +9,7 @@
 #define MAX_LEVEL_OBJECTS 4096
 #define MAX_TRAFFIC_POINTS 4096
 #define PATH_CAPACITY 2048
+#define MAX_MAP_VISUALS 1024
 
 typedef struct { float x,y; } Vec2;
 typedef struct { float dx,dy,u,v,cu,cv,w,h; } SpriteFrame;
@@ -34,6 +35,19 @@ typedef struct {
     int traffic_count;
     size_t trailing_bytes;
 } Level;
+typedef enum { MAP_FOAM, MAP_SPRITE, MAP_SPARKLES, MAP_INSECTS, MAP_MOTES } MapVisualKind;
+typedef enum { MAP_GROUND, MAP_WORLD, MAP_OVERLAY } MapVisualStage;
+typedef struct {
+    MapVisualKind kind;
+    MapVisualStage stage;
+    uint32_t seed;
+    Vec2 p,extent,pivot;
+    SDL_Rect region;
+    char image[PATH_CAPACITY],animation[128];
+    float rate,speed,wind,scale_x,scale_y,rotation,opacity;
+    int count;
+} MapVisual;
+typedef struct { MapVisual visuals[MAX_MAP_VISUALS];int visual_count; } MapScene;
 extern char asset_root[PATH_CAPACITY];
 extern SDL_Renderer *renderer;
 extern char last_error[1024];
@@ -47,10 +61,23 @@ bool draw_sprite_rotated(const char *name,float x,float y,double time,int frame,
 bool draw_sprite_tinted(const char *name,float x,float y,double time,int frame,SDL_Color tint);
 bool draw_image(const char *relative,float x,float y,float w,float h,const char *alpha);
 bool draw_image_file(const char *path,float x,float y,float w,float h);
+bool image_file_size(const char *path,int *w,int *h);
+bool draw_map_sprite(const char *path,SDL_Rect region,Vec2 pivot,Vec2 position,Vec2 scale,float bend,float angle,float opacity);
+bool draw_map_animation(const char *name,Vec2 position,double time,float scale,float angle,float opacity);
+void draw_glint(float x,float y,float radius,float opacity);
+/* Type-5 custom map records; unknown retail controllers are preserved/ignored. */
+bool map_visual_parse(MapScene *scene,const LevelObject *raw,const char *level_path,int *index);
+void map_visual_draw(const MapVisual *visual,double time);
+void map_scene_draw(const MapScene *scene,MapVisualStage stage,double time);
 /* Retail GUI UVs and rectangles both use bottom-left coordinates. */
 bool draw_atlas(const char *relative,SDL_FRect rect,SDL_FRect uv);
 /* Original fire atlas (32 frames) and smoke, centered in world coordinates. */
 bool draw_particle(bool smoke,int frame,float x,float y,float diameter,float angle,SDL_Color tint);
+bool draw_particle_stretched(bool smoke,int frame,float x,float y,float w,float h,float angle,SDL_Color tint);
+/* CC0 log-fire layers (0..79) and smoke variants (0..3), with curved updraft. */
+bool draw_log_particle(bool smoke,int frame,float x,float y,float w,float h,float bend,SDL_Color tint);
+/* Soft additive light for fire beds and ember trails, in world coordinates. */
+bool draw_particle_glow(float x,float y,float w,float h,SDL_Color tint);
 /* White foam geometry: feathered flecks or broken surface rings. */
 bool draw_foam_particle(float x,float y,float w,float h,float angle,Uint8 opacity,bool ring);
 void draw_font(const char *font,const char *text,float x,float y,int size,SDL_Color color);
@@ -74,6 +101,7 @@ int campaign_number(int index);
 bool game_init(int index);
 /* Custom binary, with optional PATH.rules mission settings. */
 bool game_init_file(const char *path);
+void game_destroy(void);
 void game_update(double dt);
 void game_draw(void);
 void game_click(float x,float y);

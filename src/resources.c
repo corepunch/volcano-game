@@ -29,6 +29,7 @@ static int animations_count;
 static Font fonts[16];
 static int font_count;
 static Texture *textures;
+static Texture *log_particles[2];
 
 static bool failure(const char *message,const char *path) {
     snprintf(last_error,sizeof(last_error),"%s: %s",message,path);return false;
@@ -327,6 +328,56 @@ bool draw_image_file(const char *path,float x,float y,float w,float h) {
     Texture *t=texture_load(path,NULL);if(!t)return false;
     SDL_FRect dest={x,GAME_HEIGHT-y-h,w,h};SDL_SetTextureAlphaMod(t->handle,255);return SDL_RenderCopyF(renderer,t->handle,NULL,&dest)==0;
 }
+bool image_file_size(const char *path,int *w,int *h) {
+    Texture *t=texture_load(path,NULL);if(!t)return false;*w=t->w;*h=t->h;return true;
+}
+bool draw_map_sprite(const char *path,SDL_Rect region,Vec2 pivot,Vec2 position,Vec2 scale,float bend,float angle,float opacity) {
+    Texture *t=texture_load(path,NULL);if(!t)return false;
+    if(region.x<0 || region.y<0 || region.w<1 || region.h<1 || region.x+region.w>t->w || region.y+region.h>t->h)
+        return failure("Map sprite region outside image",path);
+    enum { STRIPS=10 };SDL_Vertex vertices[(STRIPS+1)*2];int indices[STRIPS*6];
+    float radians=angle*.01745329252f,c=cosf(radians),s=sinf(radians);
+    for(int row=0;row<=STRIPS;row++) {
+        float fraction=(float)row/STRIPS;
+        float local_y=(pivot.y-fraction)*region.h*scale.y;
+        /* Keep the lower trunk and roots still; bend the upper canopy. */
+        float weight=fmaxf(0,(pivot.y-fraction-.2f)/.8f);weight*=weight;
+        for(int side=0;side<2;side++) {
+            float local_x=(side-pivot.x)*region.w*scale.x+bend*weight;
+            vertices[row*2+side]=(SDL_Vertex){
+                .position={position.x+c*local_x-s*local_y,GAME_HEIGHT-position.y-s*local_x-c*local_y},
+                .color={255,255,255,(Uint8)(fminf(1,fmaxf(0,opacity))*255)},
+                .tex_coord={(region.x+side*region.w)/(float)t->w,(region.y+fraction*region.h)/(float)t->h}};
+        }
+        if(row<STRIPS) {
+            int a=row*2,b=a+2,k=row*6;
+            indices[k]=a;indices[k+1]=b;indices[k+2]=a+1;
+            indices[k+3]=a+1;indices[k+4]=b;indices[k+5]=b+1;
+        }
+    }
+    SDL_SetTextureColorMod(t->handle,255,255,255);SDL_SetTextureAlphaMod(t->handle,255);
+    return SDL_RenderGeometry(renderer,t->handle,vertices,(STRIPS+1)*2,indices,STRIPS*6)==0?
+        true:failure("Map sprite render failed",SDL_GetError());
+}
+bool draw_map_animation(const char *name,Vec2 position,double time,float scale,float angle,float opacity) {
+    Animation *a=animation_find(name);if(!a || !a->frame_count)return false;
+    SpriteFrame *f=&a->frames[(int)(time*a->fps)%a->frame_count];
+    Texture *t=texture_load(a->texture,NULL);if(!t)return false;
+    SDL_Rect region={(int)lroundf(f->u*t->w),(int)lroundf((1-f->v-f->cv)*t->h),(int)lroundf(f->cu*t->w),(int)lroundf(f->cv*t->h)};
+    Vec2 pivot={f->dx/f->w,(f->h-f->dy)/f->h};
+    Vec2 ratio={scale*f->w/region.w,scale*f->h/region.h};
+    return draw_map_sprite(a->texture,region,pivot,position,ratio,0,angle,opacity);
+}
+void draw_glint(float x,float y,float radius,float opacity) {
+    SDL_Vertex vertices[9];int indices[24];
+    vertices[0]=(SDL_Vertex){.position={x,GAME_HEIGHT-y},.color={255,255,255,(Uint8)(fminf(1,fmaxf(0,opacity))*255)}};
+    for(int i=0;i<8;i++) {
+        float angle=i*.7853981634f,r=i%2?radius*.17f:radius;
+        vertices[i+1]=(SDL_Vertex){.position={x+cosf(angle)*r,GAME_HEIGHT-y+sinf(angle)*r},.color={255,255,255,0}};
+        indices[i*3]=0;indices[i*3+1]=i+1;indices[i*3+2]=(i+1)%8+1;
+    }
+    if(SDL_RenderGeometry(renderer,NULL,vertices,9,indices,24))failure("Glint render failed",SDL_GetError());
+}
 bool draw_atlas(const char *relative,SDL_FRect rect,SDL_FRect uv) {
     char path[PATH_CAPACITY];if(!join_path(path,sizeof path,asset_root,relative))return false;
     Texture *t=texture_load(path,NULL);if(!t)return false;
@@ -339,17 +390,87 @@ bool draw_atlas(const char *relative,SDL_FRect rect,SDL_FRect uv) {
     return SDL_RenderCopyF(renderer,t->handle,&src,&rect)==0;
 }
 bool draw_particle(bool smoke,int frame,float x,float y,float diameter,float angle,SDL_Color tint) {
+    return draw_particle_stretched(smoke,frame,x,y,diameter,diameter,angle,tint);
+}
+bool draw_particle_stretched(bool smoke,int frame,float x,float y,float w,float h,float angle,SDL_Color tint) {
     char path[PATH_CAPACITY];
     if(!join_path(path,sizeof path,asset_root,smoke?"texture/static/part_smoke.png":"texture/static/part_fire.png"))return false;
     Texture *t=texture_load(path,NULL);if(!t)return false;
     frame=frame<0?0:frame>31?31:frame;
     SDL_Rect src=smoke?(SDL_Rect){0,0,t->w,t->h}:
         (SDL_Rect){(frame%8)*(t->w/8),(frame/8)*(t->h/4),t->w/8,t->h/4};
-    SDL_FRect dest={x-diameter*.5f,GAME_HEIGHT-y-diameter*.5f,diameter,diameter};
+    SDL_FRect dest={x-w*.5f,GAME_HEIGHT-y-h*.5f,w,h};
     SDL_SetTextureColorMod(t->handle,tint.r,tint.g,tint.b);SDL_SetTextureAlphaMod(t->handle,tint.a);
     int result=SDL_RenderCopyExF(renderer,t->handle,&src,&dest,angle,NULL,SDL_FLIP_NONE);
     SDL_SetTextureColorMod(t->handle,255,255,255);SDL_SetTextureAlphaMod(t->handle,255);
     return result?failure("Particle render failed",SDL_GetError()):true;
+}
+bool draw_particle_glow(float x,float y,float w,float h,SDL_Color tint) {
+    enum { SEGMENTS=24, RINGS=4 };
+    const float radius[RINGS]={0,.25f,.6f,1},alpha[RINGS]={1,.6f,.16f,0};
+    SDL_Vertex vertices[(SEGMENTS+1)*RINGS];int indices[SEGMENTS*(RINGS-1)*6],count=0;
+    for(int i=0;i<=SEGMENTS;i++) {
+        float angle=i*6.28318530718f/SEGMENTS;
+        for(int ring=0;ring<RINGS;ring++) {
+            SDL_Color color=tint;color.a=(Uint8)(tint.a*alpha[ring]);
+            vertices[i*RINGS+ring]=(SDL_Vertex){
+                .position={x+cosf(angle)*w*.5f*radius[ring],GAME_HEIGHT-y+sinf(angle)*h*.5f*radius[ring]},
+                .color=color,.tex_coord={0,0}};
+        }
+    }
+    for(int i=0;i<SEGMENTS;i++) for(int ring=0;ring<RINGS-1;ring++) {
+        int a=i*RINGS+ring,b=(i+1)*RINGS+ring;
+        indices[count++]=a;indices[count++]=b;indices[count++]=b+1;
+        indices[count++]=a;indices[count++]=b+1;indices[count++]=a+1;
+    }
+    SDL_BlendMode previous;SDL_GetRenderDrawBlendMode(renderer,&previous);
+    SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_ADD);
+    int result=SDL_RenderGeometry(renderer,NULL,vertices,(SEGMENTS+1)*RINGS,indices,count);
+    SDL_SetRenderDrawBlendMode(renderer,previous);
+    return result?failure("Particle glow render failed",SDL_GetError()):true;
+}
+static Texture *log_particle_texture(bool smoke) {
+    if(log_particles[smoke])return log_particles[smoke];
+    const char *name=smoke?"log-smoke.png":"log-fire.png";
+    char path[PATH_CAPACITY];
+    char *base=SDL_GetBasePath();
+    const char *roots[]={asset_root,"assets/particles",base?base:"",base?base:""};
+    const char *folders[]={"/texture/particles/","/","../assets/particles/","../Resources/texture/particles/"};
+    for(int i=0;i<4;i++) {
+        if(i>=2 && !base)continue;
+        int n=snprintf(path,sizeof path,"%s%s%s",roots[i],folders[i],name);
+        if(n<0 || (size_t)n>=sizeof path)continue;
+        FILE *file=fopen(path,"rb");if(!file)continue;fclose(file);
+        SDL_free(base);
+        Texture *t=texture_load(path,NULL);if(!t)return NULL;
+        if((smoke && (t->w!=528 || t->h!=132)) || (!smoke && (t->w!=680 || t->h!=1270))) {
+            failure("Invalid log particle atlas dimensions",path);return NULL;
+        }
+        return log_particles[smoke]=t;
+    }
+    SDL_free(base);failure("Missing log particle atlas",name);return NULL;
+}
+bool draw_log_particle(bool smoke,int frame,float x,float y,float w,float h,float bend,SDL_Color tint) {
+    Texture *t=log_particle_texture(smoke);if(!t)return false;
+    frame=frame<0?0:frame%(smoke?4:80);
+    SDL_Rect src=smoke?(SDL_Rect){frame*132+2,2,128,128}:
+        (SDL_Rect){(frame%8)*85+2,(frame/8)*127+2,81,123};
+    enum { STRIPS=10 };
+    SDL_Vertex vertices[(STRIPS+1)*2];int indices[STRIPS*6];
+    for(int row=0;row<=STRIPS;row++) {
+        float f=(float)row/STRIPS,lift=1-f;
+        for(int side=0;side<2;side++) vertices[row*2+side]=(SDL_Vertex){
+            .position={x+(side-.5f)*w+bend*lift*lift,GAME_HEIGHT-y+(f-.5f)*h},
+            .color=tint,.tex_coord={(src.x+side*src.w)/(float)t->w,(src.y+f*src.h)/(float)t->h}};
+        if(row<STRIPS) {
+            int a=row*2,b=a+2,k=row*6;
+            indices[k]=a;indices[k+1]=b;indices[k+2]=a+1;
+            indices[k+3]=a+1;indices[k+4]=b;indices[k+5]=b+1;
+        }
+    }
+    SDL_SetTextureColorMod(t->handle,255,255,255);SDL_SetTextureAlphaMod(t->handle,255);
+    return SDL_RenderGeometry(renderer,t->handle,vertices,(STRIPS+1)*2,indices,STRIPS*6)==0?
+        true:failure("Log particle render failed",SDL_GetError());
 }
 bool draw_foam_particle(float x,float y,float w,float h,float angle,Uint8 opacity,bool ring) {
     /* White vertices with transparent edges have no smoke texture or gray
@@ -463,6 +584,7 @@ bool resources_selftest(void) {
     printf("Resource checks: %d animations, %d frames inside original texture bounds; malformed/executable declarations rejected; UTF-16 font metrics loaded.\n",animations_count,frames);return true;
 }
 void resources_destroy(void) {
+    log_particles[0]=log_particles[1]=NULL;
     for(int i=0;i<animations_count;i++)free(animations[i].frames);free(animations);animations=NULL;animations_count=0;
     for(int i=0;i<font_count;i++)free(fonts[i].glyphs);font_count=0;
     while(textures){Texture *next=textures->next;SDL_DestroyTexture(textures->handle);free(textures);textures=next;}

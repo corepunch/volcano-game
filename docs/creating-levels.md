@@ -58,6 +58,25 @@ a rescue goal of 3 in this restoration. Its goal includes one stranded worker.
 Keep imported retail data under ignored `build/`; original assets and full
 retail scene dumps are not intended for version control.
 
+## Forest Mayday example
+
+`make forest-mayday` plays `levels/forest-mayday.level.json`, a forest airliner
+crash rescue with ten people (nine passengers and one stranded rescue worker)
+and two animals. Its large aircraft and forest shadows remain part of the baked
+background; only creek foam, glints, butterflies and motes are animated overlays.
+`make forest-mayday-app` creates a local macOS launcher that loads the compiled
+level and the existing asset directory.
+
+The starting 40 food supports two initial jobs. The northern log yields 20 wood,
+which repairs the cafe and renews the food supply. A second log protects a
+passenger glade and an additional worker. The southern stone protects 40 cached
+wood and 60 money; the sawmill and ranger house provide renewable wood and money.
+The eastern rockfall needs 40 food plus 100 money, and the final evacuation trail
+needs another 20 wood. Every person is initially gated. The regression runner
+completes the mission through ordinary clicks with three production repair orders,
+without adding resources. Tune costs by choosing supported barrier/building types,
+then verify the full mission again after changing routes or supplies.
+
 ## Source fields
 
 JSON uses double quotes and disallows comments and trailing commas. `_comment`
@@ -121,6 +140,16 @@ image centers. When centering a building in a painted clearing, check the
 rendered damaged and repaired artwork, then keep its approach and bonus pickup
 clear of the building footprint.
 
+For a frame with width/height `w,h` and authored pivot `dx,dy`, its visible
+rectangle center in world coordinates is `(x + w/2 - dx, y + h/2 - dy)`.
+To place that center at a clearing's measured `cx,cy`, author
+`x = cx - w/2 + dx` and `y = cy - h/2 + dy`. Read the frame from the original
+atlas declaration rather than assuming a center pivot. For example, damaged
+`burger0_br` is 94×85 with pivot (45,31), so its visible center is 2 pixels right
+and 11.5 pixels above the level position. Repaired art can have different trim
+bounds while retaining the same ground attachment; inspect both states before
+calling the placement finished.
+
 ## Mission settings
 
 Supply every field if `mission` is present:
@@ -165,7 +194,7 @@ still has a rules file; remove the obsolete sidecar explicitly first.
 | 2 `scenery` | `params="anim=water0"`, `tree=decor2_tree1;…`, or an existing scenery animation; cosmetic |
 | 3 `marker` | Approach/docking marker; see relationships below |
 | 4 `background` | Retail background object; the restoration loads the root `background` field instead |
-| 5 `effect` | Custom `waterfall` emitter: white foam at the bottom pool; other retail weather types remain deferred |
+| 5 `effect` | Placed map visual: sprite, foam, sparkles, insects, or motes; other retail weather types remain deferred |
 | 6 `ambient` | E.g. `bird00_idle;bird00_action;bird00_sh;128`; `auxiliary` sets initial position |
 | 18 `traffic` | Implicit movement graph |
 | 101 `building` | `sawmill`, `burger`, `house`, `derrick`; `extra="0;0"` means working, other values mean damaged |
@@ -224,6 +253,65 @@ types, and dangling known references. It does not prove solvability, validate
 animation existence, simulate the economy, or detect every blocking shortcut.
 Load and complete the level to verify those properties.
 
+## Layered map visuals
+
+Keep painted scenery baked when its lighting and overlapping shadows matter,
+as with Emerald Falls' forest. Place moving accents as independent type-5 map
+records. Optional sprites suit isolated props that benefit from animation.
+The runtime stores all of them in one `MapScene`, with a shared visual list
+and game clock. Visuals never block routes or count as gameplay jobs.
+
+| Parameter prefix | Role and useful parameters |
+| --- | --- |
+| `sprite` | Local PNG/JPEG sprite or atlas region; `image`, `rect`, `pivot`, `wind`, `speed` |
+| `foam` | White foam around the exact authored `x,y`; `width`, `rate` |
+| `sparkles` | Brief surface glints inside an ellipse; `width`, `height`, `rate`, `speed`, `opacity` |
+| `insects` | Local looping flight with animated wing frames; `animation=butterfly`, `width`, `height`, `count`, `speed` |
+| `motes` | Small drifting light accents; `width`, `height`, `count`, `speed`, `opacity` |
+
+For example, a tree sprite record can use:
+
+```json
+{
+  "type": "effect",
+  "id": 100,
+  "name": "spruce",
+  "params": "sprite;image=@emerald-foliage.png;rect=0,0,382,430;pivot=.51,.968;wind=2.5;speed=.8;stage=world",
+  "x": 300,
+  "y": 520,
+  "scale_x": 0.25,
+  "scale_y": 0.25
+}
+```
+
+`rect` is the source rectangle in **top-left image pixels**, as `x,y,width,height`.
+`pivot` is the root/attachment point normalized to that rectangle, as `x,y`
+between zero and one. Level `x,y` use the usual bottom-left world coordinates.
+Object scale and rotation transform the sprite around its pivot. `wind` is
+canopy bend in world pixels; the lower trunk stays fixed. A sprite with zero
+wind can also represent a static prop in the same system. The compiler copies
+all referenced local atlas images beside the binary, and decompilation copies
+them beside the new source. Regions are read directly from the authored atlas.
+
+`stage=ground` draws over terrain and under actors. `stage=world` shares the
+actor depth sort using the visual's ground position. `stage=overlay` draws over
+the world and under the HUD. Sprites default to world, foam and sparkles to
+ground, and insects/motes to overlay. Keep large trees clear of clickable jobs
+and trail centers; use small plants at meadow edges and riverbank glints only
+inside water. Prefer several narrow sparkle patches following the river to a
+large patch crossing its banks.
+
+All kinds share `speed` (0.05–6) and `opacity` (0–1). Region width/height may be
+1–600 pixels, emission rate 0.1–180, insect/mote count 1–32, wind 0–16 pixels,
+and sprite scales 0.02–5. Atlas regions must be integral pixels wholly inside
+the image. The scene supports 1024 visuals within the level's 4096-record limit.
+Every kind pauses and restarts with the game. Insects use the original Rescue
+Team `butterfly` animation unless another existing animation is specified.
+
+Emerald Falls uses `emerald-falls.png` as its baked background, including trees,
+plants and their painted shadows. Ten water-glint patches, nine butterfly groups,
+four mote regions and six foam patches remain independent editable map objects.
+
 ## Object relationships
 
 **Waterfall particles.** In a custom level, a type-5 `effect` object with
@@ -235,9 +323,9 @@ The older
 Height extends downward to its receiving pool, width spreads the foam, and drift
 offsets the foot horizontally, all in pixels. Rate controls white foam flecks per
 second. Flecks and open foam rings drift gently downstream at the foot; there
-are no falling-water particles or aerial mist. Supported ranges are width
-4–120, height 16–220, rate 1–180 and drift −50–50; default values are
-32/72/26/0. Use at most 16 emitters. Effects draw over the background and behind
+are no falling-water particles or aerial mist. Legacy height is 16–220 pixels
+and drift is −50–50; other limits follow the shared map visual parameters above.
+Default width/height/rate/drift values are 32/72/26/0. Effects draw over the background and behind
 actors and bridges. Foam is drawn as white geometry with feathered alpha edges,
 follows game time, pauses with the level, and restarts deterministically.
 
@@ -288,8 +376,15 @@ their valves are open.
 
 ## Balance and progression
 
-These are the restoration's explicit balance rules from `src/game.c`, not
+These are the restoration's explicit balance rules from `src/game_rules.c` and
+`src/game_jobs.c`, not
 recovered retail constants. The binaries do not carry these prices or intervals.
+
+Hover cards contain up to three centered rows: the object's name, `Required`,
+and `Income`. Amounts use the original resource icons. Omit rows that do not
+apply, retain the full cost while queued, and do not add strategy hints.
+Income is the actual pickup/job reward; production buildings also show their
+income interval on the same row.
 
 | Action | Cost | Result |
 | --- | --- | --- |
@@ -429,6 +524,8 @@ EOF
 No padding or trailing data is allowed. The source compiler preserves object
 and point order, string contents, unsigned values, and finite float32 values,
 including signed zero. The runtime ignores the editor counter for gameplay.
-The production decoder is `src/level.c`; movement, costs, links, and mission
-behavior are defined in `src/game.c`; campaign prerequisites are read by
-`src/campaign.c`. These files are the primary references for the rules above.
+The production decoder is `src/level.c`. `src/game_rules.c` defines balance;
+`src/game_spawn.c` resolves retail types and links; `src/game_jobs.c` handles
+reservation and completion; `src/game_navigation.c` and `src/game_sim.c` handle
+routes and movement. Campaign prerequisites are read by `src/campaign.c`.
+These files are the primary references for the rules above.

@@ -1,0 +1,513 @@
+{
+  "format": "volcano-static-atlas-1",
+  "scale": 2,
+  "alpha_core_threshold": 32,
+  "frames": [
+    {
+      "animation": "base0",
+      "frame": 0,
+      "sheet": "buildings.generated.png",
+      "region": [
+        6,
+        7,
+        285,
+        302
+      ]
+    },
+    {
+      "animation": "burger0_br",
+      "frame": 0,
+      "sheet": "buildings.generated.png",
+      "region": [
+        295,
+        70,
+        575,
+        314
+      ]
+    },
+    {
+      "animation": "burger0_br",
+      "frame": 1,
+      "sheet": "buildings.generated.png",
+      "region": [
+        583,
+        72,
+        845,
+        310
+      ]
+    },
+    {
+      "animation": "burger0_br",
+      "frame": 2,
+      "sheet": "buildings.generated.png",
+      "region": [
+        859,
+        70,
+        1114,
+        307
+      ]
+    },
+    {
+      "animation": "burger0",
+      "frame": 0,
+      "sheet": "buildings.generated.png",
+      "region": [
+        7,
+        321,
+        277,
+        564
+      ]
+    },
+    {
+      "animation": "sawmill0_br",
+      "frame": 0,
+      "sheet": "buildings.generated.png",
+      "region": [
+        290,
+        333,
+        568,
+        570
+      ]
+    },
+    {
+      "animation": "sawmill0_br",
+      "frame": 1,
+      "sheet": "buildings.generated.png",
+      "region": [
+        578,
+        335,
+        848,
+        568
+      ]
+    },
+    {
+      "animation": "sawmill0_br",
+      "frame": 2,
+      "sheet": "buildings.generated.png",
+      "region": [
+        858,
+        333,
+        1117,
+        571
+      ]
+    },
+    {
+      "animation": "sawmill0",
+      "frame": 0,
+      "sheet": "buildings.generated.png",
+      "region": [
+        7,
+        586,
+        285,
+        842
+      ]
+    },
+    {
+      "animation": "house0_br",
+      "frame": 0,
+      "sheet": "buildings.generated.png",
+      "region": [
+        288,
+        588,
+        589,
+        854
+      ]
+    },
+    {
+      "animation": "house0_br",
+      "frame": 1,
+      "sheet": "buildings.generated.png",
+      "region": [
+        579,
+        583,
+        860,
+        854
+      ]
+    },
+    {
+      "animation": "house0_br",
+      "frame": 2,
+      "sheet": "buildings.generated.png",
+      "region": [
+        853,
+        577,
+        1116,
+        847
+      ]
+    },
+    {
+      "animation": "house0",
+      "frame": 0,
+      "sheet": "buildings.generated.png",
+      "region": [
+        7,
+        860,
+        285,
+        1133
+      ]
+    },
+    {
+      "animation": "gas0_br",
+      "frame": 0,
+      "sheet": "buildings.generated.png",
+      "region": [
+        293,
+        880,
+        565,
+        1133
+      ]
+    },
+    {
+      "animation": "gas0_br",
+      "frame": 1,
+      "sheet": "buildings.generated.png",
+      "region": [
+        574,
+        878,
+        851,
+        1129
+      ]
+    },
+    {
+      "animation": "gas0_br",
+      "frame": 2,
+      "sheet": "buildings.generated.png",
+      "region": [
+        857,
+        875,
+        1118,
+        1130
+      ]
+    },
+    {
+      "animation": "gas0",
+      "frame": 0,
+      "sheet": "buildings.generated.png",
+      "region": [
+        5,
+        1137,
+        281,
+        1394
+      ]
+    },
+    {
+      "animation": "bar_tree00",
+      "frame": 0,
+      "sheet": "props.generated.png",
+      "region": [
+        14,
+        34,
+        248,
+        288
+      ]
+    },
+    {
+      "animation": "bar_tree00",
+      "frame": 1,
+      "sheet": "props.generated.png",
+      "region": [
+        270,
+        83,
+        487,
+        290
+      ]
+    },
+    {
+      "animation": "bar_tree00",
+      "frame": 2,
+      "sheet": "props.generated.png",
+      "region": [
+        514,
+        114,
+        723,
+        287
+      ]
+    },
+    {
+      "animation": "bar_tree00",
+      "frame": 3,
+      "sheet": "props.generated.png",
+      "region": [
+        765,
+        144,
+        930,
+        281
+      ]
+    },
+    {
+      "animation": "bar_stone00",
+      "frame": 0,
+      "sheet": "props.generated.png",
+      "region": [
+        18,
+        315,
+        247,
+        531
+      ]
+    },
+    {
+      "animation": "bar_stone00",
+      "frame": 1,
+      "sheet": "props.generated.png",
+      "region": [
+        274,
+        340,
+        474,
+        518
+      ]
+    },
+    {
+      "animation": "bar_stone00",
+      "frame": 2,
+      "sheet": "props.generated.png",
+      "region": [
+        518,
+        357,
+        706,
+        514
+      ]
+    },
+    {
+      "animation": "bar_stone00",
+      "frame": 3,
+      "sheet": "props.generated.png",
+      "region": [
+        765,
+        372,
+        930,
+        513
+      ]
+    },
+    {
+      "animation": "bar_stone_big00",
+      "frame": 0,
+      "sheet": "props.generated.png",
+      "region": [
+        9,
+        550,
+        253,
+        790
+      ]
+    },
+    {
+      "animation": "bar_stone_big00",
+      "frame": 1,
+      "sheet": "props.generated.png",
+      "region": [
+        263,
+        559,
+        493,
+        786
+      ]
+    },
+    {
+      "animation": "bar_stone_big00",
+      "frame": 2,
+      "sheet": "props.generated.png",
+      "region": [
+        520,
+        606,
+        724,
+        781
+      ]
+    },
+    {
+      "animation": "bar_stone_big00",
+      "frame": 3,
+      "sheet": "props.generated.png",
+      "region": [
+        757,
+        635,
+        937,
+        775
+      ]
+    },
+    {
+      "animation": "bridge_wood00",
+      "frame": 0,
+      "sheet": "props.generated.png",
+      "region": [
+        9,
+        823,
+        255,
+        1033
+      ]
+    },
+    {
+      "animation": "bridge_wood00",
+      "frame": 1,
+      "sheet": "props.generated.png",
+      "region": [
+        261,
+        824,
+        491,
+        1033
+      ]
+    },
+    {
+      "animation": "bridge_wood00",
+      "frame": 2,
+      "sheet": "props.generated.png",
+      "region": [
+        497,
+        824,
+        725,
+        1033
+      ]
+    },
+    {
+      "animation": "bridge_wood00",
+      "frame": 3,
+      "sheet": "props.generated.png",
+      "region": [
+        731,
+        823,
+        947,
+        1035
+      ]
+    },
+    {
+      "animation": "broken_road0",
+      "frame": 0,
+      "sheet": "props.generated.png",
+      "region": [
+        8,
+        1048,
+        250,
+        1226
+      ]
+    },
+    {
+      "animation": "broken_road0",
+      "frame": 1,
+      "sheet": "props.generated.png",
+      "region": [
+        272,
+        1059,
+        489,
+        1224
+      ]
+    },
+    {
+      "animation": "broken_road0",
+      "frame": 2,
+      "sheet": "props.generated.png",
+      "region": [
+        524,
+        1074,
+        716,
+        1226
+      ]
+    },
+    {
+      "animation": "broken_road0",
+      "frame": 3,
+      "sheet": "props.generated.png",
+      "region": [
+        775,
+        1098,
+        933,
+        1209
+      ]
+    },
+    {
+      "animation": "food",
+      "frame": 0,
+      "sheet": "props.generated.png",
+      "region": [
+        21,
+        1248,
+        180,
+        1430
+      ]
+    },
+    {
+      "animation": "food_big",
+      "frame": 0,
+      "sheet": "props.generated.png",
+      "region": [
+        209,
+        1239,
+        489,
+        1435
+      ]
+    },
+    {
+      "animation": "wood",
+      "frame": 0,
+      "sheet": "props.generated.png",
+      "region": [
+        508,
+        1268,
+        693,
+        1426
+      ]
+    },
+    {
+      "animation": "wood_big",
+      "frame": 0,
+      "sheet": "props.generated.png",
+      "region": [
+        712,
+        1227,
+        939,
+        1437
+      ]
+    },
+    {
+      "animation": "money",
+      "frame": 0,
+      "sheet": "props.generated.png",
+      "region": [
+        20,
+        1481,
+        188,
+        1621
+      ]
+    },
+    {
+      "animation": "money_big",
+      "frame": 0,
+      "sheet": "props.generated.png",
+      "region": [
+        232,
+        1456,
+        465,
+        1642
+      ]
+    },
+    {
+      "animation": "gas",
+      "frame": 0,
+      "sheet": "props.generated.png",
+      "region": [
+        529,
+        1446,
+        668,
+        1638
+      ]
+    },
+    {
+      "animation": "gas_big",
+      "frame": 0,
+      "sheet": "props.generated.png",
+      "region": [
+        738,
+        1440,
+        937,
+        1637
+      ]
+    },
+    {
+      "animation": "build_place",
+      "frame": 0,
+      "sheet": "buildings.generated.png",
+      "region": [
+        290,
+        1153,
+        574,
+        1373
+      ]
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "source": "https://kenney.nl/assets/animated-characters-survivors",
+  "license": "CC0-1.0",
+  "actions": {
+    "Rescue_Alert": {
+      "frames": 32,
+      "fps": 24,
+      "origin": "Authored rescue work motion on the Kenney character rig",
+      "props": []
+    },
+    "Rescue_Call": {
+      "frames": 32,
+      "fps": 24,
+      "origin": "Authored rescue work motion on the Kenney character rig",
+      "props": [
+        "radio"
+      ]
+    },
+    "Rescue_Carry": {
+      "frames": 16,
+      "fps": 24,
+      "origin": "Authored rescue work motion on the Kenney character rig",
+      "props": [
+        "sack"
+      ]
+    },
+    "Rescue_Chop": {
+      "frames": 24,
+      "fps": 24,
+      "origin": "Authored rescue work motion on the Kenney character rig",
+      "props": [
+        "axe"
+      ]
+    },
+    "Rescue_Gather": {
+      "frames": 24,
+      "fps": 24,
+      "origin": "Authored rescue work motion on the Kenney character rig",
+      "props": []
+    },
+    "Rescue_Hammer": {
+      "frames": 24,
+      "fps": 24,
+      "origin": "Authored rescue work motion on the Kenney character rig",
+      "props": [
+        "hammer"
+      ]
+    },
+    "Rescue_Ill": {
+      "frames": 32,
+      "fps": 24,
+      "origin": "Authored rescue work motion on the Kenney character rig",
+      "props": []
+    },
+    "Rescue_Jump": {
+      "frames": 12,
+      "fps": 24,
+      "origin": "Retargeted from Kenney jump.fbx through its Targeting Pose",
+      "props": []
+    },
+    "Rescue_KenneyIdle": {
+      "frames": 32,
+      "fps": 24,
+      "origin": "Retargeted from Kenney idle.fbx through its Targeting Pose",
+      "props": []
+    },
+    "Rescue_Look": {
+      "frames": 32,
+      "fps": 24,
+      "origin": "Authored rescue work motion on the Kenney character rig",
+      "props": []
+    },
+    "Rescue_Pet": {
+      "frames": 24,
+      "fps": 24,
+      "origin": "Authored rescue work motion on the Kenney character rig",
+      "props": []
+    },
+    "Rescue_Pickaxe": {
+      "frames": 24,
+      "fps": 24,
+      "origin": "Authored rescue work motion on the Kenney character rig",
+      "props": [
+        "pickaxe"
+      ]
+    },
+    "Rescue_Repair": {
+      "frames": 24,
+      "fps": 24,
+      "origin": "Authored rescue work motion on the Kenney character rig",
+      "props": [
+        "hammer"
+      ]
+    },
+    "Rescue_Run": {
+      "frames": 16,
+      "fps": 24,
+      "origin": "Retargeted from Kenney run.fbx through its Targeting Pose",
+      "props": []
+    },
+    "Rescue_Sink": {
+      "frames": 32,
+      "fps": 24,
+      "origin": "Authored rescue work motion on the Kenney character rig",
+      "props": [
+        "ring"
+      ]
+    },
+    "Rescue_Sit": {
+      "frames": 32,
+      "fps": 24,
+      "origin": "Authored rescue work motion on the Kenney character rig",
+      "props": []
+    },
+    "Rescue_Stand": {
+      "frames": 32,
+      "fps": 24,
+      "origin": "Authored rescue work motion on the Kenney character rig",
+      "props": []
+    },
+    "Rescue_Valve": {
+      "frames": 32,
+      "fps": 24,
+      "origin": "Authored rescue work motion on the Kenney character rig",
+      "props": []
+    }
+  },
+  "directions": [
+    "E",
+    "NE",
+    "N",
+    "NW",
+    "W",
+    "SW",
+    "S",
+    "SE"
+  ]
+}

@@ -13,7 +13,6 @@ import html
 import json
 import os
 from pathlib import Path
-import shlex
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -275,8 +274,9 @@ transport, hazards and boosts. <a href="{GUIDE}">The Steam community guide</a> l
 <a href="{PLAYLIST}">all-level video playlist</a>. The playlist is a reference for future behavior checks; this audit does not claim to have watched all videos.</p>
 <p>Primary local evidence: <code>conf/locale_en.lua</code> supplies tutorial text, tasks, failure messages and achievements;
 <code>level/map.lvl</code> supplies the campaign chain; all numbered <code>.lvl</code> files supply objects and metadata;
-<code>texture/lazy/*.lua</code> supplies authored animation names. Runtime evidence is in <code>src/game.c</code>, especially
-<code>game_init</code>, <code>dispatch</code>, <code>finish_work</code>, <code>arrive_home</code>, <code>draw_hud</code> and <code>game_click</code>.</p>
+<code>texture/lazy/*.lua</code> supplies authored animation names. Runtime definitions are in <code>src/game_rules.c</code>;
+spawning, scheduling, simulation and rendering are in <code>src/game_spawn.c</code>, <code>src/game_jobs.c</code>,
+<code>src/game_sim.c</code> and <code>src/game_render.c</code>.</p>
 <p>Beyond the first six missions, per-level objectives and initial inventory remain unrecovered. Exact retail costs, timers, disaster schedules and later build restrictions are not recovered from these level records.
 Tutorials identify many behaviors but are not a substitute for those missing rules. Later mission notes use local records and locale achievements;
 they do not imply a complete walkthrough beyond level 22. Numeric type labels marked “inferred” require confirmation against retail behavior.</p>
@@ -305,11 +305,8 @@ def main():
     (out / "tests.log").write_text(tests.stdout)
     if tests.returncode:
         raise RuntimeError(f"Existing tests failed; see {out / 'tests.log'}")
-    cflags = shlex.split(subprocess.check_output(["pkg-config", "--cflags", "sdl2"], text=True))
-    libs = shlex.split(subprocess.check_output(["pkg-config", "--libs", "sdl2"], text=True))
-    subprocess.run([*shlex.split(os.environ.get("CC", "cc")), "-std=c11", "-O2", "-Wall", "-Wextra", "-Wpedantic",
-                    "-D_POSIX_C_SOURCE=200809L", *cflags, "-Ivendor", "-Isrc", "tools/audit_levels.c",
-                    "src/level.c", "src/campaign.c", "src/resources.c", "-o", str(out / "audit_levels"), *libs, "-lm"], cwd=ROOT, check=True)
+    audit_binary = out / "audit_levels"
+    subprocess.run(["make", f"AUDIT_BINARY={audit_binary}", str(audit_binary)], cwd=ROOT, check=True)
     subprocess.run([str(out / "audit_levels"), str(args.assets.resolve()), str(out / "campaign.json")], cwd=ROOT, env=env, check=True)
     evidence = json.loads((out / "campaign.json").read_text())
     fingerprints = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()

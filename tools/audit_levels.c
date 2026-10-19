@@ -1,6 +1,9 @@
-/* Read-only campaign audit. Include the real game implementation so probes use
- * its private dispatch/pathfinding logic without adding a production API. */
-#include "../src/game.c"
+/* Read-only campaign audit linked against the production game modules. */
+#include "game_internal.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define game (*game_current())
 
 char asset_root[PATH_CAPACITY];
 char last_error[1024];
@@ -25,7 +28,7 @@ static void simulate(FILE *out)
     for (;ticks<30000 && game.completed<game.target_count;ticks++) {
         if (sweep) for (int i=0;i<game.object_count;i++) {
             Entity *e=&game.objects[i];
-            if (e->kind==BARRIER || e->kind==RESOURCE || e->kind==SURVIVOR) dispatch(i,true);
+            if (e->kind==BARRIER || e->kind==RESOURCE || e->kind==SURVIVOR) game_dispatch(game_current(),i,true);
         }
         int phases[MAX_WORKERS];bool active=false;
         for (int i=0;i<game.worker_count;i++) {
@@ -104,7 +107,7 @@ int main(int argc,char **argv)
         fputc('}',out);fflush(out);
     }
     fputs("]}\n",out);if (fclose(out)) ok=false;
-    free(raw);free(current_game);current_game=NULL;
+    free(raw);game_destroy();
     resources_destroy();SDL_DestroyRenderer(renderer);SDL_FreeSurface(surface);SDL_Quit();
     return ok?0:1;
 }

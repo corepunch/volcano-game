@@ -1,0 +1,447 @@
+[
+  {
+    "animation": "worker_ill",
+    "frames": 54,
+    "fps": 10
+  },
+  {
+    "animation": "worker_ill_alert",
+    "frames": 50,
+    "fps": 15
+  },
+  {
+    "animation": "worker_sink",
+    "frames": 23,
+    "fps": 15
+  },
+  {
+    "animation": "worker_sit0",
+    "frames": 67,
+    "fps": 10
+  },
+  {
+    "animation": "worker_sit1",
+    "frames": 63,
+    "fps": 15
+  },
+  {
+    "animation": "worker_wait0",
+    "frames": 78,
+    "fps": 10
+  },
+  {
+    "animation": "worker_wait1",
+    "frames": 43,
+    "fps": 15
+  },
+  {
+    "animation": "worker_wait2",
+    "frames": 80,
+    "fps": 15
+  },
+  {
+    "animation": "worker_run0",
+    "frames": 16,
+    "fps": 30
+  },
+  {
+    "animation": "worker_run1",
+    "frames": 16,
+    "fps": 30
+  },
+  {
+    "animation": "worker_run2",
+    "frames": 16,
+    "fps": 30
+  },
+  {
+    "animation": "worker_run3",
+    "frames": 16,
+    "fps": 30
+  },
+  {
+    "animation": "worker_run4",
+    "frames": 16,
+    "fps": 30
+  },
+  {
+    "animation": "worker_run5",
+    "frames": 16,
+    "fps": 30
+  },
+  {
+    "animation": "worker_run6",
+    "frames": 16,
+    "fps": 30
+  },
+  {
+    "animation": "worker_run7",
+    "frames": 16,
+    "fps": 30
+  },
+  {
+    "animation": "worker_bag0",
+    "frames": 16,
+    "fps": 30
+  },
+  {
+    "animation": "worker_bag1",
+    "frames": 16,
+    "fps": 30
+  },
+  {
+    "animation": "worker_bag2",
+    "frames": 16,
+    "fps": 30
+  },
+  {
+    "animation": "worker_bag3",
+    "frames": 16,
+    "fps": 30
+  },
+  {
+    "animation": "worker_bag4",
+    "frames": 16,
+    "fps": 30
+  },
+  {
+    "animation": "worker_bag5",
+    "frames": 16,
+    "fps": 30
+  },
+  {
+    "animation": "worker_bag6",
+    "frames": 16,
+    "fps": 30
+  },
+  {
+    "animation": "worker_bag7",
+    "frames": 16,
+    "fps": 30
+  },
+  {
+    "animation": "worker_wood0",
+    "frames": 18,
+    "fps": 20
+  },
+  {
+    "animation": "worker_wood1",
+    "frames": 18,
+    "fps": 20
+  },
+  {
+    "animation": "worker_wood2",
+    "frames": 18,
+    "fps": 20
+  },
+  {
+    "animation": "worker_wood3",
+    "frames": 18,
+    "fps": 20
+  },
+  {
+    "animation": "worker_wood4",
+    "frames": 18,
+    "fps": 20
+  },
+  {
+    "animation": "worker_wood5",
+    "frames": 18,
+    "fps": 20
+  },
+  {
+    "animation": "worker_wood6",
+    "frames": 18,
+    "fps": 20
+  },
+  {
+    "animation": "worker_wood7",
+    "frames": 18,
+    "fps": 20
+  },
+  {
+    "animation": "worker_gather0",
+    "frames": 35,
+    "fps": 30
+  },
+  {
+    "animation": "worker_gather1",
+    "frames": 35,
+    "fps": 30
+  },
+  {
+    "animation": "worker_gather2",
+    "frames": 35,
+    "fps": 30
+  },
+  {
+    "animation": "worker_gather3",
+    "frames": 35,
+    "fps": 30
+  },
+  {
+    "animation": "worker_gather4",
+    "frames": 35,
+    "fps": 30
+  },
+  {
+    "animation": "worker_gather5",
+    "frames": 35,
+    "fps": 30
+  },
+  {
+    "animation": "worker_gather6",
+    "frames": 35,
+    "fps": 30
+  },
+  {
+    "animation": "worker_gather7",
+    "frames": 35,
+    "fps": 30
+  },
+  {
+    "animation": "worker_srepair0",
+    "frames": 15,
+    "fps": 15
+  },
+  {
+    "animation": "worker_srepair1",
+    "frames": 15,
+    "fps": 15
+  },
+  {
+    "animation": "worker_srepair2",
+    "frames": 15,
+    "fps": 15
+  },
+  {
+    "animation": "worker_srepair3",
+    "frames": 15,
+    "fps": 15
+  },
+  {
+    "animation": "worker_srepair4",
+    "frames": 15,
+    "fps": 15
+  },
+  {
+    "animation": "worker_srepair5",
+    "frames": 15,
+    "fps": 15
+  },
+  {
+    "animation": "worker_srepair6",
+    "frames": 15,
+    "fps": 15
+  },
+  {
+    "animation": "worker_srepair7",
+    "frames": 15,
+    "fps": 15
+  },
+  {
+    "animation": "worker_repair0",
+    "frames": 15,
+    "fps": 20
+  },
+  {
+    "animation": "worker_repair1",
+    "frames": 15,
+    "fps": 20
+  },
+  {
+    "animation": "worker_repair2",
+    "frames": 15,
+    "fps": 20
+  },
+  {
+    "animation": "worker_repair3",
+    "frames": 15,
+    "fps": 20
+  },
+  {
+    "animation": "worker_repair4",
+    "frames": 15,
+    "fps": 20
+  },
+  {
+    "animation": "worker_repair5",
+    "frames": 15,
+    "fps": 20
+  },
+  {
+    "animation": "worker_repair6",
+    "frames": 15,
+    "fps": 20
+  },
+  {
+    "animation": "worker_repair7",
+    "frames": 15,
+    "fps": 20
+  },
+  {
+    "animation": "worker_pick0",
+    "frames": 18,
+    "fps": 20
+  },
+  {
+    "animation": "worker_pick1",
+    "frames": 18,
+    "fps": 20
+  },
+  {
+    "animation": "worker_pick2",
+    "frames": 18,
+    "fps": 20
+  },
+  {
+    "animation": "worker_pick3",
+    "frames": 18,
+    "fps": 20
+  },
+  {
+    "animation": "worker_pick4",
+    "frames": 18,
+    "fps": 20
+  },
+  {
+    "animation": "worker_pick5",
+    "frames": 18,
+    "fps": 20
+  },
+  {
+    "animation": "worker_pick6",
+    "frames": 18,
+    "fps": 20
+  },
+  {
+    "animation": "worker_pick7",
+    "frames": 18,
+    "fps": 20
+  },
+  {
+    "animation": "worker_tap0",
+    "frames": 28,
+    "fps": 30
+  },
+  {
+    "animation": "worker_tap1",
+    "frames": 28,
+    "fps": 30
+  },
+  {
+    "animation": "worker_tap2",
+    "frames": 28,
+    "fps": 30
+  },
+  {
+    "animation": "worker_tap3",
+    "frames": 28,
+    "fps": 30
+  },
+  {
+    "animation": "worker_tap4",
+    "frames": 28,
+    "fps": 30
+  },
+  {
+    "animation": "worker_tap5",
+    "frames": 28,
+    "fps": 30
+  },
+  {
+    "animation": "worker_tap6",
+    "frames": 28,
+    "fps": 30
+  },
+  {
+    "animation": "worker_tap7",
+    "frames": 28,
+    "fps": 30
+  },
+  {
+    "animation": "worker_shadow",
+    "frames": 1,
+    "fps": 0
+  },
+  {
+    "animation": "worker_call0",
+    "frames": 28,
+    "fps": 15
+  },
+  {
+    "animation": "worker_call1",
+    "frames": 28,
+    "fps": 15
+  },
+  {
+    "animation": "worker_call2",
+    "frames": 28,
+    "fps": 15
+  },
+  {
+    "animation": "worker_call3",
+    "frames": 28,
+    "fps": 15
+  },
+  {
+    "animation": "worker_call4",
+    "frames": 28,
+    "fps": 15
+  },
+  {
+    "animation": "worker_call5",
+    "frames": 28,
+    "fps": 15
+  },
+  {
+    "animation": "worker_call6",
+    "frames": 28,
+    "fps": 15
+  },
+  {
+    "animation": "worker_call7",
+    "frames": 28,
+    "fps": 15
+  },
+  {
+    "animation": "worker_pet0",
+    "frames": 16,
+    "fps": 30
+  },
+  {
+    "animation": "worker_pet1",
+    "frames": 16,
+    "fps": 30
+  },
+  {
+    "animation": "worker_pet2",
+    "frames": 16,
+    "fps": 30
+  },
+  {
+    "animation": "worker_pet3",
+    "frames": 16,
+    "fps": 30
+  },
+  {
+    "animation": "worker_pet4",
+    "frames": 16,
+    "fps": 30
+  },
+  {
+    "animation": "worker_pet5",
+    "frames": 16,
+    "fps": 30
+  },
+  {
+    "animation": "worker_pet6",
+    "frames": 16,
+    "fps": 30
+  },
+  {
+    "animation": "worker_pet7",
+    "frames": 16,
+    "fps": 30
+  }
+]

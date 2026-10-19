@@ -1,0 +1,157 @@
+{
+  "$schema": "../docs/level-source.schema.json",
+  "format": "volcano-level-1",
+  "_comment": "Two routes: clear the northern tree for wood, then repair the southern bridge. Coordinates use bottom-left origin. Reuses retail background 103; no artwork is embedded.",
+  "background": "103",
+  "mission": {
+    "food": 20,
+    "wood": 0,
+    "money": 0,
+    "fuel": 0,
+    "rescue_goal": 2,
+    "basin_goal": 0,
+    "allow_cafe": true
+  },
+  "objects": [
+    {
+      "type": "traffic",
+      "id": 1,
+      "layer": 4,
+      "points": [
+        [
+          326,
+          371
+        ],
+        [
+          314,
+          342
+        ],
+        [
+          310,
+          304
+        ],
+        [
+          353,
+          294
+        ],
+        [
+          391,
+          288
+        ],
+        [
+          434,
+          281
+        ],
+        [
+          476,
+          274
+        ],
+        [
+          515,
+          277
+        ],
+        [
+          556,
+          281
+        ],
+        [
+          552,
+          323
+        ],
+        [
+          545,
+          359
+        ],
+        [
+          529,
+          397
+        ],
+        [
+          505,
+          425
+        ],
+        [
+          428,
+          240
+        ],
+        [
+          426,
+          198
+        ],
+        [
+          424,
+          154
+        ],
+        [
+          426,
+          117
+        ],
+        [
+          411,
+          78
+        ],
+        [
+          381,
+          53
+        ],
+        [
+          350,
+          25
+        ]
+      ]
+    },
+    {
+      "type": "base",
+      "id": 2,
+      "layer": 5,
+      "x": 345,
+      "y": 371
+    },
+    {
+      "type": "worker",
+      "id": 3,
+      "layer": 6,
+      "x": 345,
+      "y": 371
+    },
+    {
+      "type": "barrier",
+      "id": 4,
+      "layer": 5,
+      "params": "tree00",
+      "x": 545,
+      "y": 358,
+      "_comment": "Costs 20 food and returns 20 wood, enough for the bridge."
+    },
+    {
+      "type": "barrier",
+      "id": 5,
+      "layer": 5,
+      "params": "bridge_wood01",
+      "x": 426,
+      "y": 196
+    },
+    {
+      "type": "civilian",
+      "id": 6,
+      "layer": 6,
+      "x": 525,
+      "y": 395
+    },
+    {
+      "type": "civilian",
+      "id": 7,
+      "layer": 6,
+      "x": 368,
+      "y": 40
+    },
+    {
+      "type": "resource",
+      "id": 8,
+      "layer": 5,
+      "params": "food2",
+      "x": 315,
+      "y": 268
+    }
+  ]
+}

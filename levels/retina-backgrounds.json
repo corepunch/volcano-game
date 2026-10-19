@@ -1,0 +1,46 @@
+{
+  "method": "Runway AI image upscaler",
+  "settings": {
+    "scaleFactor": 2,
+    "flavor": "sublime",
+    "sharpen": 10,
+    "smartGrain": 0,
+    "ultraDetail": 10
+  },
+  "prompt": null,
+  "notes": "Upscaling has no text prompt. Original layout and original image files retained; HD copies used only by build/hd-levels and the HD app.",
+  "images": [
+    {
+      "level": "forest-mayday",
+      "source": "forest-mayday.png",
+      "output": "forest-mayday@2x.png",
+      "source_dimensions": [
+        1672,
+        941
+      ],
+      "output_dimensions": [
+        3344,
+        1882
+      ],
+      "source_sha256": "810b0a2fe534f4741d891381d7b02d77116d1984f1e1382ba88c8cd811c2d3ac",
+      "output_sha256": "366385412f3aa0dba4fab883317dbf48b4fa31655fba5df1c5b206447d31d00c",
+      "task_id": "8bdbab4e-1737-4b30-8480-96696fae99da"
+    },
+    {
+      "level": "emerald-falls",
+      "source": "emerald-falls.png",
+      "output": "emerald-falls@2x.png",
+      "source_dimensions": [
+        1672,
+        941
+      ],
+      "output_dimensions": [
+        3344,
+        1882
+      ],
+      "source_sha256": "b2e68ed9cefe8f4dc775a4adc5071a2439c6524eef1f27f2993223e546ce20b7",
+      "output_sha256": "fba0cae98823c118f9388787b3d001f904c1971d31fbbef62e082381e00d9a7b",
+      "task_id": "354b09b9-acf5-4419-ae17-1e716fb9bc5f"
+    }
+  ]
+}

@@ -12,6 +12,64 @@ runtime. Its small data parser accepts the original Lua-shaped atlas/font
 syntax as declarations. **There is no Lua library, script execution, asset
 conversion, generated XML, or dependency on ORCA.**
 
+## Game architecture
+
+The game uses fixed entity/actor arrays, immutable definition tables, and C
+callbacks. The SDL-facing API in `volcano.h` owns a single active world;
+implementation modules receive an explicit `Game *`. `game_internal.h` is the
+private contract between those modules, not an application API.
+
+| Module | Responsibility |
+| --- | --- |
+| `src/game.c` | Active-world ownership, transactional initialization, public API, shutdown |
+| `src/game_spawn.c` | Retail type → spawn callback registry; validation and entity links |
+| `src/game_rules.c` | Building, obstacle, pickup and mission definitions; economy queries |
+| `src/game_jobs.c` | Reservation, exact-once spending, completion callbacks and home delivery |
+| `src/game_navigation.c` | Route finding, barriers, vehicle access and reachability |
+| `src/game_sim.c` | Worker state callbacks, production, vehicles, rescues, animals and victory |
+| `src/game_render.c` | Visual poses, depth sorting, effects, HUD, hit testing and tooltips |
+| `src/game_input.c` | Pointer/key translation, menu commands and lifecycle requests |
+| `src/game_util.c` | Shared geometry, deterministic randomness and diagnostics |
+| `tests/game_selftest.c` | Campaign, interaction and rendered regressions linked to production code |
+| `tests/game_architecture.c` | World isolation, callback behavior, art independence and failed-load rollback |
+
+The review found four sources of coupling in the former `game.c`: a hidden
+current-world macro, duplicated building arrays, gameplay inferred repeatedly
+from animation strings, and tests that included the implementation file. These
+are replaced by explicit context, shared records, spawn-time rule resolution,
+and tests linked against the same modules as the executable.
+
+To add a retail object type, register its `SpawnDef` and callback in
+`game_spawn.c`. To add an interaction, define its `JobDef` in `game_jobs.c`:
+duration, work animation, completion callback, delivery policy, cost and click
+eligibility. The scheduler chooses and reserves the worker, spends once after
+finding a route, and starts the return journey after the callback. Construction
+uses this same spending path. Completion callbacks change the target and world;
+they do not dispatch another job. Building records supply menu labels, prices,
+sprites, output resource and bonus pickup together. Obstacle and pickup rules
+resolve once from the original level data, so replacing their displayed sprites
+does not change fees, wood rewards, cargo amounts or worker compatibility.
+
+Loading builds and validates a fresh zeroed candidate. A successful public init
+replaces and frees the old world; failure frees the candidate and preserves the
+active world. Entity indices stay stable for a world's lifetime. A successful
+init/restart invalidates all old world/entity pointers. Input returns lifecycle
+commands; the application applies them after the input handler returns. `game_destroy()` is
+idempotent and releases the active world before SDL resources are destroyed.
+
+Update order remains workers → queued jobs → followers → production → vehicles
+→ automatic rescues → animals → victory. Timed jobs begin returning in the same
+update; immediate pickups begin moving home on the next update. Rendering
+computes depth keys before sorting, so its comparator needs no hidden world.
+
+Further architectural boundaries remain explicit: the resource cache, renderer
+and diagnostic buffer are still application-wide; vehicles and evacuees keep
+their specialized movement loops; route queries still scan the traffic graph
+and barriers. Cached graph adjacency and a fixed simulation tick are useful
+future changes, but need separate behavior/performance validation. Callback
+addresses are runtime code references; future saves must serialize stable IDs
+and resolve definitions again, rather than persisting pointers.
+
 ## Build and run
 
 Requires a C11 compiler, `make`, `pkg-config`, and SDL2. These are already
@@ -21,6 +79,51 @@ available on this Mac.
 cd ~/Developer/volcano-sdl2
 make run
 ```
+
+Run either custom level (builds the game and compiles the level as needed):
+
+```sh
+make run-emerald-falls
+make run-forest-mayday
+```
+
+To build our new static sprites at twice the original texture resolution:
+
+```sh
+make hd-app
+make run-emerald-falls-hd
+make run-forest-mayday-hd
+```
+
+`make hd-app` creates the self-contained `build/Volcano HD.app`, opening Emerald
+Falls, plus `build/Emerald Falls HD.app` and `build/Forest Mayday HD.app` launchers.
+Keep those small launchers beside `Volcano HD.app`. The main bundle includes both
+missions and their backgrounds. The original run targets continue to use retail
+sprites. HD artwork covers every interactive building, debris and resource sprite
+used by the two custom missions, plus the fuel station and construction lot:
+23 sprites and 46 authored damage/repair states. HD workers and civilians use
+our [Kenney character adaptation](assets/kenney-characters/README.md), rendered
+from an editable Blender rig in eight directions. Animals, scenery animations
+and HUD artwork retain their original textures.
+
+Both HD missions also use AI-upscaled **3344×1882** backgrounds, exactly twice
+the original **1672×941** image dimensions. The logical playfield remains
+1366×768; paths, objects and click targets keep their original coordinates.
+The originals remain in `levels/SLUG.png`; Retina artwork is saved separately as
+`levels/SLUG@2x.png`. `make hd-levels` compiles the same mission data into
+`build/hd-levels`, with the Retina backgrounds alongside it. All HD run targets
+and the HD app use that directory. Upscale settings and source/output hashes
+are recorded in [`levels/retina-backgrounds.json`](levels/retina-backgrounds.json).
+
+The ImageGen source sheets, exact prompts and extraction manifest live in
+[`assets/hd-static`](assets/hd-static). `tools/build_hd_assets.py` requires Pillow
+and packs the authored frames into `build/hd-assets/texture/lazy/volcano-static.png`.
+Texture regions have exactly twice the original width and height; world sizes,
+pivots, frame order and frame rates stay unchanged. The source artwork is only
+downsampled when packing, with no enlargement or script-generated work states.
+Original resources under `reference/rescue-team` stay untouched. macOS windows
+support Retina backing pixels. `make test-hd` runs the conversion, mission,
+resource and campaign checks with the HD asset directory.
 
 On macOS, `make app` also creates the double-clickable `build/Volcano.app`
 with its own bundled resource copy. The app does not need the Documents folder.
@@ -70,13 +173,15 @@ queued jobs show green checkmarks; click a queued job again to cancel it.
 Working targets use the original progress-bar artwork. Available workers inside
 HQ appear as helmet icons above its roof and emerge when dispatched.
 
-Log obstructions whose level object name is `fire` burn with the original
-32-frame fire atlas and rising, rotating smoke particles. In level000 these are
+Log obstructions whose level object name is `fire` burn with two layers of
+40-frame flame animation, restrained warm light, rising embers and expanding,
+drifting smoke. The downloaded CC0 textures and their credits live in
+[`assets/particles`](assets/particles/README.md). In level000 these are
 objects 1249 and 1204, the two trees on the right; the two unmarked trees stay
 unlit. Each fire has its own timing; effects pause with the game and
 restart with the level. Clearing logs stops emission while existing flames and
-smoke finish fading. Particle rates, lifetimes, sizes and speeds follow the
-retail `conf/particles.lua` fire/smoke settings.
+smoke finish fading. Independently phased flame patches stay rooted across the
+wood and bend in the updraft; smoke dissipates within seven seconds of clearing.
 
 Birds fly left to right at a new random height on each pass, and translucent
 clouds drift across the scene. Both wrap fully off screen and use the original
@@ -168,6 +273,10 @@ object types, traffic spacing, obstacle gates, resource budgets, building
 outputs, vehicle markers, and patterns recovered from the original campaign.
 The [starter source](levels/first-rescue.level.json) has editor support through
 the [JSON Schema](docs/level-source.schema.json).
+The reusable [Rescue Team level skill](skills/rescue-team-levels/SKILL.md) provides
+the full authoring workflow, a tested starter, and helpers for traffic sampling
+and placement using original sprite pivots. Invoke it as `$rescue-team-levels`
+after installing the skill in your personal Codex skills folder.
 Custom mission supplies and goals compile to a `.lvl.rules` companion;
 the `.lvl` retains the original version 301 binary layout. Custom levels load
 directly without modifying the retail resources. Press R after recompiling to
@@ -177,11 +286,28 @@ reload a custom level. `make analyze-levels` inventories the original campaign;
 Play **Emerald Falls**, our original forest-and-waterfall level, with
 `make emerald-falls`. Its three branches contain seven people, two animals,
 and a resource puzzle linking timber, food production, money production, and
-the final river crossing. Six foam emitters add white surface foam at
-the bottom pools, which pauses and resets with the mission. The editable source is
-[`levels/emerald-falls.level.json`](levels/emerald-falls.level.json); the original
-ImageGen background and its prompt are saved beside it. Regressions complete
+the final river crossing. The original painted background preserves the forest's
+integrated lighting and shadows. Original Rescue Team butterflies, water glints,
+light motes and six white foam patches animate independently over it.
+These effects share a layered scene system, pause and reset with the mission,
+and remain editable as placed objects.
+The editable source is
+[`levels/emerald-falls.level.json`](levels/emerald-falls.level.json); its baked
+background is `levels/emerald-falls.png`. Regressions complete
 the mission with three different production repair priorities.
+
+Play **Forest Mayday**, a forest crash-site rescue around an A320-sized
+passenger jet, with `make forest-mayday`. Ten people and two animals wait behind
+fallen trees, a rockfall and a damaged evacuation trail. Restore the cafe,
+forestry shed and ranger house to fund the rescue. The aircraft, forest and
+shadows are baked into the painting; creek foam, water glints, butterflies and
+light motes animate independently. Its editable source is
+[`levels/forest-mayday.level.json`](levels/forest-mayday.level.json), and the
+background and built-in ImageGen prompt are saved as
+[`levels/forest-mayday.png`](levels/forest-mayday.png) and
+[`levels/forest-mayday.prompt.txt`](levels/forest-mayday.prompt.txt).
+`make forest-mayday-app` creates a local macOS launcher in `build/Forest Mayday.app`.
+Regressions complete all rescues with three different production repair priorities.
 
 ## Verification
 

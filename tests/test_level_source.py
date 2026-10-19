@@ -141,20 +141,56 @@ class LevelSourceTests(unittest.TestCase):
             origin = root / "source"
             origin.mkdir()
             source = dict(self.source, background="@scene.png")
+            source["objects"] = list(source["objects"]) + [
+                {"type": "effect", "id": 90, "params": "sprite;image=@foliage.png;rect=0,0,32,32"}
+            ]
             (origin / "level.json").write_text(json.dumps(source))
             pixels = (ROOT / "levels/emerald-falls.png").read_bytes()
             (origin / "scene.png").write_bytes(pixels)
+            (origin / "foliage.png").write_bytes(pixels)
             binary = root / "compiled/demo.lvl"
             command = [sys.executable, str(tool), "compile", str(origin / "level.json"), str(binary)]
             subprocess.run(command, check=True)
             self.assertEqual((binary.parent / "scene.png").read_bytes(), pixels)
+            self.assertEqual((binary.parent / "foliage.png").read_bytes(), pixels)
             editable = root / "editable/demo.level.json"
             subprocess.run([sys.executable, str(tool), "decompile", str(binary), str(editable)], check=True)
             self.assertEqual((editable.parent / "scene.png").read_bytes(), pixels)
+            self.assertEqual((editable.parent / "foliage.png").read_bytes(), pixels)
             before = binary.read_bytes()
-            (origin / "scene.png").unlink()
+            (origin / "foliage.png").unlink()
             self.assertNotEqual(subprocess.run(command, capture_output=True).returncode, 0)
             self.assertEqual(binary.read_bytes(), before)
+
+    def test_map_visual_validation(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / "atlas.png").write_bytes((ROOT / "levels/emerald-falls.png").read_bytes())
+            binary = root / "demo.lvl"
+            assets = os.environ.get("RESCUE_TEAM_ASSETS", str(ROOT / "reference/rescue-team"))
+            command = [str(ROOT / "build/volcano"), "--assets", assets, "--software", "--hidden", "--level-file", str(binary), "--frames", "1"]
+            env = dict(os.environ, SDL_VIDEODRIVER="dummy")
+            def run(params, **fields):
+                source = copy.deepcopy(self.source)
+                source["objects"].append({"type": "effect", "id": 90, "params": params, "x": 400, "y": 400, **fields})
+                binary.write_bytes(ls.encode(source))
+                return subprocess.run(command, env=env, cwd=ROOT, capture_output=True).returncode
+            self.assertEqual(run("sprite;image=@atlas.png;rect=0,0,32,32;pivot=.5,.9;wind=2"), 0)
+            for params in [
+                "sprite;image=@../atlas.png", "sprite;image=@atlas.png;rect=0,0,8192,8192",
+                "sprite;image=@atlas.png;rect=0,0,0,32", "sprite;image=@atlas.png;rect=0,0,32.5,32",
+                "sprite;image=@atlas.png;pivot=2,.9", "sprite;image=@atlas.png;stage=sky",
+                "sparkles;speed=0", "sparkles;opacity=nan", "insects;count=33", "insects;count=1.5",
+                "insects;animation=no_such_animation", "motes;width=-1",
+            ]:
+                with self.subTest(params=params):
+                    self.assertNotEqual(run(params), 0)
+            self.assertNotEqual(run("sprite;image=@atlas.png", scale_x=0), 0)
+            self.assertEqual(run("unrestored_retail_controller"), 0)
+            source = copy.deepcopy(self.source)
+            source["objects"] += [{"type": "effect", "id": i, "params": "foam"} for i in range(100, 1125)]
+            binary.write_bytes(ls.encode(source))
+            self.assertNotEqual(subprocess.run(command, env=env, cwd=ROOT, capture_output=True).returncode, 0)
 
 
 if __name__ == "__main__":

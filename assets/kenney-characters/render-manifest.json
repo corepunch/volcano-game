@@ -1,0 +1,426 @@
+{
+  "format": "volcano-kenney-character-renders-1",
+  "resolution": [
+    128,
+    160
+  ],
+  "texture_scale": 2,
+  "directions": [
+    "E",
+    "NE",
+    "N",
+    "NW",
+    "W",
+    "SW",
+    "S",
+    "SE"
+  ],
+  "clips": [
+    {
+      "character": "worker",
+      "action": "Stand",
+      "frames": 32,
+      "resolution": [
+        128,
+        160
+      ],
+      "folder": "build/kenney-character-frames/worker-Stand",
+      "anchor": [
+        64.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "worker",
+      "action": "Look",
+      "frames": 32,
+      "resolution": [
+        128,
+        160
+      ],
+      "folder": "build/kenney-character-frames/worker-Look",
+      "anchor": [
+        64.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "worker",
+      "action": "Run",
+      "frames": 16,
+      "resolution": [
+        128,
+        160
+      ],
+      "folder": "build/kenney-character-frames/worker-Run",
+      "anchor": [
+        64.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "worker",
+      "action": "Carry",
+      "frames": 16,
+      "resolution": [
+        128,
+        160
+      ],
+      "folder": "build/kenney-character-frames/worker-Carry",
+      "anchor": [
+        64.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "worker",
+      "action": "Chop",
+      "frames": 24,
+      "resolution": [
+        160,
+        160
+      ],
+      "folder": "build/kenney-character-frames/worker-Chop",
+      "anchor": [
+        80.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "worker",
+      "action": "Gather",
+      "frames": 24,
+      "resolution": [
+        128,
+        160
+      ],
+      "folder": "build/kenney-character-frames/worker-Gather",
+      "anchor": [
+        64.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "worker",
+      "action": "Hammer",
+      "frames": 24,
+      "resolution": [
+        160,
+        160
+      ],
+      "folder": "build/kenney-character-frames/worker-Hammer",
+      "anchor": [
+        80.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "worker",
+      "action": "Repair",
+      "frames": 24,
+      "resolution": [
+        160,
+        160
+      ],
+      "folder": "build/kenney-character-frames/worker-Repair",
+      "anchor": [
+        80.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "worker",
+      "action": "Pickaxe",
+      "frames": 24,
+      "resolution": [
+        160,
+        160
+      ],
+      "folder": "build/kenney-character-frames/worker-Pickaxe",
+      "anchor": [
+        80.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "worker",
+      "action": "Valve",
+      "frames": 32,
+      "resolution": [
+        128,
+        160
+      ],
+      "folder": "build/kenney-character-frames/worker-Valve",
+      "anchor": [
+        64.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "worker",
+      "action": "Call",
+      "frames": 32,
+      "resolution": [
+        128,
+        160
+      ],
+      "folder": "build/kenney-character-frames/worker-Call",
+      "anchor": [
+        64.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "worker",
+      "action": "Pet",
+      "frames": 24,
+      "resolution": [
+        128,
+        160
+      ],
+      "folder": "build/kenney-character-frames/worker-Pet",
+      "anchor": [
+        64.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "worker",
+      "action": "Sit",
+      "frames": 32,
+      "resolution": [
+        128,
+        160
+      ],
+      "folder": "build/kenney-character-frames/worker-Sit",
+      "anchor": [
+        64.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "worker",
+      "action": "Ill",
+      "frames": 32,
+      "resolution": [
+        128,
+        160
+      ],
+      "folder": "build/kenney-character-frames/worker-Ill",
+      "anchor": [
+        64.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "worker",
+      "action": "Alert",
+      "frames": 32,
+      "resolution": [
+        128,
+        160
+      ],
+      "folder": "build/kenney-character-frames/worker-Alert",
+      "anchor": [
+        64.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "worker",
+      "action": "Sink",
+      "frames": 32,
+      "resolution": [
+        128,
+        160
+      ],
+      "folder": "build/kenney-character-frames/worker-Sink",
+      "anchor": [
+        64.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "worker",
+      "action": "Jump",
+      "frames": 12,
+      "resolution": [
+        128,
+        160
+      ],
+      "folder": "build/kenney-character-frames/worker-Jump",
+      "anchor": [
+        64.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "male",
+      "action": "Stand",
+      "frames": 32,
+      "resolution": [
+        128,
+        160
+      ],
+      "folder": "build/kenney-character-frames/male-Stand",
+      "anchor": [
+        64.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "male",
+      "action": "Look",
+      "frames": 32,
+      "resolution": [
+        128,
+        160
+      ],
+      "folder": "build/kenney-character-frames/male-Look",
+      "anchor": [
+        64.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "male",
+      "action": "Run",
+      "frames": 16,
+      "resolution": [
+        128,
+        160
+      ],
+      "folder": "build/kenney-character-frames/male-Run",
+      "anchor": [
+        64.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "male",
+      "action": "Ill",
+      "frames": 32,
+      "resolution": [
+        128,
+        160
+      ],
+      "folder": "build/kenney-character-frames/male-Ill",
+      "anchor": [
+        64.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "male",
+      "action": "Alert",
+      "frames": 32,
+      "resolution": [
+        128,
+        160
+      ],
+      "folder": "build/kenney-character-frames/male-Alert",
+      "anchor": [
+        64.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "male",
+      "action": "Sink",
+      "frames": 32,
+      "resolution": [
+        128,
+        160
+      ],
+      "folder": "build/kenney-character-frames/male-Sink",
+      "anchor": [
+        64.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "female",
+      "action": "Stand",
+      "frames": 32,
+      "resolution": [
+        128,
+        160
+      ],
+      "folder": "build/kenney-character-frames/female-Stand",
+      "anchor": [
+        64.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "female",
+      "action": "Look",
+      "frames": 32,
+      "resolution": [
+        128,
+        160
+      ],
+      "folder": "build/kenney-character-frames/female-Look",
+      "anchor": [
+        64.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "female",
+      "action": "Run",
+      "frames": 16,
+      "resolution": [
+        128,
+        160
+      ],
+      "folder": "build/kenney-character-frames/female-Run",
+      "anchor": [
+        64.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "female",
+      "action": "Ill",
+      "frames": 32,
+      "resolution": [
+        128,
+        160
+      ],
+      "folder": "build/kenney-character-frames/female-Ill",
+      "anchor": [
+        64.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "female",
+      "action": "Alert",
+      "frames": 32,
+      "resolution": [
+        128,
+        160
+      ],
+      "folder": "build/kenney-character-frames/female-Alert",
+      "anchor": [
+        64.0,
+        118.64001750946045
+      ]
+    },
+    {
+      "character": "female",
+      "action": "Sink",
+      "frames": 32,
+      "resolution": [
+        128,
+        160
+      ],
+      "folder": "build/kenney-character-frames/female-Sink",
+      "anchor": [
+        64.0,
+        118.64001750946045
+      ]
+    }
+  ]
+}
