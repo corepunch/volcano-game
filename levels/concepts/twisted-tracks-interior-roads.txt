@@ -1,0 +1,52 @@
+Twisted Tracks: roads through the interior wreck
+
+Visual concept only. Production background, level routes and game code are
+unchanged. This revises the road-clearing concept to address its inaccessible
+center, while retaining the classic ground-road obstacle-clearing formula.
+
+Generation
+Built-in ImageGen edit of levels/concepts/twisted-tracks-road-clearing.png.
+Exact prompt saved alongside this file. Earlier concepts remain preserved.
+
+Composition intent
+Reorganize the coaster instead of retaining the impassable central track drop.
+Cluster the richest wreckage into islands between existing maintenance lanes:
+large track silhouettes above, a dramatic eastern loop, a lower central rubble
+island and a compact train wreck beside an accessible ground rescue pocket.
+Remove the caption strip and obstacle studies to devote the full image to map.
+
+Ground-road network
+- Southwest arrival enters a central service junction near logical (690,390).
+- An upper interior branch reaches a rescue pocket near (680,205).
+- An eastern interior branch reaches a pocket inside the loop near (1130,285).
+- A southeast branch reaches a train-side ground pocket near (1040,485).
+- Small southern service clearings connect to the lower supply road.
+These are TOP-LEFT logical 1366x768 prompt coordinates, not measured runtime
+routes. Adapt any implementation to the actual painting after visual review.
+
+Gameplay retained
+Short red track panels, broken yellow supports, folded fencing and a detached
+blue car are discrete removable blockers across existing roads. Workers clear
+them using ordinary queued jobs and resources, then survivors escape along the
+reopened roads. Keep the same four obstacle families and vary their appearance.
+Concentrate meaningful jobs and rescues in the middle of the map, not just its
+perimeter. No ladders, bridges, catwalks, construction kits or elevated routes.
+
+Visual review of selected image
+The central steep drop has been relocated into the upper-left wreckage. A
+clearly exposed junction with two workers now occupies the center, with ground
+roads extending north to an interior visitor pocket, east toward the loop and
+southeast to the train. Additional winding lanes surround a lower central wreck
+island. Dense rail/support debris remains between roads and along screen edges.
+The full canvas is map; the caption strip and obstacle thumbnails are gone.
+This addresses the earlier peripheral-play layout. Some roads form cycles:
+before implementation, assign gates across all bypasses or make chosen links
+visually impassable so a mandatory obstruction cannot simply be walked around.
+
+Production checks still required
+Measure lane widths, road centerlines, clearing centers and obstacle footprints.
+Separate interactive debris from the background and leave clean road beneath
+each removable prop. Prove gate blocking and absence of unintended bypasses;
+verify accessible working positions, sufficient resources and survivor returns.
+Keep background wreck clear of actual movement and click targets. This drawing
+does not demonstrate a solvable mission or provide an exact traffic graph.
