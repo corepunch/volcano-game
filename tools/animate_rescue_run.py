@@ -45,6 +45,45 @@ def linear(action):
                         key.interpolation = 'LINEAR'
 
 
+def reduce_head_swing(rig, factor=.5):
+    """Scale neck/head angular excursions, including inherited torso motion.
+
+    Apply once to the full-strength run. Keep the average facing direction,
+    neck attachment, torso, arms and bouncing stride intact.
+    """
+    action = bpy.data.actions['Rescue_Run']
+    count = int(action['frames'])
+    assign(rig, action)
+    names = ('Neck', 'Head')
+    rotations = {name: [] for name in names}
+    for frame in range(1, count + 1):
+        bpy.context.scene.frame_set(frame)
+        for name in names:
+            q = rig.pose.bones[name].matrix.to_quaternion()
+            if rotations[name]:
+                q.make_compatible(rotations[name][0])
+            rotations[name].append(q)
+    means = {name: Quaternion(tuple(sum(q[i] for q in values)/count
+                                   for i in range(4))).normalized()
+             for name, values in rotations.items()}
+    previous = {}
+    for frame in range(1, count + 2):
+        bpy.context.scene.frame_set(frame)
+        for name in names:
+            bone = rig.pose.bones[name]
+            q = means[name].slerp(rotations[name][(frame-1) % count], factor)
+            matrix = q.to_matrix().to_4x4()
+            matrix.translation = bone.head.copy()
+            bone.matrix = matrix
+            bpy.context.view_layer.update()
+            if name in previous:
+                bone.rotation_quaternion.make_compatible(previous[name])
+            previous[name] = bone.rotation_quaternion.copy()
+            bone.keyframe_insert('rotation_quaternion', frame=frame, group=name)
+    linear(action)
+    action['head_swing_scale'] = factor
+
+
 def enhance_run(rig):
     action = bpy.data.actions['Rescue_Run']
     count = int(action['frames'])
@@ -84,7 +123,8 @@ def enhance_run(rig):
         key_pose(rig, frame, previous)
     linear(action)
     action['origin'] = ('Kenney run retargeted through its Targeting Pose; '
-                        'authored stride bounce, torso recoil, head follow-through and arm drive')
+                        'authored stride bounce, torso recoil, half-strength head follow-through and arm drive')
+    reduce_head_swing(rig)
     return action
 
 
@@ -124,5 +164,5 @@ def rebuild_carry(rig):
         carry_arms(rig)
         key_pose(rig, frame, previous)
     linear(carry)
-    carry['origin'] = 'Authored rescue carrying run with stride bounce, head follow-through and chest-relative sack grip'
+    carry['origin'] = 'Authored rescue carrying run with stride bounce, half-strength head follow-through and chest-relative sack grip'
     return carry
