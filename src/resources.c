@@ -315,6 +315,26 @@ static bool sprite_color(const char *name,float x,float y,double time,int frame,
 bool draw_sprite_rotated(const char *name,float x,float y,double time,int frame,float alpha,float angle) {
     return sprite_color(name,x,y,time,frame,alpha,angle,(SDL_Color){255,255,255,255});
 }
+bool draw_sprite_shadow(const char *name,float x,float y,double time,int frame,float alpha,float angle,float cast) {
+    Animation *a=animation_find(name);if(!a || !a->frame_count)return false;
+    int index=frame>=0?frame:(int)(time*a->fps)%a->frame_count;if(index>=a->frame_count)index=a->frame_count-1;
+    SpriteFrame *f=&a->frames[index];Texture *t=texture_load(a->texture,NULL);if(!t)return false;
+    float radians=angle*.01745329252f,c=cosf(radians),s=sinf(radians);
+    SDL_Color color={255,255,255,(Uint8)(fminf(1,fmaxf(0,alpha))*255)};
+    SDL_Vertex vertices[4];const int indices[]={0,1,2,0,2,3};
+    const int corners[4][2]={{0,0},{1,0},{1,1},{0,1}};
+    for(int i=0;i<4;i++) {
+        int right=corners[i][0],bottom=corners[i][1];
+        float dx=right*f->w-f->dx,dy=bottom*f->h-(f->h-f->dy);
+        /* The near edge stays planted. Move the far edge equally left/up:
+         * northwest at 45 degrees in screen space, even on bobbing objects. */
+        float reach=(1-bottom)*cast;
+        vertices[i]=(SDL_Vertex){.position={x+c*dx-s*dy-reach,GAME_HEIGHT-y+s*dx+c*dy-reach},
+            .color=color,.tex_coord={f->u+right*f->cu,1-f->v-f->cv+bottom*f->cv}};
+    }
+    return SDL_RenderGeometry(renderer,t->handle,vertices,4,indices,6)==0?
+        true:failure("Ground shadow render failed",SDL_GetError());
+}
 bool draw_sprite_tinted(const char *name,float x,float y,double time,int frame,SDL_Color tint) {
     return sprite_color(name,x,y,time,frame,tint.a/255.f,0,tint);
 }

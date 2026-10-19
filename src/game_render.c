@@ -76,7 +76,16 @@ static void game_paint(Game *g, const Entity *e)
         snprintf(shadow,sizeof shadow,"%s_ground_shadow",sprite);
         /* HD assets opt in with an authored footprint for every object state.
          * Share the pose and frame so repair, clearing and floating stay aligned. */
-        if (animation_find(shadow)) draw_sprite_rotated(shadow,pose.p.x,pose.p.y,time,e->frame,.55f,pose.angle);
+        Animation *body=animation_find(sprite);
+        if (body && body->frame_count && animation_find(shadow)) {
+            int frame=e->frame>=0?e->frame:(int)(time*body->fps)%body->frame_count;
+            if (frame>=body->frame_count) frame=body->frame_count-1;
+            SpriteFrame *f=&body->frames[frame];
+            /* Height above the anchor sets the cast distance. Road damage
+             * stays flush with the ground rather than casting a raised shadow. */
+            float cast=!strcmp(sprite,"broken_road0")?0:fmaxf(3,(f->h-f->dy)*.5f);
+            draw_sprite_shadow(shadow,pose.p.x,pose.p.y,time,e->frame,.55f,pose.angle,cast);
+        }
         draw_sprite_rotated(sprite,pose.p.x,pose.p.y,time,e->frame,e->ambient==CLOUD?.65f:1,pose.angle);
     }
 }

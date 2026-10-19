@@ -58,6 +58,7 @@ Animation *animation_find(const char *name);
 int animation_count(void);
 bool draw_sprite(const char *name,float x,float y,double time,int frame,float alpha);
 bool draw_sprite_rotated(const char *name,float x,float y,double time,int frame,float alpha,float angle);
+bool draw_sprite_shadow(const char *name,float x,float y,double time,int frame,float alpha,float angle,float cast);
 bool draw_sprite_tinted(const char *name,float x,float y,double time,int frame,SDL_Color tint);
 bool draw_image(const char *relative,float x,float y,float w,float h,const char *alpha);
 bool draw_image_file(const char *path,float x,float y,float w,float h);
