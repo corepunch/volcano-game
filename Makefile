@@ -77,15 +77,16 @@ ancient-echoes-app: all build/levels/ancient-echoes.lvl.rules build/levels/ancie
 	python3 tools/package_custom_level.py "Ancient Echoes" build/levels/ancient-echoes.lvl "$(ASSETS)"
 test-ancient-echoes: build/check_custom_level build/levels/ancient-echoes.lvl.rules build/levels/ancient-echoes.png
 	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(ASSETS)" build/levels/ancient-echoes.lvl --ancient
-build/levels/twisted-tracks.lvl: levels/twisted-tracks.level.json levels/twisted-tracks.png tools/level_source.py
+COASTER_IMAGES = levels/twisted-tracks-interior.png levels/twisted-tracks-debris.png
+build/levels/twisted-tracks.lvl: levels/twisted-tracks.level.json $(COASTER_IMAGES) tools/level_source.py
 	python3 tools/level_source.py compile $< $@
-build/levels/twisted-tracks.lvl.rules build/levels/twisted-tracks.png: build/levels/twisted-tracks.lvl
+build/levels/twisted-tracks.lvl.rules build/levels/twisted-tracks-interior.png build/levels/twisted-tracks-debris.png: build/levels/twisted-tracks.lvl
 	@test -f "$@" || python3 tools/level_source.py compile levels/twisted-tracks.level.json build/levels/twisted-tracks.lvl
-twisted-tracks: all build/levels/twisted-tracks.lvl.rules build/levels/twisted-tracks.png
+twisted-tracks: all build/levels/twisted-tracks.lvl.rules build/levels/twisted-tracks-interior.png build/levels/twisted-tracks-debris.png
 	./build/volcano --assets "$(ASSETS)" --level-file build/levels/twisted-tracks.lvl
-twisted-tracks-app: all build/levels/twisted-tracks.lvl.rules build/levels/twisted-tracks.png
+twisted-tracks-app: all build/levels/twisted-tracks.lvl.rules build/levels/twisted-tracks-interior.png build/levels/twisted-tracks-debris.png
 	python3 tools/package_custom_level.py "Twisted Tracks" build/levels/twisted-tracks.lvl "$(ASSETS)"
-test-twisted-tracks: build/check_custom_level build/levels/twisted-tracks.lvl.rules build/levels/twisted-tracks.png
+test-twisted-tracks: build/check_custom_level build/levels/twisted-tracks.lvl.rules build/levels/twisted-tracks-interior.png build/levels/twisted-tracks-debris.png
 	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(ASSETS)" build/levels/twisted-tracks.lvl --coaster
 build/levels/ground-zero.lvl: levels/ground-zero.level.json levels/ground-zero.png levels/ground-zero-props.png tools/level_source.py
 	python3 tools/level_source.py compile $< $@
