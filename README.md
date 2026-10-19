@@ -151,6 +151,38 @@ menu artwork. Victory requires every people, animal and basin objective.
 - **Escape:** dismiss the construction menu, or open/close the pause menu
 - Close the window to quit
 
+## Create your own levels
+
+Levels now have an editable JSON source format, a lossless compiler/decompiler,
+and a playable example:
+
+```sh
+make level-example
+python3 tools/level_source.py check levels/first-rescue.level.json
+python3 tools/level_source.py compile levels/first-rescue.level.json build/levels/first-rescue.lvl
+./build/volcano --level-file build/levels/first-rescue.lvl
+```
+
+The [level authoring guide](docs/creating-levels.md) explains source fields,
+object types, traffic spacing, obstacle gates, resource budgets, building
+outputs, vehicle markers, and patterns recovered from the original campaign.
+The [starter source](levels/first-rescue.level.json) has editor support through
+the [JSON Schema](docs/level-source.schema.json).
+Custom mission supplies and goals compile to a `.lvl.rules` companion;
+the `.lvl` retains the original version 301 binary layout. Custom levels load
+directly without modifying the retail resources. Press R after recompiling to
+reload a custom level. `make analyze-levels` inventories the original campaign;
+`make test-levels` checks conversion and completes the starter through normal play.
+
+Play **Emerald Falls**, our original forest-and-waterfall level, with
+`make emerald-falls`. Its three branches contain seven people, two animals,
+and a resource puzzle linking timber, food production, money production, and
+the final river crossing. Six foam emitters add white surface foam at
+the bottom pools, which pauses and resets with the mission. The editable source is
+[`levels/emerald-falls.level.json`](levels/emerald-falls.level.json); the original
+ImageGen background and its prompt are saved beside it. Regressions complete
+the mission with three different production repair priorities.
+
 ## Verification
 
 ```sh

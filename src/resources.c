@@ -323,6 +323,10 @@ bool draw_image(const char *relative,float x,float y,float w,float h,const char 
     Texture *t=texture_load(path,mask);if(!t)return false;
     SDL_FRect dest={x,GAME_HEIGHT-y-h,w,h};SDL_SetTextureAlphaMod(t->handle,255);return SDL_RenderCopyF(renderer,t->handle,NULL,&dest)==0;
 }
+bool draw_image_file(const char *path,float x,float y,float w,float h) {
+    Texture *t=texture_load(path,NULL);if(!t)return false;
+    SDL_FRect dest={x,GAME_HEIGHT-y-h,w,h};SDL_SetTextureAlphaMod(t->handle,255);return SDL_RenderCopyF(renderer,t->handle,NULL,&dest)==0;
+}
 bool draw_atlas(const char *relative,SDL_FRect rect,SDL_FRect uv) {
     char path[PATH_CAPACITY];if(!join_path(path,sizeof path,asset_root,relative))return false;
     Texture *t=texture_load(path,NULL);if(!t)return false;
@@ -346,6 +350,36 @@ bool draw_particle(bool smoke,int frame,float x,float y,float diameter,float ang
     int result=SDL_RenderCopyExF(renderer,t->handle,&src,&dest,angle,NULL,SDL_FLIP_NONE);
     SDL_SetTextureColorMod(t->handle,255,255,255);SDL_SetTextureAlphaMod(t->handle,255);
     return result?failure("Particle render failed",SDL_GetError()):true;
+}
+bool draw_foam_particle(float x,float y,float w,float h,float angle,Uint8 opacity,bool ring) {
+    /* White vertices with transparent edges have no smoke texture or gray
+     * pigment. Small irregular flecks and open rings read as surface foam. */
+    enum { SEGMENTS=20, BANDS=3 };
+    SDL_Vertex vertices[(SEGMENTS+1)*BANDS];int indices[SEGMENTS*12],count=0;
+    float radians=angle*.01745329252f,c=cosf(radians),s=sinf(radians);
+    const float radii[2][BANDS]={{0,.48f,1},{.63f,.81f,1}};
+    for(int i=0;i<=SEGMENTS;i++) {
+        float theta=i*6.28318530718f/SEGMENTS;
+        float rough=1+.10f*sinf(theta*3+radians)+.06f*cosf(theta*5-radians);
+        for(int band=0;band<BANDS;band++) {
+            float radius=radii[ring?1:0][band]*rough;
+            float dx=cosf(theta)*w*.5f*radius,dy=sinf(theta)*h*.5f*radius;
+            Uint8 alpha=band==2 || (ring && band==0)?0:opacity;
+            vertices[i*BANDS+band]=(SDL_Vertex){
+                .position={x+c*dx-s*dy,GAME_HEIGHT-y-s*dx-c*dy},
+                .color={255,255,255,alpha},.tex_coord={0,0}};
+        }
+    }
+    for(int i=0;i<SEGMENTS;i++) {
+        if(ring && (i%10==0 || i%10>=8))continue;
+        for(int band=0;band<BANDS-1;band++) {
+            int a=i*BANDS+band,b=(i+1)*BANDS+band;
+            indices[count++]=a;indices[count++]=b;indices[count++]=b+1;
+            indices[count++]=a;indices[count++]=b+1;indices[count++]=a+1;
+        }
+    }
+    return SDL_RenderGeometry(renderer,NULL,vertices,(SEGMENTS+1)*BANDS,indices,count)==0?
+        true:failure("Foam particle render failed",SDL_GetError());
 }
 static Font *font_find(const char *name) {
     for(int i=0;i<font_count;i++)if(!strcmp(fonts[i].name,name))return &fonts[i];return NULL;

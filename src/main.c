@@ -36,17 +36,18 @@ static void default_assets(void) {
     snprintf(asset_root,sizeof asset_root,"reference/rescue-team");
 }
 int main(int argc,char **argv) {
-    const char *assets=getenv("RESCUE_TEAM_ASSETS"),*shot=NULL;
+    const char *assets=getenv("RESCUE_TEAM_ASSETS"),*shot=NULL,*level_file=NULL;
     int frames=0,level=-1,campaign=1,result=1;bool hidden=false,software=false,selftest=false,inspect=false;
     SDL_Window *window=NULL;
     if(assets)snprintf(asset_root,sizeof(asset_root),"%s",assets);
     else default_assets();
     for(int i=1;i<argc;i++){
         const char *arg=argv[i];
-        if(!strcmp(arg,"--assets")||!strcmp(arg,"--screenshot")||!strcmp(arg,"--frames")||!strcmp(arg,"--level")||!strcmp(arg,"--campaign")){
+        if(!strcmp(arg,"--assets")||!strcmp(arg,"--screenshot")||!strcmp(arg,"--frames")||!strcmp(arg,"--level")||!strcmp(arg,"--campaign")||!strcmp(arg,"--level-file")){
             if(i+1>=argc){fprintf(stderr,"Missing value for %s\n",arg);return 1;}const char *value=argv[++i];
             if(!strcmp(arg,"--assets")){if(strlen(value)>=sizeof(asset_root)){fprintf(stderr,"Resource path too long\n");return 1;}strcpy(asset_root,value);}
             else if(!strcmp(arg,"--screenshot"))shot=value;
+            else if(!strcmp(arg,"--level-file"))level_file=value;
             else if(!integer(value,!strcmp(arg,"--frames")?&frames:!strcmp(arg,"--campaign")?&campaign:&level)){fprintf(stderr,"Invalid number for %s\n",arg);return 1;}
         }else if(!strcmp(arg,"--hidden"))hidden=true;
         else if(!strcmp(arg,"--software"))software=true;
@@ -54,11 +55,12 @@ int main(int argc,char **argv) {
         else if(!strcmp(arg,"--inspect"))inspect=true;
         else if(!strcmp(arg,"--help")){
             puts("Volcano SDL2 - C-only Rescue Team 5 restoration\n"
-                 "Usage: volcano [--assets ORIGINAL_FOLDER] [--campaign 1..50 | --level SOURCE_INDEX]\n"
+                 "Usage: volcano [--assets ORIGINAL_FOLDER] [--campaign 1..50 | --level SOURCE_INDEX | --level-file FILE.lvl]\n"
                  "               [--frames N] [--screenshot FILE.bmp] [--hidden]\n"
                  "               [--software] [--self-test] [--inspect]\n"
                  "Resources default to $RESCUE_TEAM_ASSETS or reference/rescue-team/.\n"
                  "Defaults to campaign level 1. --level uses the original file index.\n"
+                 "Custom files load optional FILE.lvl.rules mission settings.\n"
                  "Click obstacles, supplies or buildings; Space pause, R restart,\n"
                  "F1 paths, Escape pause/resume. Close the window to quit.");return 0;
         }else {fprintf(stderr,"Unknown option: %s\n",arg);return 1;}
@@ -78,12 +80,16 @@ int main(int argc,char **argv) {
         if(!resources_selftest()||!level_selftest(asset_root)||!game_selftest())goto done;
         frames=1;
     }
-    if (!campaign_load(asset_root)) goto done;
-    if (level<0) {
-        level=campaign_index(campaign);
-        if (level<0) {snprintf(last_error,sizeof last_error,"Campaign level must be 1..50");goto done;}
+    if (level_file) {
+        if (!game_init_file(level_file)) goto done;
+    } else {
+        if (!campaign_load(asset_root)) goto done;
+        if (level<0) {
+            level=campaign_index(campaign);
+            if (level<0) {snprintf(last_error,sizeof last_error,"Campaign level must be 1..50");goto done;}
+        }
+        if(!game_init(level))goto done;
     }
-    if(!game_init(level))goto done;
     Uint64 previous=SDL_GetPerformanceCounter();bool running=true;int frame=0;
     while(running){
         SDL_Event event;

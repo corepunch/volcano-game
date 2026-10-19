@@ -1,4 +1,5 @@
 #include "volcano.h"
+#include <errno.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,6 +37,12 @@ typedef struct {
     double work;
 } Worker;
 typedef struct {
+    Vec2 p;
+    float width,height,rate,drift;
+    uint32_t seed;
+    bool centered;
+} Waterfall;
+typedef struct {
     Level level;
     Entity objects[MAX_LEVEL_OBJECTS];
     int object_count,worker_count,target_count,barriers,resources,survivors;
@@ -44,10 +51,13 @@ typedef struct {
     int evacuee_count,vehicle_count,animals,animals_rescued,purified,basin_goal;
     int transport_trips,fishing_trips,route_epoch;
     double time,message_time;
-    bool paused,debug,ready,early,won,routes_dirty;
+    bool paused,debug,ready,early,won,routes_dirty,allow_cafe,local_background;
     float pointer_x,pointer_y;
     bool pointer_down;
     char message[256],background[PATH_CAPACITY],alpha[PATH_CAPACITY];
+    char custom_path[PATH_CAPACITY];
+    Waterfall waterfalls[16];
+    int waterfall_count;
 } Game;
 static Game *current_game;
 #define game (*current_game)
@@ -257,7 +267,7 @@ static bool dispatch_vehicle(int target,bool quiet)
     if (!quiet) announce(v->atv?"ATV dispatched to rescue a worker.":"Boat dispatched to fish.");
     return true;
 }
-static bool allowed_building(int type) { return !(game.early && game.campaign==6 && type==1); }
+static bool allowed_building(int type) { return game.allow_cafe || type!=1; }
 static bool dispatch(int target,bool quiet)
 {
     Entity *t=&game.objects[target];
@@ -296,28 +306,95 @@ static bool dispatch(int target,bool quiet)
     return true;
 }
 
-bool game_init(int index)
+/* Mission settings are deliberately outside the retail binary format. */
+static bool custom_rules(const char *path)
 {
-    if (!campaign_load(asset_root)) return false;
-    char path[PATH_CAPACITY];snprintf(path,sizeof(path),"%s/level/level%03d.lvl",asset_root,index);
+    FILE *file=fopen(path,"rb");
+    if (!file) return errno==ENOENT?true:fail("Cannot open custom mission rules: %s",path);
+    char buffer[1024];size_t n=fread(buffer,1,sizeof buffer-1,file);
+    bool ok=!ferror(file) && feof(file);fclose(file);buffer[n]=0;
+    if (!ok || memchr(buffer,0,n)) return fail("Invalid or oversized custom mission rules: %s",path);
+    const char *keys[]={"version","food","wood","money","fuel","rescue_goal","basin_goal","allow_cafe"};
+    int values[8]={0};unsigned seen=0;char *save=NULL;
+    for (char *line=strtok_r(buffer,"\r\n",&save);line;line=strtok_r(NULL,"\r\n",&save)) {
+        char *equals=strchr(line,'=');if (!equals) return fail("Invalid mission rule: %s",line);
+        *equals=0;int key=-1;
+        for (int i=0;i<8;i++) if (!strcmp(line,keys[i])) key=i;
+        if (key<0 || (seen&(1u<<key))) return fail("Unknown or duplicate mission rule: %s",line);
+        char *end;errno=0;long value=strtol(equals+1,&end,10);
+        if (errno || end==equals+1 || *end || value<0 || value>1000000) return fail("Invalid mission value: %s",line);
+        values[key]=(int)value;seen|=1u<<key;
+    }
+    if (seen!=255 || values[0]!=1 || values[7]>1) return fail("Incomplete or unsupported custom mission rules");
+    game.early=true;game.food=values[1];game.wood=values[2];game.money=values[3];game.gas=values[4];
+    game.goal=values[5];game.basin_goal=values[6];game.allow_cafe=values[7]!=0;
+    return true;
+}
+static bool waterfall_scalar(const LevelObject *raw,const char *key,float fallback,float low,float high,float *out)
+{
+    char value[4096];*out=fallback;
+    if (!level_param(raw->params,key,value,sizeof value)) return true;
+    char *end;errno=0;float result=strtof(value,&end);
+    if (errno || end==value || *end || !isfinite(result) || result<low || result>high)
+        return fail("Waterfall %u: %s must be between %.0f and %.0f",raw->id,key,low,high);
+    *out=result;return true;
+}
+static bool add_waterfall(const LevelObject *raw)
+{
+    if (game.waterfall_count==16) return fail("Custom level exceeds 16 waterfall emitters");
+    Waterfall *w=&game.waterfalls[game.waterfall_count++];w->p=(Vec2){raw->x,raw->y};w->seed=raw->id;
+    w->centered=!strcmp(raw->params,"foam") || !strncmp(raw->params,"foam;",5);
+    return waterfall_scalar(raw,"width",32,4,120,&w->width) &&
+        waterfall_scalar(raw,"height",w->centered?0:72,w->centered?0:16,220,&w->height) &&
+        waterfall_scalar(raw,"rate",26,1,180,&w->rate) &&
+        waterfall_scalar(raw,"drift",0,-50,50,&w->drift);
+}
+static bool init_level(int index,const char *custom_path)
+{
+    if (!custom_path && !campaign_load(asset_root)) return false;
+    char path[PATH_CAPACITY];
+    if (custom_path) {
+        if (strlen(custom_path)>=sizeof path-6) return fail("Custom level path too long");
+        snprintf(path,sizeof path,"%s",custom_path);
+    } else snprintf(path,sizeof(path),"%s/level/level%03d.lvl",asset_root,index);
     /* Helpers build against the candidate; commit only after full validation. */
     Game *candidate=calloc(1,sizeof(*candidate)),*previous=current_game;
     if (!candidate) return fail("Cannot allocate gameplay state");
     if (!level_load(path,&candidate->level,last_error,1024)) { free(candidate);return false; }
     current_game=candidate;
     game.index=index;game.build_menu=-1;game.pointer_x=game.pointer_y=-100;
-    game.campaign=campaign_number(index);game.early=game.campaign>=1 && game.campaign<=6;game.routes_dirty=true;
+    game.campaign=custom_path?0:campaign_number(index);game.early=game.campaign>=1 && game.campaign<=6;game.routes_dirty=true;
+    game.allow_cafe=game.campaign!=6;
     if (game.early) {
         const Cost starts[]={{20,0,0},{50,30,20},{10,100,30},{60,80,70},{70,80,40},{60,90,40}};
         Cost c=starts[game.campaign-1];game.food=c.food;game.wood=c.wood;game.money=c.money;
         const int goals[]={3,3,5,13,6,2},fuel[]={0,0,0,70,0,220};
         game.goal=goals[game.campaign-1];game.gas=fuel[game.campaign-1];game.basin_goal=game.campaign==6?2:0;
     }
+    if (custom_path) {
+        snprintf(game.custom_path,sizeof game.custom_path,"%s",path);
+        char rules[PATH_CAPACITY];snprintf(rules,sizeof rules,"%s.rules",path);
+        if (!custom_rules(rules)) goto restore;
+    }
     snprintf(game.background,sizeof(game.background),"texture/back/%s_0.jpg",game.level.background);
     snprintf(game.alpha,sizeof(game.alpha),"texture/back/%s_0.alpha",game.level.background);
+    if (custom_path && game.level.background[0]=='@') {
+        const char *image=game.level.background+1,*slash=strrchr(path,'/');
+        if (!*image || strchr(image,'/') || strchr(image,'\\') || !strcmp(image,".") || !strcmp(image,"..")) {
+            fail("Custom background must be @FILENAME beside the level");goto restore;
+        }
+        int n=snprintf(game.background,sizeof game.background,"%.*s%s",slash?(int)(slash-path+1):0,path,image);
+        if (n<0 || n>=(int)sizeof game.background) {fail("Custom background path too long");goto restore;}
+        game.alpha[0]=0;game.local_background=true;
+    }
     for (int i=0;i<game.level.object_count;i++) {
         LevelObject *raw=&game.level.objects[i];int kind=DECOR;char name[128]={0};
         switch (raw->type) {
+        case 5:
+            if (custom_path && (!strcmp(raw->params,"waterfall") || !strncmp(raw->params,"waterfall;",10) ||
+                                !strcmp(raw->params,"foam") || !strncmp(raw->params,"foam;",5)))
+                if (!add_waterfall(raw)) goto restore;
+            continue;
         case 2: decor_name(raw->params,name,sizeof(name));if (!strcmp(name,"water0")) kind=WATER;break;
         case 102: kind=BARRIER;snprintf(name,sizeof(name),"%s",raw->params);break;
         case 108:
@@ -337,7 +414,7 @@ bool game_init(int index)
             if (!game.early) continue;
             kind=WATER;snprintf(name,sizeof name,"water0");break;
         case 153: case 154:
-            if (!game.early || game.campaign<4) continue;
+            if (!game.early || (!*game.custom_path && game.campaign<4)) continue;
             kind=raw->type==153?VEHICLE:SERVICE;
             snprintf(name,sizeof name,"%s",raw->type==153?"offroad0":"garage0");break;
         case 125: snprintf(name,sizeof(name),"firefighter_idle0");break;
@@ -464,6 +541,14 @@ bool game_init(int index)
     free(previous);last_error[0]=0;return true;
 restore:
     current_game=previous;free(candidate);return false;
+}
+bool game_init(int index) { return init_level(index,NULL); }
+bool game_init_file(const char *path) { return path && *path?init_level(-1,path):fail("Missing custom level path"); }
+static bool restart_level(void)
+{
+    /* Copy first: successful initialization frees the old game. */
+    char path[PATH_CAPACITY];snprintf(path,sizeof path,"%s",game.custom_path);
+    return *path?game_init_file(path):game_init(game.index);
 }
 static void return_home(Worker *w)
 {
@@ -797,6 +882,34 @@ static void paint_log_particles(const Entity *e)
         }
     }
 }
+static void paint_waterfalls(void)
+{
+    /* Foam stays on the receiving pool. The background supplies falling water;
+     * there are no particles along the drop or smoky clouds above its foot. */
+    double now=game.time+6;
+    for (int emitter=0;emitter<game.waterfall_count;emitter++) {
+        const Waterfall *w=&game.waterfalls[emitter];
+        for (int pass=0;pass<2;pass++) {
+            double rate=pass==0?w->rate:w->rate*.2;
+            float max_life=pass==0?2.2f:3.4f;
+            double phase=particle_random(w->seed+(uint32_t)pass*127u);
+            int64_t latest=(int64_t)floor(now*rate-phase);
+            for (int slot=(int)ceil(max_life*rate);slot>=0;slot--) {
+                int64_t birth=latest-slot;float age=(float)(now-(birth+phase)/rate);
+                uint32_t seed=(uint32_t)birth*747796405u+w->seed*2891336453u+(uint32_t)pass*277803737u;
+                float r=particle_random(seed),s=particle_random(seed+1),life=max_life*(.7f+.3f*s);
+                if (age<0 || age>=life) continue;
+                float t=age/life,fade=fminf(1,t*9)*fminf(1,(1-t)*4);
+                float x=w->p.x+w->drift+(r-.5f)*w->width*1.1f+(s-.5f)*5*age;
+                float y=w->p.y-w->height+(w->centered?(r-.5f)*6+(.5f-t)*12:-2-8*s-age*(4+3*r));
+                float width=pass==0?3+4*s+age:6+age*3;
+                float height=width*(pass==0?.55f:.42f);
+                float alpha=fade*(pass==0?205+50*r:165+50*s);
+                draw_foam_particle(x,y,width,height,r*360+age*(s-.5f)*15,(Uint8)alpha,pass==1);
+            }
+        }
+    }
+}
 static bool inside(float x,float y,float w,float h)
 {
     return game.pointer_x>=x && game.pointer_x<x+w && game.pointer_y>=y && game.pointer_y<y+h;
@@ -805,7 +918,7 @@ static int hud_button(void)
 {
     if (game.paused || game.won) {
         if (inside(508,429,350,83)) return 1;
-        if (inside(508,329,350,55)) return 2;
+        if (!(game.won && *game.custom_path) && inside(508,329,350,55)) return 2;
     }
     return inside(1,681,82,82)?0:-1;
 }
@@ -859,16 +972,19 @@ static void draw_hud(void)
         game.early?game.animals-game.animals_rescued:game.barriers-game.cleared,
         game.early?game.basin_goal-game.purified:game.resources-game.collected};
     const char *tasks[]={"Rescue people",game.early?"Rescue animals":"Clear obstructions",game.early?"Purify the basins":"Collect supplies"};
-    for (int i=0;i<(game.early?1+(game.animals>0)+(game.basin_goal>0):3);i++) {
-        float y=741-21*i;bool done=remaining[i]==0;
+    int row=0;
+    for (int i=0;i<3;i++) {
+        if (game.early && ((i==1 && !game.animals) || (i==2 && !game.basin_goal))) continue;
+        float y=741-21*row;bool done=remaining[i]==0;
         if (done) gui(1036,y,21,22,.8535f,.7373f,.0205f,.0215f);
         else gui(1035,y,20,21,.8330f,.7373f,.0195f,.0205f);
         if (done) snprintf(text,sizeof text,"%s: Done!",tasks[i]);
         else snprintf(text,sizeof text,"%s: %d",tasks[i],remaining[i]);
-        label(done?"CalibriBold20G":"CalibriBold20W",text,1059,738-21*i,25,20,false);
+        label(done?"CalibriBold20G":"CalibriBold20W",text,1059,738-21*row++,25,20,false);
     }
     if (game.early) {
-        snprintf(text,sizeof text,"Level %d   Time %d:%02d",game.campaign,(int)game.time/60,(int)game.time%60);
+        if (*game.custom_path) snprintf(text,sizeof text,"Custom level   Time %d:%02d",(int)game.time/60,(int)game.time%60);
+        else snprintf(text,sizeof text,"Level %d   Time %d:%02d",game.campaign,(int)game.time/60,(int)game.time%60);
         label("CalibriBold20W",text,683,718,25,20,true);
     }
     if (game.paused || game.won) {
@@ -879,8 +995,8 @@ static void draw_hud(void)
         const char *title=game.won?"Level complete":"Pause";
         draw_font("CambriaBold30W",title,683-text_width("CambriaBold30W",title,30)*.5f,
             GAME_HEIGHT-554-45+7.5f,30,color(110,83,58,255));
-        menu_button(1,game.won?"Next level":"Continue",429,83,0,.9189f,.2676f,.0811f,45);
-        menu_button(2,"Play again",329,55,.5059f,.9463f,.2363f,.0537f,32);
+        menu_button(1,game.won?(*game.custom_path?"Play again":"Next level"):"Continue",429,83,0,.9189f,.2676f,.0811f,45);
+        if (!(game.won && *game.custom_path)) menu_button(2,"Play again",329,55,.5059f,.9463f,.2363f,.0537f,32);
     }
     /* Context feedback is transient; it does not cover the scene with a bar. */
     if (!game.paused && game.message_time>0) {
@@ -1057,7 +1173,9 @@ void game_draw(void)
     if (!current_game || !game.ready) return;
     for (int i=0;i<game.object_count;i++) if (game.objects[i].kind==WATER && game.objects[i].effect!=3) paint(&game.objects[i]);
     for (int i=0;i<game.object_count;i++) if (game.objects[i].kind==WATER && game.objects[i].effect==3) paint(&game.objects[i]);
-    draw_image(game.background,0,0,GAME_WIDTH,GAME_HEIGHT,game.alpha);
+    if (game.local_background) draw_image_file(game.background,0,0,GAME_WIDTH,GAME_HEIGHT);
+    else draw_image(game.background,0,0,GAME_WIDTH,GAME_HEIGHT,game.alpha);
+    paint_waterfalls();
     if (game.debug) {
         for (int i=0;i<game.level.traffic_count;i++) for (int j=i+1;j<game.level.traffic_count;j++) {
             Vec2 a=game.level.traffic[i],b=game.level.traffic[j];
@@ -1124,7 +1242,7 @@ void game_click(float x,float y)
     game_pointer(x,y,false);
     int button=hud_button();
     if (game.won) {
-        if (button==1) game_init(campaign_index(game.campaign+1));
+        if (button==1) {if (*game.custom_path) restart_level();else game_init(campaign_index(game.campaign+1));}
         else if (button==2) game_key(SDLK_r);
         return;
     }
@@ -1165,12 +1283,14 @@ void game_click(float x,float y)
 void game_key(SDL_Keycode key)
 {
     if (!current_game) return;
-    if (game.won && (key==SDLK_RETURN || key==SDLK_n)) {game_init(campaign_index(game.campaign+1));return;}
+    if (game.won && (key==SDLK_RETURN || key==SDLK_n)) {
+        if (*game.custom_path) restart_level();else game_init(campaign_index(game.campaign+1));return;
+    }
     if (game.won && key!=SDLK_r) return;
     if (key==SDLK_ESCAPE && game.build_menu>=0) { game.build_menu=-1;return; }
     if (key==SDLK_SPACE || key==SDLK_p || key==SDLK_ESCAPE) { game.paused=!game.paused;game.build_menu=-1; }
     else if (key==SDLK_r) {
-        if (!game_init(game.index)) { announce(last_error);last_error[0]=0; }
+        if (!restart_level()) { announce(last_error);last_error[0]=0; }
     }
     else if (key==SDLK_F1) game.debug=!game.debug;
 }

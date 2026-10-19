@@ -46,10 +46,13 @@ bool draw_sprite(const char *name,float x,float y,double time,int frame,float al
 bool draw_sprite_rotated(const char *name,float x,float y,double time,int frame,float alpha,float angle);
 bool draw_sprite_tinted(const char *name,float x,float y,double time,int frame,SDL_Color tint);
 bool draw_image(const char *relative,float x,float y,float w,float h,const char *alpha);
+bool draw_image_file(const char *path,float x,float y,float w,float h);
 /* Retail GUI UVs and rectangles both use bottom-left coordinates. */
 bool draw_atlas(const char *relative,SDL_FRect rect,SDL_FRect uv);
 /* Original fire atlas (32 frames) and smoke, centered in world coordinates. */
 bool draw_particle(bool smoke,int frame,float x,float y,float diameter,float angle,SDL_Color tint);
+/* White foam geometry: feathered flecks or broken surface rings. */
+bool draw_foam_particle(float x,float y,float w,float h,float angle,Uint8 opacity,bool ring);
 void draw_font(const char *font,const char *text,float x,float y,int size,SDL_Color color);
 float text_width(const char *font,const char *text,int size);
 void draw_text(const char *text,float x,float y,int size,SDL_Color color);
@@ -69,6 +72,8 @@ int campaign_index(int number);
 int campaign_number(int index);
 
 bool game_init(int index);
+/* Custom binary, with optional PATH.rules mission settings. */
+bool game_init_file(const char *path);
 void game_update(double dt);
 void game_draw(void);
 void game_click(float x,float y);
