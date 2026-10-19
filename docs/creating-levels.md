@@ -11,6 +11,11 @@ in the original binary layout: no extra header, private object type, or trailer.
 Binary compatibility has been verified against our production reader and all
 52 supplied binaries, not by running newly authored levels in the retail game.
 
+For the complete artwork process, see [Creating and revising backgrounds](creating-backgrounds.md).
+It includes the tools used for Ancient Echoes and Twisted Tracks, their original
+and intermediate images, exact prompt sequence, measured layout, verification
+commands and local launcher targets.
+
 ## Start with the example
 
 From the repository root:

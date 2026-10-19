@@ -1,0 +1,111 @@
+{
+  "format": "volcano-background-workflow-1",
+  "date": "2026-10-19",
+  "tool": "image_gen.imagegen",
+  "execution": "built-in tool, not CLI/API fallback",
+  "model": null,
+  "seed": null,
+  "transparent_background": false,
+  "logical_canvas": [
+    1366,
+    768
+  ],
+  "notes": [
+    "Model identifier and seed were not exposed in the recorded tool results.",
+    "Regeneration is nondeterministic; retained PNGs are the authoritative artwork.",
+    "Paths are relative to repository root. Hashes describe the preserved authoring outputs.",
+    "The top-level twisted-tracks.prompt.txt combines two separate edit prompts; per-call prompts are archived here."
+  ],
+  "stages": [
+    {
+      "id": "ancient-original",
+      "operation": "generate",
+      "input_stage": null,
+      "prompt": {
+        "path": "levels/background-history/ancient-echoes-v1.prompt.txt",
+        "sha256": "abe0771815e1d0f3897a4670dbd3732d8f3a343187e0e464795ad008f3c9e6b8"
+      },
+      "output": {
+        "path": "levels/background-history/ancient-echoes-v1.png",
+        "sha256": "9acd4e308e98ec28e519092503eeb343b8d4f0aef2ba0cd1816d90088a9bc2a0",
+        "size": [
+          1672,
+          941
+        ]
+      },
+      "original_commit": "ad9c0c9650e2e240c21d5b482536f749c0096fa9"
+    },
+    {
+      "id": "ancient-expanded",
+      "operation": "edit",
+      "input_stage": "ancient-original",
+      "prompt": {
+        "path": "levels/ancient-echoes.prompt.txt",
+        "sha256": "898ca8bfb06e1bc2dd979bcc0aa3ba6d9c4cf32e769ff2e9372041d36ee74a2e"
+      },
+      "output": {
+        "path": "levels/ancient-echoes.png",
+        "sha256": "dc9a419a122be52f27b76423aebf0c54c661b443af3823ec9df20c146da1e6d1",
+        "size": [
+          1672,
+          941
+        ]
+      },
+      "original_commit": "6a54cae5506a9d92d00dadcefb73e0b25b6c27ee"
+    },
+    {
+      "id": "coaster-original",
+      "operation": "generate",
+      "input_stage": null,
+      "prompt": {
+        "path": "levels/background-history/twisted-tracks-v1.prompt.txt",
+        "sha256": "499410ad91899f31b83768bb43a53c070d0c129391e7708dcc4ff7a426242ca2"
+      },
+      "output": {
+        "path": "levels/background-history/twisted-tracks-v1.png",
+        "sha256": "2bba244410e0a76be27460e27a092fd32bd84c0f9b831f600a6af5dd418b816d",
+        "size": [
+          1672,
+          941
+        ]
+      },
+      "original_commit": "a6745fb5a9d312fe367ee9c81c658e0de707585f"
+    },
+    {
+      "id": "coaster-expanded",
+      "operation": "edit",
+      "input_stage": "coaster-original",
+      "prompt": {
+        "path": "levels/background-history/twisted-tracks-expanded.prompt.txt",
+        "sha256": "d4be329ffbbd0a5ef59df0b75048ee26ba07eabc7d88e402f9231b53b6781499"
+      },
+      "output": {
+        "path": "levels/background-history/twisted-tracks-expanded.png",
+        "sha256": "e8cfb573abd683aa14313bda1ec8208e573dee3462cd04c967c7d898bd013904",
+        "size": [
+          1672,
+          941
+        ]
+      },
+      "original_commit": null
+    },
+    {
+      "id": "coaster-access",
+      "operation": "edit",
+      "input_stage": "coaster-expanded",
+      "prompt": {
+        "path": "levels/background-history/twisted-tracks-access.prompt.txt",
+        "sha256": "25a3529c237eeb29dd4aee3585e7cac6917337333e10c75389dec76eeda43187"
+      },
+      "output": {
+        "path": "levels/twisted-tracks.png",
+        "sha256": "fe683d331574d9ceb1a29a9f824a9a57a9cb09f5902bc3a861b1b83e7408aa75",
+        "size": [
+          1672,
+          941
+        ]
+      },
+      "original_commit": "f60e7687defddeb22986f425217fcfa4579ccb40"
+    }
+  ]
+}

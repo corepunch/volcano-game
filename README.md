@@ -82,11 +82,13 @@ cd ~/Developer/volcano-sdl2
 make run
 ```
 
-Run either custom level (builds the game and compiles the level as needed):
+Run a custom level (builds the game and compiles the level as needed):
 
 ```sh
 make run-emerald-falls
 make run-forest-mayday
+make run-ancient-echoes
+make run-twisted-tracks
 ```
 
 To build our new static sprites at twice the original texture resolution:
@@ -290,6 +292,11 @@ python3 tools/level_source.py compile levels/first-rescue.level.json build/level
 The [level authoring guide](docs/creating-levels.md) explains source fields,
 object types, traffic spacing, obstacle gates, resource budgets, building
 outputs, vehicle markers, and patterns recovered from the original campaign.
+The [background production guide](docs/creating-backgrounds.md) covers ImageGen
+generation and edits, large disaster compositions, makeshift rescue trails,
+measuring the painting, sprite placement, verification and packaging. The
+[background history](levels/background-history/README.md) preserves the source
+images, per-call prompts and provenance for the two disaster missions.
 The [starter source](levels/first-rescue.level.json) has editor support through
 the [JSON Schema](docs/level-source.schema.json).
 The reusable [Rescue Team level skill](skills/rescue-team-levels/SKILL.md) provides

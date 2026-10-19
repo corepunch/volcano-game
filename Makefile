@@ -17,6 +17,7 @@ HD_ASSETS = build/hd-assets
 .PHONY: hd-assets hd-levels hd-app run-emerald-falls-hd run-forest-mayday-hd test-hd character-assets
 .PHONY: ancient-echoes ancient-echoes-app test-ancient-echoes
 .PHONY: twisted-tracks twisted-tracks-app test-twisted-tracks
+.PHONY: run-ancient-echoes run-twisted-tracks
 all: build/volcano
 build/volcano: $(SOURCES) $(HEADERS) vendor/stb_image.h
 	@mkdir -p build
@@ -33,6 +34,8 @@ run: all
 	./build/volcano
 run-emerald-falls: emerald-falls
 run-forest-mayday: forest-mayday
+run-ancient-echoes: ancient-echoes
+run-twisted-tracks: twisted-tracks
 test: all test-levels
 	SDL_VIDEODRIVER=dummy ./build/volcano --software --hidden --self-test
 build/check_custom_level: tests/check_custom_level.c $(CORE_SOURCES) $(TEST_SOURCES) $(HEADERS)
