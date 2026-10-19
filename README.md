@@ -103,9 +103,12 @@ make run-forest-mayday-hd
 Falls, plus `build/Emerald Falls HD.app` and `build/Forest Mayday HD.app` launchers.
 Keep those small launchers beside `Volcano HD.app`. The main bundle includes both
 missions and their backgrounds. The original run targets continue to use retail
-sprites. HD artwork covers every interactive building, debris and resource sprite
-used by the two custom missions, plus the fuel station and construction lot:
-23 sprites and 46 authored damage/repair states. HD workers and civilians use
+sprites. HD artwork covers **every building declaration in both retail building
+atlases**: all production upgrade tiers, emergency facilities, docks, railway
+stations, garages, bases, landing pads and the construction lot. Coverage is
+75 building states plus 26 animated flag, valve and delivery-beacon frames.
+Including debris and supplies, there are 61 sprites and 129 authored frames.
+HD workers and civilians use
 our [Kenney character adaptation](assets/kenney-characters/README.md), rendered
 from an editable Blender rig in eight directions. See the [character rendering
 guide](docs/rendering-characters.md) to render saved models, rebuild animations,
@@ -137,7 +140,14 @@ available. Only the HQ uses the revised sheet. Its `extraction: "rect"` region
 retains all scattered props, including detached pieces; other entries use the
 original connected-alpha extraction. Frames
 without an explicit pivot retain their original placement and bounds.
-`make hd-pivot-previews` renders all 46 packed states into `build/pivot-previews/`,
+The eight `buildings-{cafes,sawmills,houses,fuel,services,transport,bases,overlays}`
+source sheets add 83 frames using built-in ImageGen. Each family and all of its
+states were authored together; exact prompts sit beside the sheets.
+`parity-sheets.json` records their layout, and `building-parity.json` records the
+complete original declaration/frame inventory. The packer rejects missing
+building states or changes to that contract. New sprites retain their authored
+in-sheet shadows; animated attachments have no ground shadow.
+`make hd-pivot-previews` renders all 129 packed states into `build/pivot-previews/`,
 including individual PNGs, building/obstacle/supply sheets, a combined sheet and
 a ZIP. Pink crosses show the runtime pivot, cyan rectangles show body bounds,
 and green ellipses use the in-game highlight artwork and dimensions. All states
@@ -146,13 +156,17 @@ Body artwork is only downsampled when packing, with no enlargement or
 script-generated work states.
 Original resources under `reference/rescue-team` stay untouched. macOS windows
 support Retina backing pixels. `make test-hd` runs the conversion, mission,
-resource and campaign checks with the HD asset directory.
+resource and campaign checks with the HD asset directory. It also checks that
+all 101 original building/attachment frames actually reference the HD texture,
+retain their original timing and body bounds, and have valid transparent 2x
+texture regions, with no retail building fallbacks. The machine-readable result
+is `build/hd-assets/building-parity-report.json`.
 
 HD buildings, debris, bridges, road damage and supplies also have short, soft
-ground shadows in the retail style. All 46 shadow states were authored together
+ground shadows in the retail style. The original 46 shadow states were authored together
 in `assets/hd-static/shadows.generated.png`; `shadows.prompt.txt` records the
 ImageGen prompt and `shadows.json` records source regions and footprint placement.
-The packer combines each authored shadow with its object into one transparent
+The packer combines each separate authored shadow with its object into one transparent
 sprite, as retail buildings do. Shadows project northwest (upper-left) at 45°,
 with a grounded near edge and a cast distance proportional to object height;
 road damage retains only contact shading. The 55% shadow strength is baked into

@@ -7,7 +7,10 @@
       "animation": "base0",
       "frame": 0,
       "sheet": "buildings-hq-rounded.generated.png",
-      "pivot": [148, 242],
+      "pivot": [
+        148,
+        242
+      ],
       "extraction": "rect",
       "region": [
         0,
@@ -510,6 +513,1085 @@
         574,
         1373
       ]
+    },
+    {
+      "animation": "burger1_br",
+      "frame": 0,
+      "sheet": "buildings-cafes.generated.png",
+      "region": [
+        61,
+        49,
+        553,
+        484
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "burger1_br",
+      "frame": 1,
+      "sheet": "buildings-cafes.generated.png",
+      "region": [
+        568,
+        61,
+        981,
+        457
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "burger1",
+      "frame": 0,
+      "sheet": "buildings-cafes.generated.png",
+      "region": [
+        1081,
+        64,
+        1503,
+        464
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "burger2_br",
+      "frame": 0,
+      "sheet": "buildings-cafes.generated.png",
+      "region": [
+        22,
+        496,
+        553,
+        962
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "burger2_br",
+      "frame": 1,
+      "sheet": "buildings-cafes.generated.png",
+      "region": [
+        559,
+        499,
+        1042,
+        953
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "burger2",
+      "frame": 0,
+      "sheet": "buildings-cafes.generated.png",
+      "region": [
+        1037,
+        511,
+        1531,
+        975
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "sawmill1_br",
+      "frame": 0,
+      "sheet": "buildings-sawmills.generated.png",
+      "region": [
+        10,
+        71,
+        517,
+        472
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "sawmill1_br",
+      "frame": 1,
+      "sheet": "buildings-sawmills.generated.png",
+      "region": [
+        527,
+        69,
+        1018,
+        477
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "sawmill1",
+      "frame": 0,
+      "sheet": "buildings-sawmills.generated.png",
+      "region": [
+        1039,
+        83,
+        1520,
+        464
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "sawmill2_br",
+      "frame": 0,
+      "sheet": "buildings-sawmills.generated.png",
+      "region": [
+        4,
+        503,
+        517,
+        966
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "sawmill2_br",
+      "frame": 1,
+      "sheet": "buildings-sawmills.generated.png",
+      "region": [
+        528,
+        497,
+        1032,
+        956
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "sawmill2",
+      "frame": 0,
+      "sheet": "buildings-sawmills.generated.png",
+      "region": [
+        1045,
+        501,
+        1528,
+        954
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "house1_br",
+      "frame": 0,
+      "sheet": "buildings-houses.generated.png",
+      "region": [
+        40,
+        18,
+        545,
+        470
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "house1_br",
+      "frame": 1,
+      "sheet": "buildings-houses.generated.png",
+      "region": [
+        559,
+        18,
+        1051,
+        468
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "house1",
+      "frame": 0,
+      "sheet": "buildings-houses.generated.png",
+      "region": [
+        1091,
+        18,
+        1506,
+        455
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "house2_br",
+      "frame": 0,
+      "sheet": "buildings-houses.generated.png",
+      "region": [
+        23,
+        476,
+        544,
+        970
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "house2_br",
+      "frame": 1,
+      "sheet": "buildings-houses.generated.png",
+      "region": [
+        557,
+        481,
+        1065,
+        977
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "house2",
+      "frame": 0,
+      "sheet": "buildings-houses.generated.png",
+      "region": [
+        1072,
+        488,
+        1522,
+        980
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "gas1_br",
+      "frame": 0,
+      "sheet": "buildings-fuel.generated.png",
+      "region": [
+        14,
+        61,
+        512,
+        485
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "gas1_br",
+      "frame": 1,
+      "sheet": "buildings-fuel.generated.png",
+      "region": [
+        540,
+        73,
+        1015,
+        478
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "gas1",
+      "frame": 0,
+      "sheet": "buildings-fuel.generated.png",
+      "region": [
+        1061,
+        90,
+        1527,
+        480
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "gas2_br",
+      "frame": 0,
+      "sheet": "buildings-fuel.generated.png",
+      "region": [
+        11,
+        515,
+        523,
+        978
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "gas2_br",
+      "frame": 1,
+      "sheet": "buildings-fuel.generated.png",
+      "region": [
+        523,
+        515,
+        1035,
+        978
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "gas2",
+      "frame": 0,
+      "sheet": "buildings-fuel.generated.png",
+      "region": [
+        1045,
+        543,
+        1532,
+        978
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "police_br",
+      "frame": 0,
+      "sheet": "buildings-services.generated.png",
+      "region": [
+        10,
+        54,
+        333,
+        300
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "police_br",
+      "frame": 1,
+      "sheet": "buildings-services.generated.png",
+      "region": [
+        337,
+        49,
+        638,
+        290
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "police_br",
+      "frame": 2,
+      "sheet": "buildings-services.generated.png",
+      "region": [
+        638,
+        25,
+        953,
+        298
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "police",
+      "frame": 0,
+      "sheet": "buildings-services.generated.png",
+      "region": [
+        955,
+        23,
+        1250,
+        303
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "firestation_br",
+      "frame": 0,
+      "sheet": "buildings-services.generated.png",
+      "region": [
+        6,
+        311,
+        341,
+        644
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "firestation_br",
+      "frame": 1,
+      "sheet": "buildings-services.generated.png",
+      "region": [
+        343,
+        310,
+        651,
+        631
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "firestation_br",
+      "frame": 2,
+      "sheet": "buildings-services.generated.png",
+      "region": [
+        655,
+        317,
+        956,
+        642
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "firestation",
+      "frame": 0,
+      "sheet": "buildings-services.generated.png",
+      "region": [
+        970,
+        316,
+        1254,
+        639
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "hospital_br",
+      "frame": 0,
+      "sheet": "buildings-services.generated.png",
+      "region": [
+        7,
+        661,
+        345,
+        951
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "hospital_br",
+      "frame": 1,
+      "sheet": "buildings-services.generated.png",
+      "region": [
+        350,
+        653,
+        650,
+        947
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "hospital_br",
+      "frame": 2,
+      "sheet": "buildings-services.generated.png",
+      "region": [
+        650,
+        653,
+        957,
+        947
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "hospital",
+      "frame": 0,
+      "sheet": "buildings-services.generated.png",
+      "region": [
+        960,
+        659,
+        1252,
+        945
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "heliport_br",
+      "frame": 0,
+      "sheet": "buildings-services.generated.png",
+      "region": [
+        10,
+        973,
+        324,
+        1216
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "heliport_br",
+      "frame": 1,
+      "sheet": "buildings-services.generated.png",
+      "region": [
+        343,
+        982,
+        632,
+        1200
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "heliport_br",
+      "frame": 2,
+      "sheet": "buildings-services.generated.png",
+      "region": [
+        647,
+        982,
+        936,
+        1201
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "heliport",
+      "frame": 0,
+      "sheet": "buildings-services.generated.png",
+      "region": [
+        957,
+        982,
+        1249,
+        1204
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "seaport_br",
+      "frame": 0,
+      "sheet": "buildings-transport.generated.png",
+      "region": [
+        6,
+        74,
+        358,
+        359
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "seaport_br",
+      "frame": 1,
+      "sheet": "buildings-transport.generated.png",
+      "region": [
+        373,
+        68,
+        710,
+        372
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "seaport_br",
+      "frame": 2,
+      "sheet": "buildings-transport.generated.png",
+      "region": [
+        733,
+        67,
+        1076,
+        375
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "seaport",
+      "frame": 0,
+      "sheet": "buildings-transport.generated.png",
+      "region": [
+        1099,
+        65,
+        1437,
+        375
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "railstation0_br",
+      "frame": 0,
+      "sheet": "buildings-transport.generated.png",
+      "region": [
+        2,
+        404,
+        364,
+        700
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "railstation0_br",
+      "frame": 1,
+      "sheet": "buildings-transport.generated.png",
+      "region": [
+        365,
+        404,
+        715,
+        700
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "railstation0_br",
+      "frame": 2,
+      "sheet": "buildings-transport.generated.png",
+      "region": [
+        718,
+        393,
+        1084,
+        711
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "railstation0",
+      "frame": 0,
+      "sheet": "buildings-transport.generated.png",
+      "region": [
+        1084,
+        393,
+        1443,
+        711
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "garage0_br",
+      "frame": 0,
+      "sheet": "buildings-transport.generated.png",
+      "region": [
+        10,
+        769,
+        365,
+        1033
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "garage0_br",
+      "frame": 1,
+      "sheet": "buildings-transport.generated.png",
+      "region": [
+        371,
+        755,
+        713,
+        1024
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "garage0_br",
+      "frame": 2,
+      "sheet": "buildings-transport.generated.png",
+      "region": [
+        722,
+        753,
+        1074,
+        1024
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "garage0",
+      "frame": 0,
+      "sheet": "buildings-transport.generated.png",
+      "region": [
+        1083,
+        754,
+        1434,
+        1036
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "base1",
+      "frame": 0,
+      "sheet": "buildings-bases.generated.png",
+      "region": [
+        15,
+        28,
+        564,
+        579
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "base2",
+      "frame": 0,
+      "sheet": "buildings-bases.generated.png",
+      "region": [
+        569,
+        202,
+        1043,
+        561
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "base3",
+      "frame": 0,
+      "sheet": "buildings-bases.generated.png",
+      "region": [
+        1058,
+        204,
+        1532,
+        573
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "finish_base0",
+      "frame": 0,
+      "sheet": "buildings-bases.generated.png",
+      "region": [
+        105,
+        622,
+        392,
+        978
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "delivery_place0",
+      "frame": 0,
+      "sheet": "buildings-bases.generated.png",
+      "region": [
+        516,
+        679,
+        1051,
+        947
+      ],
+      "extraction": "rect",
+      "shadow": "authored"
+    },
+    {
+      "animation": "base_flag",
+      "frame": 0,
+      "sheet": "buildings-overlays.generated.png",
+      "region": [
+        27,
+        77,
+        234,
+        185
+      ],
+      "extraction": "rect",
+      "shadow": "none"
+    },
+    {
+      "animation": "base_flag",
+      "frame": 1,
+      "sheet": "buildings-overlays.generated.png",
+      "region": [
+        256,
+        79,
+        468,
+        179
+      ],
+      "extraction": "rect",
+      "shadow": "none"
+    },
+    {
+      "animation": "base_flag",
+      "frame": 2,
+      "sheet": "buildings-overlays.generated.png",
+      "region": [
+        484,
+        77,
+        696,
+        179
+      ],
+      "extraction": "rect",
+      "shadow": "none"
+    },
+    {
+      "animation": "base_flag",
+      "frame": 3,
+      "sheet": "buildings-overlays.generated.png",
+      "region": [
+        715,
+        73,
+        924,
+        184
+      ],
+      "extraction": "rect",
+      "shadow": "none"
+    },
+    {
+      "animation": "tap",
+      "frame": 0,
+      "sheet": "buildings-overlays.generated.png",
+      "region": [
+        946,
+        43,
+        1139,
+        217
+      ],
+      "extraction": "rect",
+      "shadow": "none"
+    },
+    {
+      "animation": "tap",
+      "frame": 1,
+      "sheet": "buildings-overlays.generated.png",
+      "region": [
+        1174,
+        44,
+        1367,
+        218
+      ],
+      "extraction": "rect",
+      "shadow": "none"
+    },
+    {
+      "animation": "tap",
+      "frame": 2,
+      "sheet": "buildings-overlays.generated.png",
+      "region": [
+        30,
+        273,
+        225,
+        447
+      ],
+      "extraction": "rect",
+      "shadow": "none"
+    },
+    {
+      "animation": "tap",
+      "frame": 3,
+      "sheet": "buildings-overlays.generated.png",
+      "region": [
+        258,
+        273,
+        453,
+        447
+      ],
+      "extraction": "rect",
+      "shadow": "none"
+    },
+    {
+      "animation": "tap",
+      "frame": 4,
+      "sheet": "buildings-overlays.generated.png",
+      "region": [
+        485,
+        273,
+        680,
+        448
+      ],
+      "extraction": "rect",
+      "shadow": "none"
+    },
+    {
+      "animation": "tap",
+      "frame": 5,
+      "sheet": "buildings-overlays.generated.png",
+      "region": [
+        713,
+        273,
+        909,
+        448
+      ],
+      "extraction": "rect",
+      "shadow": "none"
+    },
+    {
+      "animation": "tap",
+      "frame": 6,
+      "sheet": "buildings-overlays.generated.png",
+      "region": [
+        944,
+        274,
+        1138,
+        448
+      ],
+      "extraction": "rect",
+      "shadow": "none"
+    },
+    {
+      "animation": "tap",
+      "frame": 7,
+      "sheet": "buildings-overlays.generated.png",
+      "region": [
+        1175,
+        273,
+        1368,
+        447
+      ],
+      "extraction": "rect",
+      "shadow": "none"
+    },
+    {
+      "animation": "tap",
+      "frame": 8,
+      "sheet": "buildings-overlays.generated.png",
+      "region": [
+        30,
+        507,
+        226,
+        680
+      ],
+      "extraction": "rect",
+      "shadow": "none"
+    },
+    {
+      "animation": "tap",
+      "frame": 9,
+      "sheet": "buildings-overlays.generated.png",
+      "region": [
+        260,
+        507,
+        455,
+        680
+      ],
+      "extraction": "rect",
+      "shadow": "none"
+    },
+    {
+      "animation": "tap",
+      "frame": 10,
+      "sheet": "buildings-overlays.generated.png",
+      "region": [
+        486,
+        506,
+        680,
+        680
+      ],
+      "extraction": "rect",
+      "shadow": "none"
+    },
+    {
+      "animation": "tap",
+      "frame": 11,
+      "sheet": "buildings-overlays.generated.png",
+      "region": [
+        714,
+        507,
+        910,
+        680
+      ],
+      "extraction": "rect",
+      "shadow": "none"
+    },
+    {
+      "animation": "tap",
+      "frame": 12,
+      "sheet": "buildings-overlays.generated.png",
+      "region": [
+        944,
+        506,
+        1139,
+        680
+      ],
+      "extraction": "rect",
+      "shadow": "none"
+    },
+    {
+      "animation": "tap",
+      "frame": 13,
+      "sheet": "buildings-overlays.generated.png",
+      "region": [
+        1174,
+        507,
+        1368,
+        680
+      ],
+      "extraction": "rect",
+      "shadow": "none"
+    },
+    {
+      "animation": "tap",
+      "frame": 14,
+      "sheet": "buildings-overlays.generated.png",
+      "region": [
+        30,
+        737,
+        226,
+        909
+      ],
+      "extraction": "rect",
+      "shadow": "none"
+    },
+    {
+      "animation": "tap",
+      "frame": 15,
+      "sheet": "buildings-overlays.generated.png",
+      "region": [
+        259,
+        737,
+        451,
+        908
+      ],
+      "extraction": "rect",
+      "shadow": "none"
+    },
+    {
+      "animation": "tap",
+      "frame": 16,
+      "sheet": "buildings-overlays.generated.png",
+      "region": [
+        483,
+        737,
+        676,
+        909
+      ],
+      "extraction": "rect",
+      "shadow": "none"
+    },
+    {
+      "animation": "tap",
+      "frame": 17,
+      "sheet": "buildings-overlays.generated.png",
+      "region": [
+        714,
+        734,
+        911,
+        909
+      ],
+      "extraction": "rect",
+      "shadow": "none"
+    },
+    {
+      "animation": "delivery_place_hl",
+      "frame": 0,
+      "sheet": "buildings-overlays.generated.png",
+      "region": [
+        973,
+        758,
+        1112,
+        898
+      ],
+      "extraction": "rect",
+      "shadow": "none"
+    },
+    {
+      "animation": "delivery_place_hl",
+      "frame": 1,
+      "sheet": "buildings-overlays.generated.png",
+      "region": [
+        1154,
+        709,
+        1390,
+        926
+      ],
+      "extraction": "rect",
+      "shadow": "none"
+    },
+    {
+      "animation": "delivery_place_hl",
+      "frame": 2,
+      "sheet": "buildings-overlays.generated.png",
+      "region": [
+        0,
+        912,
+        248,
+        1132
+      ],
+      "extraction": "rect",
+      "shadow": "none"
+    },
+    {
+      "animation": "delivery_place_hl",
+      "frame": 3,
+      "sheet": "buildings-overlays.generated.png",
+      "region": [
+        243,
+        923,
+        468,
+        1132
+      ],
+      "extraction": "rect",
+      "shadow": "none"
     }
   ]
 }

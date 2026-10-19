@@ -23,6 +23,45 @@ FRAMES = re.compile(r"frames\s*=\s*\{(.*?)\}\s*(addTextureInfoExNodes\(texinfo, 
 FIELD = re.compile(r"\b(dx|dy|u|v|cu|cv|w|h)\s*=\s*([\d.eE+-]+)")
 
 
+def building_inventory(assets):
+    """Read the complete retail building contract, including animated overlays."""
+    inventory = []
+    for path in sorted((assets / "texture/lazy").glob("build*.lua")):
+        raw = path.read_bytes()
+        source = raw.decode("utf-16" if raw.startswith((b"\xff\xfe", b"\xfe\xff")) else "utf-8-sig")
+        declarations = list(DECL.finditer(source))
+        for i, declaration in enumerate(declarations):
+            end = declarations[i + 1].start() if i + 1 < len(declarations) else len(source)
+            table = FRAMES.search(source[declaration.end():end])
+            if table is None:
+                raise ValueError(f"missing building frame table: {declaration[1]}")
+            inventory.append(dict(animation=declaration[1],
+                                  frames=len(re.findall(r"\{([^{}]+)\}", table[1])),
+                                  declaration=path.name,
+                                  category="overlay" if declaration[1] in
+                                  ("base_flag", "tap", "delivery_place_hl") else "building"))
+    if not inventory:
+        raise ValueError("no retail building declarations found")
+    return inventory
+
+
+def check_building_parity(assets, art, selected):
+    inventory = building_inventory(assets)
+    contract = json.loads((art / "building-parity.json").read_text())
+    if contract["format"] != "volcano-building-parity-1" or contract["animations"] != inventory:
+        raise ValueError("retail building inventory changed; review building-parity.json")
+    missing = [f"{entry['animation']}[{i}]" for entry in inventory
+               for i in range(entry["frames"])
+               if i not in selected.get(entry["animation"], {})]
+    if missing:
+        raise ValueError("missing authored building states: " + ", ".join(missing))
+    return dict(format="volcano-building-parity-report-1", complete=True,
+                animations=len(inventory),
+                building_states=sum(e["frames"] for e in inventory if e["category"] == "building"),
+                overlay_frames=sum(e["frames"] for e in inventory if e["category"] == "overlay"),
+                missing=[], inventory=inventory)
+
+
 def anchored_frame(original, pivot, source_box, sprite_size):
     """Map an authored sheet-space pivot through trimming and 2x packing.
 
@@ -204,12 +243,16 @@ def build(assets, output, art):
             raise ValueError(f"unknown extraction mode: {extraction}")
         if extraction == "rect":
             crop_regions[entry["sheet"]].add(tuple(entry["region"]))
+        if entry.get("shadow", "baked") not in ("baked", "authored", "none"):
+            raise ValueError(f"unknown shadow mode: {name}[{index}]")
+    parity = check_building_parity(assets, art, selected)
     extracted = {
         sheet: extract_regions(art / sheet, regions, manifest["alpha_core_threshold"], crop_regions[sheet])
         for sheet, regions in sheets.items()
     }
-    shadows = BakedShadows(art, {(name, index) for name, states in selected.items() for index in states})
-    atlas = Image.new("RGBA", (2048, 2048))
+    shadows = BakedShadows(art, {(name, index) for name, states in selected.items()
+                               for index, entry in states.items() if entry.get("shadow", "baked") == "baked"})
+    atlas = Image.new("RGBA", (4096, 4096))
     cursor_x = cursor_y = row_height = 4
     replacements, report = {}, []
     for path in sorted((assets / "texture/lazy").glob("*.lua")):
@@ -243,7 +286,15 @@ def build(assets, output, art):
                 sprite = sprite.resize((max(1, round(sprite.width * ratio)),
                                         max(1, round(sprite.height * ratio))), Image.Resampling.LANCZOS)
                 frame = anchored_frame(frame, entry.get("pivot"), source_box, sprite.size)
-                sprite, padded, body_offset = shadows.compose(name, index, frame, sprite)
+                shadow_mode = entry.get("shadow", "baked")
+                if shadow_mode == "baked":
+                    sprite, padded, body_offset = shadows.compose(name, index, frame, sprite)
+                else:
+                    # New sheets already contain authored contact shadows. Animated
+                    # attachments have no ground footprint. Neither needs synthesis.
+                    body = Image.new("RGBA", (w, h))
+                    body.alpha_composite(sprite, ((w - sprite.width) // 2, (h - sprite.height) // 2))
+                    sprite, padded, body_offset = body, frame, [0, 0]
                 w, h = sprite.size
                 if cursor_x + w + 4 > atlas.width:
                     cursor_x, cursor_y = 4, cursor_y + row_height + 4
@@ -261,7 +312,8 @@ def build(assets, output, art):
                                    pivot=[padded["dx"], padded["dy"]],
                                    body_pivot=[frame["dx"], frame["dy"]],
                                    source_pivot=entry.get("pivot"),
-                                   body_offset=body_offset, shadow="baked-northwest-45",
+                                   body_offset=body_offset,
+                                   shadow="baked-northwest-45" if shadow_mode == "baked" else shadow_mode,
                                    atlas_region=[cursor_x, cursor_y, w, h]))
                 cursor_x += w + 4
                 row_height = max(row_height, h)
@@ -286,8 +338,10 @@ def build(assets, output, art):
         (folder / name).write_bytes(content)
     atlas.save(folder / "volcano-static.png")
     (output / "hd-static-report.json").write_text(json.dumps(report, indent=2) + "\n")
-    print(f"HD assets: {len(selected)} static sprites, {len(report)} authored states at exact 2x texture resolution.")
-    print(f"Ground shadows: {len(report)} authored footprints baked into their object frames; no separate layer.")
+    (output / "building-parity-report.json").write_text(json.dumps(parity, indent=2) + "\n")
+    print(f"HD assets: {len(selected)} sprites, {len(report)} authored states at exact 2x texture resolution.")
+    print(f"Building parity: {parity['building_states']} building states and {parity['overlay_frames']} overlay frames; no omissions.")
+    print("Ground shadows are authored in-sheet or baked from authored footprints; no separate runtime layer.")
     print(f"Authored pivots applied to artwork and click bounds; frame order and FPS preserved. Output: {output}")
 
 

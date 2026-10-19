@@ -119,6 +119,7 @@ run-emerald-falls-hd: all hd-assets hd-levels
 run-forest-mayday-hd: all hd-assets hd-levels
 	./build/volcano --assets "$(HD_ASSETS)" --level-file build/hd-levels/forest-mayday.lvl
 test-hd: all hd-assets hd-levels build/check_custom_level
+	python3 tools/check_hd_building_parity.py --assets "$(ASSETS)" --output "$(HD_ASSETS)"
 	$(MAKE) test-levels ASSETS="$(HD_ASSETS)"
 	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(HD_ASSETS)" build/hd-levels/emerald-falls.lvl --emerald
 	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(HD_ASSETS)" build/hd-levels/forest-mayday.lvl --mayday
