@@ -129,8 +129,13 @@ frame order and frame rates stay unchanged. Optional per-frame `pivot: [x,y]`
 points in `atlas.json` use top-left source-sheet pixels. The packer maps them
 through trimming, resizing and shadow padding into the existing `dx,dy` fields;
 click bounds follow the artwork while the ground highlight and level positions
-stay fixed. Headquarters uses an authored ground pivot to raise its tent about
-9 world pixels to align its footprint with the selection circle. Frames
+stay fixed. Headquarters uses the lower ground pivot marked in the placement
+review, with camp supplies, rolled tarps, rope and stones breaking up the tent's
+rectangular perimeter. Its revised source sheet and built-in ImageGen edit
+prompt are `assets/hd-static/buildings-hq-rounded.*`; the original sheet remains
+available. Only the HQ uses the revised sheet. Its `extraction: "rect"` region
+retains all scattered props, including detached pieces; other entries use the
+original connected-alpha extraction. Frames
 without an explicit pivot retain their original placement and bounds.
 `make hd-pivot-previews` renders all 46 packed states into `build/pivot-previews/`,
 including individual PNGs, building/obstacle/supply sheets, a combined sheet and

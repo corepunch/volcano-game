@@ -106,14 +106,28 @@ class BakedShadows:
         return combined, frame, [-left, -top]
 
 
-def extract_regions(path, regions, threshold):
+def extract_regions(path, regions, threshold, crop_regions=()):
     """Separate touching low-alpha fringes without changing authored colors.
 
-    Recorded regions bound connected alpha cores. A three-pixel fringe retains
-    the generated antialiasing; it excludes nearby sprites in the source sheet.
+    Recorded regions normally bound connected alpha cores. A three-pixel fringe
+    retains antialiasing. Explicit rect crops retain detached authored props.
     """
     image = Image.open(path).convert("RGBA")
     width, height = image.size
+    result, core_regions = {}, []
+    for region in regions:
+        key = tuple(region)
+        if key not in crop_regions:
+            core_regions.append(region)
+            continue
+        left, top, right, bottom = key
+        if not (0 <= left < right <= width and 0 <= top < bottom <= height):
+            raise ValueError(f"invalid explicit source crop: {path.name} {key}")
+        sprite = image.crop(key)
+        sprite.info["source_box"] = key
+        result[key] = sprite
+    if not core_regions:
+        return result
     alpha = image.getchannel("A")
     pixels = alpha.tobytes()
     labels = array("i", [0]) * (width * height)
@@ -146,8 +160,7 @@ def extract_regions(path, regions, threshold):
                     labels[neighbor] = component
                     stack.append(neighbor)
         components[(x0, y0, x1 + 1, y1 + 1)] = component
-    result = {}
-    for region in regions:
+    for region in core_regions:
         key = tuple(region)
         if key not in components:
             raise ValueError(f"authored alpha region changed: {path.name} {key}")
@@ -179,14 +192,20 @@ def build(assets, output, art):
         raise ValueError("expected the authored 2x static atlas manifest")
     selected = defaultdict(dict)
     sheets = defaultdict(list)
+    crop_regions = defaultdict(set)
     for entry in manifest["frames"]:
         name, index = entry["animation"], entry["frame"]
         if index in selected[name]:
             raise ValueError(f"duplicate frame: {name}[{index}]")
         selected[name][index] = entry
         sheets[entry["sheet"]].append(entry["region"])
+        extraction = entry.get("extraction", "component")
+        if extraction not in ("component", "rect"):
+            raise ValueError(f"unknown extraction mode: {extraction}")
+        if extraction == "rect":
+            crop_regions[entry["sheet"]].add(tuple(entry["region"]))
     extracted = {
-        sheet: extract_regions(art / sheet, regions, manifest["alpha_core_threshold"])
+        sheet: extract_regions(art / sheet, regions, manifest["alpha_core_threshold"], crop_regions[sheet])
         for sheet, regions in sheets.items()
     }
     shadows = BakedShadows(art, {(name, index) for name, states in selected.items() for index in states})

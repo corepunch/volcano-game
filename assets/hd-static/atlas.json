@@ -6,13 +6,14 @@
     {
       "animation": "base0",
       "frame": 0,
-      "sheet": "buildings.generated.png",
-      "pivot": [162, 209],
+      "sheet": "buildings-hq-rounded.generated.png",
+      "pivot": [164, 242],
+      "extraction": "rect",
       "region": [
-        6,
-        7,
-        285,
-        302
+        0,
+        0,
+        294,
+        315
       ]
     },
     {
