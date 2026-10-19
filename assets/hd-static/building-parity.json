@@ -1,0 +1,294 @@
+{
+  "format": "volcano-building-parity-1",
+  "scope": "Every declaration and authored frame in retail texture/lazy/build0.lua and build1.lua",
+  "animations": [
+    {
+      "animation": "gas0_br",
+      "frames": 3,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "gas0",
+      "frames": 1,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "gas1_br",
+      "frames": 2,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "gas1",
+      "frames": 1,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "gas2_br",
+      "frames": 2,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "gas2",
+      "frames": 1,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "police_br",
+      "frames": 3,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "police",
+      "frames": 1,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "firestation_br",
+      "frames": 3,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "firestation",
+      "frames": 1,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "hospital_br",
+      "frames": 3,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "hospital",
+      "frames": 1,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "heliport_br",
+      "frames": 3,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "heliport",
+      "frames": 1,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "base0",
+      "frames": 1,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "base1",
+      "frames": 1,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "base_flag",
+      "frames": 4,
+      "declaration": "build0.lua",
+      "category": "overlay"
+    },
+    {
+      "animation": "tap",
+      "frames": 18,
+      "declaration": "build0.lua",
+      "category": "overlay"
+    },
+    {
+      "animation": "seaport_br",
+      "frames": 3,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "seaport",
+      "frames": 1,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "base2",
+      "frames": 1,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "base3",
+      "frames": 1,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "house0_br",
+      "frames": 3,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "house0",
+      "frames": 1,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "house1_br",
+      "frames": 2,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "house1",
+      "frames": 1,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "house2_br",
+      "frames": 2,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "house2",
+      "frames": 1,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "burger0_br",
+      "frames": 3,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "burger0",
+      "frames": 1,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "burger1_br",
+      "frames": 2,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "burger1",
+      "frames": 1,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "burger2_br",
+      "frames": 2,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "burger2",
+      "frames": 1,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "sawmill0_br",
+      "frames": 3,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "sawmill0",
+      "frames": 1,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "sawmill1_br",
+      "frames": 2,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "sawmill1",
+      "frames": 1,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "sawmill2_br",
+      "frames": 2,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "sawmill2",
+      "frames": 1,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "build_place",
+      "frames": 1,
+      "declaration": "build0.lua",
+      "category": "building"
+    },
+    {
+      "animation": "railstation0_br",
+      "frames": 3,
+      "declaration": "build1.lua",
+      "category": "building"
+    },
+    {
+      "animation": "railstation0",
+      "frames": 1,
+      "declaration": "build1.lua",
+      "category": "building"
+    },
+    {
+      "animation": "finish_base0",
+      "frames": 1,
+      "declaration": "build1.lua",
+      "category": "building"
+    },
+    {
+      "animation": "delivery_place0",
+      "frames": 1,
+      "declaration": "build1.lua",
+      "category": "building"
+    },
+    {
+      "animation": "delivery_place_hl",
+      "frames": 4,
+      "declaration": "build1.lua",
+      "category": "overlay"
+    },
+    {
+      "animation": "garage0",
+      "frames": 1,
+      "declaration": "build1.lua",
+      "category": "building"
+    },
+    {
+      "animation": "garage0_br",
+      "frames": 3,
+      "declaration": "build1.lua",
+      "category": "building"
+    }
+  ]
+}
