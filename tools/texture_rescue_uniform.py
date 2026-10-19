@@ -82,38 +82,44 @@ def bake_uniform(rig,body,helmet,worker_parts,art,palette):
     if old:bpy.data.images.remove(old)
     image=bpy.data.images.new('Rescue worker atlas',width=1024,height=1280,alpha=False)
     image.colorspace_settings.name='sRGB'
-    original=body.data.uv_layers.active
-    atlas_uv=body.data.uv_layers.new(name='RescueAtlas',do_init=True)
+    original=body.data.uv_layers['UVMap']
+    atlas_uv=body.data.uv_layers.get('RescueAtlas') or body.data.uv_layers.new(name='RescueAtlas',do_init=True)
     for src,dst in zip(original.data,atlas_uv.data):dst.uv=(src.uv.x,.2+.8*src.uv.y)
     body.data.uv_layers.active=atlas_uv;atlas_uv.active_render=True
-    orange=palette['orange'];navy=palette['navy'];silver=palette['silver'];lime=palette['lime'];black=palette['black']
-    white=(.78,.82,.8,1);seam=(.5,.075,.012,1)
-    p=Paint('Uniform paint / vest',image);ax=p.math('ABSOLUTE',p.x)
-    color=orange
-    pocket=p.both(p.band(ax,.075,.285),p.band(p.z,1.99,2.17),p.math('LESS_THAN',p.y,-.12))
-    color=p.mix(pocket,color,seam)
-    pocket_inner=p.both(p.band(ax,.088,.272),p.band(p.z,2.005,2.155),p.math('LESS_THAN',p.y,-.12))
-    color=p.mix(pocket_inner,color,orange)
-    edges=p.both(p.band(ax,.12,.24),p.band(p.z,1.73,2.48))
-    tape=p.both(p.band(ax,.15,.21),p.band(p.z,1.73,2.48))
-    color=p.mix(edges,color,lime);color=p.mix(tape,color,silver)
-    color=p.mix(p.band(p.z,1.79,1.89),color,lime);color=p.mix(p.band(p.z,1.815,1.865),color,silver)
-    zipper=p.both(p.band(ax,0,.012),p.band(p.z,1.6,2.38),p.math('LESS_THAN',p.y,-.12))
-    vest=p.finish(p.mix(zipper,color,seam))
+    silver=palette['silver'];black=palette['black']
+    # Reference outfit: cobalt work shirt/trousers, yellow hard hat and a
+    # brown utility belt. Keep tool palette swatches independent of clothing.
+    blue=(.012,.095,.38,1);seam=(.006,.035,.14,1)
+    yellow=(.85,.42,.008,1);leather=(.16,.065,.023,1)
+    p=Paint('Uniform paint / blue work shirt',image);ax=p.math('ABSOLUTE',p.x)
+    front=p.math('LESS_THAN',p.y,-.12)
+    pocket=p.both(p.band(ax,.11,.28),p.band(p.z,2.05,2.24),front)
+    color=p.mix(pocket,blue,seam)
+    pocket_inner=p.both(p.band(ax,.125,.265),p.band(p.z,2.065,2.225),front)
+    color=p.mix(pocket_inner,color,blue)
+    placket=p.both(p.band(ax,0,.014),p.band(p.z,1.6,2.4),front)
+    color=p.mix(placket,color,seam)
+    collar=p.both(p.band(p.z,2.35,2.49),p.band(ax,0,.16))
+    shirt=p.finish(p.mix(collar,color,seam))
     p=Paint('Uniform paint / sleeves',image);ax=p.math('ABSOLUTE',p.x)
-    sleeves=p.finish(p.mix(p.math('GREATER_THAN',ax,1.20),white,black))
+    sleeves=p.finish(p.mix(p.math('GREATER_THAN',ax,1.20),blue,seam))
     p=Paint('Uniform paint / trousers and belt',image);ax=p.math('ABSOLUTE',p.x)
-    color=p.mix(p.band(p.z,.73,.9),navy,(.018,.045,.075,1))
-    color=p.mix(p.band(p.z,1.46,1.57),color,black)
+    color=p.mix(p.band(p.z,.73,.9),blue,seam)
+    color=p.mix(p.band(p.z,1.46,1.57),color,leather)
+    pouch=p.both(p.band(ax,.22,.42),p.band(p.z,1.26,1.53))
+    color=p.mix(pouch,color,(.23,.10,.035,1))
+    flap=p.both(p.band(ax,.22,.42),p.band(p.z,1.45,1.50))
+    color=p.mix(flap,color,leather)
     buckle=p.both(p.band(p.z,1.485,1.55),p.band(ax,0,.07),p.math('LESS_THAN',p.y,-.2))
     pants=p.finish(p.mix(buckle,color,silver))
-    p=Paint('Uniform paint / gloves and boots',image);boots=p.finish(black)
+    p=Paint('Uniform paint / hands and boots',image)
+    boots=p.finish(p.mix(p.math('GREATER_THAN',p.z,1.0),black,(.95,.3,.16,1)))
     p=Paint('Uniform paint / original Kenney face',image)
     tex=p.nodes.new('ShaderNodeTexImage');tex.image=bpy.data.images.load(str(Path(art)/'source/survivors/Skins/survivorMaleB.png'),check_existing=True)
     uv=p.nodes.new('ShaderNodeUVMap');uv.uv_map=original.name;p.links.new(uv.outputs[0],tex.inputs['Vector'])
     face=p.finish(tex.outputs['Color'])
     body.data.materials.clear()
-    for mat in [face,vest,sleeves,pants,boots]:body.data.materials.append(mat)
+    for mat in [face,shirt,sleeves,pants,boots]:body.data.materials.append(mat)
     for poly in body.data.polygons:
         groups={}
         for vi in poly.vertices:
@@ -122,10 +128,8 @@ def bake_uniform(rig,body,helmet,worker_parts,art,palette):
         group=max(groups,key=groups.get)
         poly.material_index=0 if group=='Head' else 4 if any(s in group for s in ['Hand','Foot','Toes']) else 3 if any(s in group for s in ['Leg','Hips']) else 2 if any(s in group for s in ['Arm','Shoulder']) else 1
     p=Paint('Uniform paint / hard hat',image);ax=p.math('ABSOLUTE',p.x)
-    color=p.mix(p.both(p.band(ax,0,.045),p.math('GREATER_THAN',p.z,3.65)),orange,(.78,.13,.018,1))
-    # Painted reinforcing ridge and a plain reflective sticker; no raised trim.
-    badge=p.both(p.band(ax,0,.14),p.math('LESS_THAN',p.y,-.47),p.band(p.z,3.52,3.72))
-    color=p.mix(badge,color,silver);color=p.mix(p.math('LESS_THAN',p.z,3.435),color,(.6,.105,.015,1))
+    color=p.mix(p.both(p.band(ax,0,.045),p.math('GREATER_THAN',p.z,3.65)),yellow,(.7,.3,.004,1))
+    color=p.mix(p.math('LESS_THAN',p.z,3.435),color,(.65,.28,.003,1))
     helmet.data.materials.clear();helmet.data.materials.append(p.finish(color))
     # Bake twelve palette tiles into the same texture for unchanged tool shapes.
     verts=[];faces=[];tile_uv=[];tile_materials=[];swatches={}
@@ -148,7 +152,10 @@ def bake_uniform(rig,body,helmet,worker_parts,art,palette):
     bpy.ops.object.select_all(action='DESELECT')
     for obj in [body,helmet,tiles]:obj.hide_set(False);obj.hide_render=False;obj.select_set(True)
     bpy.context.view_layer.objects.active=body;bpy.context.view_layer.update()
-    bpy.ops.object.bake(type='EMIT')
+    # The background MCP context may not expose selected_objects implicitly.
+    with bpy.context.temp_override(object=body,active_object=body,
+            selected_objects=[body,helmet,tiles],selected_editable_objects=[body,helmet,tiles]):
+        bpy.ops.object.bake(type='EMIT')
     image.filepath_raw=str(atlas_path);image.file_format='PNG';image.save();image.pack()
     bpy.data.objects.remove(tiles,do_unlink=True)
     scene.render.engine=engine;scene.cycles.samples=samples;rig.data.pose_position=pose
@@ -168,6 +175,12 @@ def bake_uniform(rig,body,helmet,worker_parts,art,palette):
         for poly in obj.data.polygons:poly.material_index=0
     for obj in worker_parts:
         if obj in [body,helmet]:continue
+        # Saved scenes already have exact tool swatch UVs. Retain those on a
+        # texture-only rebake instead of inferring colors from image materials.
+        if obj.data.uv_layers.get('RescueAtlas'):
+            is_metal=obj.data.materials[0].node_tree.nodes.get('Principled BSDF').inputs['Metallic'].default_value>.25
+            obj.data.materials.clear();obj.data.materials.append(metal if is_metal else uniform)
+            continue
         old_color=tuple(obj.data.materials[0].diffuse_color)
         name=min(palette,key=lambda k:sum((palette[k][i]-old_color[i])**2 for i in range(3)))
         uv=obj.data.uv_layers.get('RescueAtlas') or obj.data.uv_layers.new(name='RescueAtlas')
