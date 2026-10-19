@@ -199,12 +199,20 @@
           323.0
         ],
         [
-          272.5,
-          325.5
+          290.0,
+          338.0
+        ],
+        [
+          280.0,
+          353.0
+        ],
+        [
+          262.5,
+          365.5
         ],
         [
           245.0,
-          328.0
+          378.0
         ],
         [
           431.67,
@@ -492,19 +500,15 @@
         ],
         [
           600.0,
-          123.0
+          128.0
         ],
         [
           600.0,
-          98.0
+          108.0
         ],
         [
           600.0,
-          73.0
-        ],
-        [
-          600.0,
-          48.0
+          88.0
         ],
         [
           970.0,
@@ -520,19 +524,11 @@
         ],
         [
           970.0,
-          115.5
+          113.0
         ],
         [
           970.0,
-          93.0
-        ],
-        [
-          970.0,
-          70.5
-        ],
-        [
-          970.0,
-          48.0
+          88.0
         ]
       ]
     },
@@ -616,9 +612,10 @@
       "id": 30,
       "layer": 5,
       "x": 245,
-      "y": 328,
+      "y": 378,
       "params": "burger",
-      "extra": "1;0"
+      "extra": "1;0",
+      "_comment": "Ground-footprint center inside the painted pad; shared by selection and work target."
     },
     {
       "type": "resource",
@@ -634,9 +631,10 @@
       "id": 32,
       "layer": 5,
       "x": 600,
-      "y": 48,
+      "y": 88,
       "params": "sawmill",
-      "extra": "1;0"
+      "extra": "1;0",
+      "_comment": "Ground-footprint center inside the painted pad; shared by selection and work target."
     },
     {
       "type": "resource",
@@ -652,9 +650,10 @@
       "id": 34,
       "layer": 5,
       "x": 970,
-      "y": 48,
+      "y": 88,
       "params": "house",
-      "extra": "1;0"
+      "extra": "1;0",
+      "_comment": "Ground-footprint center inside the painted pad; shared by selection and work target."
     },
     {
       "type": "resource",
@@ -792,9 +791,10 @@
       "y": 768,
       "link_id": 30,
       "name": "Field kitchen",
-      "params": "sprite;image=@library-rescue-props.png;rect=380,110,345,280;pivot=0.5,0.93;state=default",
+      "params": "sprite;image=@library-rescue-props.png;rect=380,110,345,280;pivot=0.5,0.7;state=default",
       "scale_x": 0.34,
-      "scale_y": 0.34
+      "scale_y": 0.34,
+      "_comment": "Measured ground-footprint pivot for this authored state, not the image bottom edge."
     },
     {
       "type": "effect",
@@ -804,9 +804,10 @@
       "y": 768,
       "link_id": 30,
       "name": "Field kitchen",
-      "params": "sprite;image=@library-rescue-props.png;rect=745,110,345,280;pivot=0.5,0.93;state=operational",
+      "params": "sprite;image=@library-rescue-props.png;rect=745,110,345,280;pivot=0.5,0.68;state=operational",
       "scale_x": 0.34,
-      "scale_y": 0.34
+      "scale_y": 0.34,
+      "_comment": "Measured ground-footprint pivot for this authored state, not the image bottom edge."
     },
     {
       "type": "effect",
@@ -816,9 +817,10 @@
       "y": 768,
       "link_id": 32,
       "name": "Salvage supply station",
-      "params": "sprite;image=@library-rescue-props.png;rect=1095,110,350,290;pivot=0.5,0.93;state=default",
+      "params": "sprite;image=@library-rescue-props.png;rect=1095,110,350,290;pivot=0.5,0.74;state=default",
       "scale_x": 0.36,
-      "scale_y": 0.36
+      "scale_y": 0.36,
+      "_comment": "Measured ground-footprint pivot for this authored state, not the image bottom edge."
     },
     {
       "type": "effect",
@@ -828,9 +830,10 @@
       "y": 768,
       "link_id": 32,
       "name": "Salvage supply station",
-      "params": "sprite;image=@library-rescue-props.png;rect=10,430,350,290;pivot=0.5,0.93;state=operational",
+      "params": "sprite;image=@library-rescue-props.png;rect=10,430,350,290;pivot=0.5,0.69;state=operational",
       "scale_x": 0.36,
-      "scale_y": 0.36
+      "scale_y": 0.36,
+      "_comment": "Measured ground-footprint pivot for this authored state, not the image bottom edge."
     },
     {
       "type": "effect",
@@ -840,9 +843,10 @@
       "y": 768,
       "link_id": 34,
       "name": "Logistics station",
-      "params": "sprite;image=@library-rescue-props.png;rect=375,425,350,285;pivot=0.5,0.93;state=default",
+      "params": "sprite;image=@library-rescue-props.png;rect=375,425,350,285;pivot=0.5,0.72;state=default",
       "scale_x": 0.36,
-      "scale_y": 0.36
+      "scale_y": 0.36,
+      "_comment": "Measured ground-footprint pivot for this authored state, not the image bottom edge."
     },
     {
       "type": "effect",
@@ -852,9 +856,10 @@
       "y": 768,
       "link_id": 34,
       "name": "Logistics station",
-      "params": "sprite;image=@library-rescue-props.png;rect=740,425,350,285;pivot=0.5,0.93;state=operational",
+      "params": "sprite;image=@library-rescue-props.png;rect=740,425,350,285;pivot=0.5,0.69;state=operational",
       "scale_x": 0.36,
-      "scale_y": 0.36
+      "scale_y": 0.36,
+      "_comment": "Measured ground-footprint pivot for this authored state, not the image bottom edge."
     },
     {
       "type": "effect",

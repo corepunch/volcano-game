@@ -40,7 +40,7 @@ HQ cell is unused. No state artwork is synthesized or recolored.
 MEASURED FINAL LAYOUT — top-left logical screen coordinates
 Service drive: (210,520)-(430,540)-(620,577)-(880,590)-(1125,580).
 HQ spur: (210,520)-(205,570)-(190,640).
-Cafe spur: (285,527)-(285,480)-(300,445)-(245,440); output at (320,445).
+Cafe spur: (285,527)-(285,480)-(300,445)-(280,415)-(245,390); output at (320,445).
 West corridor: (430,540)-(435,470)-(443,420)-(449,400)-(420,350)-
  (380,310)-(350,270)-(365,230)-(350,190)-(330,160).
 Central corridor: (735,583)-(735,500)-(735,440)-(735,385)-(725,345)-
@@ -48,7 +48,7 @@ Central corridor: (735,583)-(735,500)-(735,440)-(735,385)-(725,345)-
 East corridor: (1125,580)-(1125,530)-(1125,500)-(1120,440)-(1090,385)-
  (1065,335)-(1050,300)-(1085,275)-(1120,235)-(1180,190)-(1190,150).
 East courtyard spur: (1120,440)-(1180,440)-(1245,415).
-South producer anchors (600,720), (970,720), approached from the main drive.
+South producer anchors (600,680), (970,680), approached from the main drive.
 Outputs remain on the drive, outside both station footprints.
 Gate centers: 20=(435,470), 21=(359,247), 22=(530,559.47), 23=(1125,530),
 24=(1180,440), 25=(720,310). Routes sampled at <=28 pixels. All rescues start
@@ -81,3 +81,18 @@ The original HQ sprite is independent of this character pack and stays unchanged
 Final verification: all three playthroughs pass with the custom character pack;
 start/repaired/route renders inspected. Library Rescue.app visibly verified with
 custom blue workers, custom civilians and original blue HQ together.
+
+BUILDING ALIGNMENT CORRECTION
+The first source used y=.93 image pivots, putting target/selection centers near
+image bottoms, below the buildings' actual ground footprints. The source now
+anchors each authored state at its measured ground-plane center. Atlas pixels
+and global renderer/retail sprite pivots are unchanged.
+Station              screen anchor    damaged pivot    repaired pivot
+Field kitchen        (245,390)        (.5,.70)         (.5,.68)
+Salvage supply       (600,680)        (.5,.74)         (.5,.69)
+Logistics            (970,680)        (.5,.72)         (.5,.69)
+The kitchen approach enters through the pad opening and ends at its new ground
+anchor. South approach spurs stop inside their pads. Recurring pickups remain
+outside the combined building footprints. Dedicated damaged/repaired hover
+renders are captured for all three stations through normal repair progression,
+with the project's custom characters. All three repair orders still complete.

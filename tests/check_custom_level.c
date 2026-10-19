@@ -245,6 +245,21 @@ static bool play_production_mission(const char *path,bool mayday)
     game_key(SDLK_r);
     return check(!game.won && !game.time && game.food==40 && game.wood==0,"mission restart resets puzzle");
 }
+static bool library_station_frames(const char *state)
+{
+    const uint32_t ids[]={30,32,34};
+    const char *names[]={"kitchen","salvage","logistics"};
+    for (int j=0;j<3;j++) {
+        Entity *station=&game.objects[test_entity(ids[j])];
+        game_pointer(station->p.x,GAME_HEIGHT-station->p.y,false);
+        if (!check(game_hovered_object(game_current())==test_entity(ids[j]),
+                   "station ground footprint remains a natural click target")) return false;
+        char shot[96];snprintf(shot,sizeof shot,"library-rescue-%s-%s",names[j],state);
+        if (!test_frame(shot)) return false;
+    }
+    game_pointer(-100,-100,false);
+    return true;
+}
 /* These IDs are shared deliberately by the disaster missions. Exercise the actual
  * UI, route graph and economy; no inventory grants or completion shortcuts. */
 static bool play_disaster_mission(const char *path,int variant)
@@ -313,7 +328,7 @@ static bool play_disaster_mission(const char *path,int variant)
             game_pointer(station->p.x-59,GAME_HEIGHT-station->p.y-35,false);
             if (!check(game_hovered_object(game_current())==test_entity(32),
                        "authored field-station footprint is clickable")) return false;
-            if (!order && !test_frame("library-rescue-station-hover")) return false;
+            if (!order && !library_station_frames("damaged")) return false;
             game_pointer(-100,-100,false);
         }
         snprintf(shot,sizeof shot,"%s-start",slug);
@@ -347,6 +362,7 @@ static bool play_disaster_mission(const char *path,int variant)
                 game.objects[test_entity(32)].operational && game.objects[test_entity(34)].operational) {
                 snprintf(shot,sizeof shot,"%s-repaired",slug);
                 if (!test_frame(shot)) return false;
+                if (site && !library_station_frames("repaired")) return false;
                 repaired=true;
             }
         }

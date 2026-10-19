@@ -362,7 +362,10 @@ Use `state=default` (or omit state) for the normal/damaged artwork and a second
 record with `state=operational` for a building's repaired artwork. There can be
 only one record per target/state, and an operational state requires a default.
 Both must be world-stage sprites with no wind/rotation. Their measured, scaled
-rectangles also define click bounds. Prices, production, work duration, route
+rectangles also define click bounds. Choose a pivot at the projected ground
+footprint's center, not the image's bottom edge: this anchor also centers the
+selection ellipse and worker target. Measure each authored state's footprint.
+Prices, production, work duration, route
 blocking, queue state and removal still come from the target's original type
 and parameters. A cleared removable barrier hides its replacement completely.
 Demolishing or replacing a producer restores ordinary lot/new-building artwork.
