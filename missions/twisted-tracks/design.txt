@@ -46,10 +46,12 @@ atlas regions, clears every job before the final rescue, checks full sprite and
 click-target removal, and verifies the final car reserves 40 food/100 money once.
 
 Building placement correction
-The production plate's pad centers differ from the requested generation
-coordinates. Inspect the ground-contact footprint in both damaged and repaired
-renders, rather than aligning a tall sprite's full-frame midpoint to the dirt.
-Corrected anchors (bottom-left world pixels): HQ (150.5,160), cafe (489,109.5),
-sawmill (935.5,82), park office (1135,114). Starting crew and final approach nodes
-move with their buildings. Cafe output is at (555,155), outside both building
-states. Original atlas pivots and the background artwork are unchanged.
+Anchors are the centres of the painted pads, measured from background.png: the
+dirt pads were segmented by colour, road necks removed, and each centre taken
+from the pad's widest contiguous rows (then checked by eye against the edges).
+Anchors (bottom-left world units): HQ (147,139), cafe (499,100), sawmill
+(914,85), park office (1127,101.5). The anchor is the sprite's ground point and
+the centre of its selection ring, so the ring and the building both sit centred
+on the pad. Starting crew and the final approach node of each spur moved with
+their buildings; the old HQ node stays as an intermediate step so the HQ spur
+keeps a short link. Outputs stay outside the building footprints.
