@@ -132,6 +132,11 @@ click bounds follow the artwork while the ground highlight and level positions
 stay fixed. Headquarters uses an authored ground pivot to raise its tent about
 9 world pixels to align its footprint with the selection circle. Frames
 without an explicit pivot retain their original placement and bounds.
+`make hd-pivot-previews` renders all 46 packed states into `build/pivot-previews/`,
+including individual PNGs, building/obstacle/supply sheets, a combined sheet and
+a ZIP. Pink crosses show the runtime pivot, cyan rectangles show body bounds,
+and green ellipses use the in-game highlight artwork and dimensions. All states
+share a ground position within their cells and display at native 2x resolution.
 Body artwork is only downsampled when packing, with no enlargement or
 script-generated work states.
 Original resources under `reference/rescue-team` stay untouched. macOS windows

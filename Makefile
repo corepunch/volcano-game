@@ -15,6 +15,7 @@ HD_ASSETS = build/hd-assets
 
 .PHONY: all app run run-emerald-falls run-forest-mayday test test-levels level-example emerald-falls forest-mayday forest-mayday-app analyze-levels sanitize clean
 .PHONY: hd-assets hd-levels hd-app run-emerald-falls-hd run-forest-mayday-hd test-hd character-assets
+.PHONY: hd-pivot-previews
 .PHONY: ancient-echoes ancient-echoes-app test-ancient-echoes
 .PHONY: twisted-tracks twisted-tracks-app test-twisted-tracks
 .PHONY: run-ancient-echoes run-twisted-tracks
@@ -88,6 +89,8 @@ test-twisted-tracks: build/check_custom_level build/levels/twisted-tracks.lvl.ru
 hd-assets:
 	python3 tools/build_hd_assets.py --assets "$(ASSETS)" --output "$(HD_ASSETS)"
 	python3 tools/pack_rescue_characters.py --assets "$(HD_ASSETS)" --output "$(HD_ASSETS)"
+hd-pivot-previews: hd-assets
+	python3 tools/preview_hd_pivots.py --assets "$(HD_ASSETS)"
 character-assets:
 	python3 tools/pack_rescue_characters.py --assets "$(ASSETS)" --output build/kenney-assets
 hd-levels:
