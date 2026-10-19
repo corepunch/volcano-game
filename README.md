@@ -130,7 +130,7 @@ points in `atlas.json` use top-left source-sheet pixels. The packer maps them
 through trimming, resizing and shadow padding into the existing `dx,dy` fields;
 click bounds follow the artwork while the ground highlight and level positions
 stay fixed. Headquarters uses an authored ground pivot to raise its tent about
-18 world pixels, centering its footprint within the selection circle. Frames
+9 world pixels to align its footprint with the selection circle. Frames
 without an explicit pivot retain their original placement and bounds.
 Body artwork is only downsampled when packing, with no enlargement or
 script-generated work states.
