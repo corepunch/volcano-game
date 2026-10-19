@@ -167,7 +167,7 @@ for name, count in counts.items():
     action = new_action(name, count)
     action['origin'] = 'Authored rescue work motion on the Kenney character rig'
     if name == 'Carry':
-        action['origin'] = 'Authored rescue carrying run with stride bounce, half-strength head follow-through and chest-relative sack grip'
+        action['origin'] = 'Authored rescue carrying run with stride bounce, quarter-strength head follow-through and chest-relative sack grip'
     for frame in range(1, count+2):
         p = (frame-1)/count
         t = p*2*math.pi

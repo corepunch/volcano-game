@@ -48,7 +48,7 @@ def linear(action):
 def reduce_head_swing(rig, factor=.5):
     """Scale neck/head angular excursions, including inherited torso motion.
 
-    Apply once to the full-strength run. Keep the average facing direction,
+    The factor is relative to the current run. Keep the average facing direction,
     neck attachment, torso, arms and bouncing stride intact.
     """
     action = bpy.data.actions['Rescue_Run']
@@ -81,7 +81,7 @@ def reduce_head_swing(rig, factor=.5):
             previous[name] = bone.rotation_quaternion.copy()
             bone.keyframe_insert('rotation_quaternion', frame=frame, group=name)
     linear(action)
-    action['head_swing_scale'] = factor
+    action['head_swing_scale'] = action.get('head_swing_scale', 1.0) * factor
 
 
 def enhance_run(rig):
@@ -123,8 +123,8 @@ def enhance_run(rig):
         key_pose(rig, frame, previous)
     linear(action)
     action['origin'] = ('Kenney run retargeted through its Targeting Pose; '
-                        'authored stride bounce, torso recoil, half-strength head follow-through and arm drive')
-    reduce_head_swing(rig)
+                        'authored stride bounce, torso recoil, quarter-strength head follow-through and arm drive')
+    reduce_head_swing(rig, .25)
     return action
 
 
@@ -164,5 +164,5 @@ def rebuild_carry(rig):
         carry_arms(rig)
         key_pose(rig, frame, previous)
     linear(carry)
-    carry['origin'] = 'Authored rescue carrying run with stride bounce, half-strength head follow-through and chest-relative sack grip'
+    carry['origin'] = 'Authored rescue carrying run with stride bounce, quarter-strength head follow-through and chest-relative sack grip'
     return carry

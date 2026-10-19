@@ -19,7 +19,7 @@
     "Rescue_Carry": {
       "frames": 16,
       "fps": 24,
-      "origin": "Authored rescue carrying run with stride bounce, half-strength head follow-through and chest-relative sack grip",
+      "origin": "Authored rescue carrying run with stride bounce, quarter-strength head follow-through and chest-relative sack grip",
       "props": [
         "sack"
       ]
@@ -95,7 +95,7 @@
     "Rescue_Run": {
       "frames": 16,
       "fps": 24,
-      "origin": "Kenney run retargeted through its Targeting Pose; authored stride bounce, torso recoil, half-strength head follow-through and arm drive",
+      "origin": "Kenney run retargeted through its Targeting Pose; authored stride bounce, torso recoil, quarter-strength head follow-through and arm drive",
       "props": []
     },
     "Rescue_Sink": {
