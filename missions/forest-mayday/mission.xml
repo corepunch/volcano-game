@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Forest Mayday: an A320-sized passenger airliner crash in the forest. Baked forest and aircraft preserve integrated shadows. Ten people (including a stranded rescue worker) and two animals. North: cafe and timber; south: forestry/ranger production; east: crash-site access and evacuation trail. Coordinates are bottom-left world pixels. -->
+<mission format="volcano-mission-1" title="Forest Mayday" background="background.png">
+  <settings rules="rescue" food="40" people="10"/>
+  <traffic>165,318 193.5,318 222,318 250.5,318 279,318 307.5,318 336,318 364.5,318 393,318 421.5,318 450,318 480,318 510,318 540,318 570,318 600,318 630,318 660,318 686.67,318 713.33,318 740,318 766.67,318 793.33,318 820,318 846,318 872,318 898,318 924,318 950,318 976,318 1002,318 1028,318 1054,318 1080,318 1110,318 1140,318 1170,318 1200,318 452.5,345.5 455,373 455,395.5 455,418 465,433 475,448 495,465.5 515,483 532.5,500.5 550,518 567.5,533 585,548 430,418 405,418 382.5,418 360,418 330,418 661.67,298 663.33,278 665,258 665,238 665,218 650,193 630,188 610,183 590,178 562.5,170.5 535,163 517.5,155.5 500,148 680,193 710,193 737.5,185.5 765,178 782.5,168 800,158 827.5,160.5 855,163 870,165.5 885,168 961.67,336.33 973.33,354.67 985,373 1006.67,384.67 1028.33,396.33 1050,408 1075,413 1100,418 1125,423 1150,428 1175,440.5 1200,453</traffic>
+  <object id="10" type="hq" x="165" y="318"/>
+  <object id="11" type="worker" x="165" y="318"/>
+  <object id="12" type="worker" x="177" y="318"/>
+  <object id="20" type="tree" x="455" y="373"/>
+  <object id="21" type="tree" x="515" y="483"/>
+  <object id="22" type="stone" x="665" y="258"/>
+  <object id="23" type="boulder" x="820" y="318"/>
+  <object id="24" type="road" x="1080" y="318"/>
+  <object id="30" type="cafe" x="328.25" y="429.25"/>
+  <object id="31" type="food-small" x="385" y="413" producer="30"/>
+  <object id="32" type="sawmill" x="512.25" y="157.75"/>
+  <object id="33" type="wood-small" x="555" y="163" producer="32"/>
+  <object id="34" type="house" x="820" y="154.75"/>
+  <object id="35" type="money-small" x="895" y="178" producer="34"/>
+  <object id="40" type="wood-large" x="595" y="188"/>
+  <object id="41" type="wood-large" x="635" y="168"/>
+  <object id="42" type="money-large" x="735" y="183"/>
+  <object id="43" type="money-large" x="865" y="148"/>
+  <object id="44" type="money-large" x="895" y="178"/>
+  <object id="50" type="civilian" x="585" y="548"/>
+  <object id="51" type="civilian" x="620" y="533"/>
+  <object id="53" type="civilian" x="870" y="193"/>
+  <object id="54" type="civilian" x="905" y="158"/>
+  <object id="55" type="civilian" x="1095" y="418"/>
+  <object id="56" type="civilian" x="1150" y="428"/>
+  <object id="57" type="civilian" x="1200" y="453"/>
+  <object id="58" type="civilian" x="1170" y="323"/>
+  <object id="59" type="civilian" x="1220" y="303"/>
+  <object id="52" type="worker" x="555" y="528"/>
+  <object id="60" type="dog" x="575" y="513"/>
+  <object id="61" type="cat" x="850" y="128" variant="1"/>
+  <effect kind="sparkles" x="140" y="743" width="36" height="35" rate="4" speed=".8" opacity=".6"/>
+  <effect kind="sparkles" x="137" y="713" width="32" height="25" rate="4" speed=".8" opacity=".6"/>
+  <effect kind="sparkles" x="126" y="623" width="30" height="40" rate="4" speed=".8" opacity=".6"/>
+  <effect kind="sparkles" x="85" y="503" width="26" height="35" rate="4" speed=".8" opacity=".6"/>
+  <effect kind="sparkles" x="35" y="423" width="40" height="20" rate="4" speed=".8" opacity=".6"/>
+  <effect kind="sparkles" x="89" y="168" width="30" height="25" rate="4" speed=".8" opacity=".6"/>
+  <effect kind="sparkles" x="68" y="48" width="35" height="25" rate="4" speed=".8" opacity=".6"/>
+  <effect kind="foam" x="122" y="621" width="25" rate="16" opacity=".85"/>
+  <effect kind="foam" x="82" y="502" width="22" rate="16" opacity=".85"/>
+  <effect kind="foam" x="61" y="45" width="26" rate="16" opacity=".85"/>
+  <effect kind="insects" x="260" y="468" width="45" height="25" speed=".8" opacity=".9" count="2"/>
+  <effect kind="insects" x="390" y="288" width="45" height="25" speed=".8" opacity=".9" count="2"/>
+  <effect kind="insects" x="580" y="408" width="45" height="25" speed=".8" opacity=".9" count="2"/>
+  <effect kind="insects" x="730" y="233" width="45" height="25" speed=".8" opacity=".9" count="2"/>
+  <effect kind="insects" x="1010" y="223" width="45" height="25" speed=".8" opacity=".9" count="2"/>
+  <effect kind="insects" x="1245" y="348" width="45" height="25" speed=".8" opacity=".9" count="2"/>
+  <effect kind="motes" x="300" y="528" width="90" height="50" speed=".6" opacity=".35" count="6"/>
+  <effect kind="motes" x="900" y="388" width="90" height="50" speed=".6" opacity=".35" count="6"/>
+  <effect kind="motes" x="970" y="118" width="90" height="50" speed=".6" opacity=".35" count="6"/>
+</mission>
