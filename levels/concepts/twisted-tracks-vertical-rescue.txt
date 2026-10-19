@@ -1,0 +1,51 @@
+Twisted Tracks: vertical rescue concept
+
+Status: visual proposal only. No level, movement, obstacle, animation or renderer
+changes are implemented by this concept. The pose study is not a playable
+animation or a production sprite atlas.
+
+Generated with the built-in ImageGen tool, using levels/twisted-tracks.png as
+the edit target. Exact prompt is saved alongside the concept image. The original
+background remains the source of the landscape and coaster composition.
+
+Playable geography
+- Ground: open the bent fence, brace a fallen yellow support, then pass beneath
+  the wreck to a survivor pocket. Cyan marks this route in the concept.
+- Raised: secure a ladder, climb onto a maintenance landing, repair a short gap
+  with boards, then reach people stranded beside the blue train. Amber marks
+  this route. The wider concept includes an eastern descent to form a loop.
+- Walking surfaces need stable landings and supports. Bare coaster rails and
+  vertical loops remain scenery. Boards fill short gaps rather than every route.
+
+Themed clearance jobs
+- Bent fence: cut/open the enclosure entrance.
+- Tangled cables: isolate and clear a junction.
+- Fallen support: jack and brace the beam to open a passage beneath it.
+- Jammed blue car: winch it away from the landing.
+Costs, tools and job durations are deliberately undecided at concept stage.
+
+Suggested first playable slice
+One ground approach, one braced underpass, one ladder with upper/lower landings,
+one short repairable bridge and two rescue points (one below, one above).
+Climb sequence: approach and align, mount, alternating hands/feet on rungs,
+step onto landing, resume walking. Descending must work for the return escort.
+Ladder movement should reserve the link so two actors do not overlap on it.
+
+Engine requirements to resolve during prototyping
+- Explicit ground/raised route connectivity: screen-space crossings must not
+  automatically join routes at different heights.
+- Workers and escorted survivors must render behind foreground beams below the
+  structure and above decking on the raised route. The current baked background
+  alone cannot supply this foreground occlusion; selected overlays/masks or
+  separated local wreck pieces will be needed.
+- A broken bridge blocks only its own elevated link. Ladder access and return
+  travel must remain consistent for both workers and survivors.
+- Pose study and obstacle sketches are design references, not extracted assets.
+  Author any production animation and prop artwork separately as appropriate.
+
+Visual review
+The image preserves the recognizable red/yellow coaster, blue cars, pond and
+carousel, and illustrates ladders, raised walking surfaces and a lower passage.
+The note strip occupies the bottom of the composition; this annotated sheet
+is not a drop-in 1366x768 background or an exact route-coordinate specification.
+No gameplay validation is claimed for this visual-only proposal.
