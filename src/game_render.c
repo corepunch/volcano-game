@@ -5,10 +5,16 @@
 #include <string.h>
 
 
-typedef struct { Entity *entity;float depth; } DrawEntry;
+typedef struct { const Entity *entity;uint32_t layer;float depth; } DrawEntry;
+static DrawEntry game_draw_entry(const Game *g,const Entity *e)
+{
+    /* Keep bobbing and roof attachment out of the ground-position sort key. */
+    return (DrawEntry){e,g->level.objects[e->source].layer,e->p.y};
+}
 static int draw_entry_compare(const void *a,const void *b)
 {
     const DrawEntry *aa=a,*bb=b;
+    if (aa->layer!=bb->layer) return aa->layer<bb->layer?-1:1;
     return aa->depth==bb->depth?aa->entity->order-bb->entity->order:aa->depth>bb->depth?-1:1;
 }
 typedef struct { int units[4]; } TooltipAmounts; /* Food, wood, money, fuel. */
@@ -43,18 +49,11 @@ VisualPose game_visual_pose(Game *g, const Entity *e)
     return pose;
 }
 
-static float game_entity_depth(Game *g, const Entity *e)
-{
-    /* Roof occupants sort just after their support, using the house waterline
-     * rather than their elevated feet. Bobbing never changes world depth. */
-    return game_on_roof(e)?g->objects[e->support].p.y-.01f:e->p.y;
-}
-
 int game_depth_compare(Game *g, const void *a,const void *b)
 {
     const Entity *aa=*(const Entity *const *)a,*bb=*(const Entity *const *)b;
-    float ay=game_entity_depth(g, aa),by=game_entity_depth(g, bb);
-    return ay==by?aa->order-bb->order:ay>by?-1:1;
+    DrawEntry first=game_draw_entry(g,aa),second=game_draw_entry(g,bb);
+    return draw_entry_compare(&first,&second);
 }
 
 static void game_paint(Game *g, const Entity *e)
@@ -451,10 +450,10 @@ void game_render(Game *g)
             (SDL_FRect){.0078125f,state?.140625f:.5703125f,.6171875f,.421875f});
     }
     DrawEntry sorted[MAX_LEVEL_OBJECTS];int count=0;
-    for (int i=0;i<g->object_count;i++) if (g->objects[i].kind!=WATER && !g->objects[i].ambient) sorted[count++]=(DrawEntry){&g->objects[i],game_entity_depth(g, &g->objects[i])};
+    for (int i=0;i<g->object_count;i++) if (g->objects[i].kind!=WATER) sorted[count++]=game_draw_entry(g,&g->objects[i]);
     qsort(sorted,count,sizeof(*sorted),draw_entry_compare);
     for (int i=0;i<count;i++) {
-        Entity *e=sorted[i].entity;if (e->hidden) { game_paint_log_particles(g, e);continue; }
+        const Entity *e=sorted[i].entity;if (e->hidden) { game_paint_log_particles(g, e);continue; }
         if ((e->kind==WORKER || e->kind==RECRUIT) && strncmp(e->anim,"boat",4)) draw_sprite("worker_shadow",e->p.x,e->p.y,g->time,-1,1);
         if (e->kind==SURVIVOR && !game_on_roof(e)) draw_sprite("man_shadow",e->p.x,e->p.y,g->time,-1,1);
         game_paint(g, e);
@@ -484,8 +483,6 @@ void game_render(Game *g)
                 draw_sprite("icon_head",e->p.x+(count++-(total-1)*.5f)*23,e->p.y+65,0,0,1);
         }
     }
-    /* Type-6 scenery lives above the world, as in its original layer 9. */
-    for (int i=0;i<g->object_count;i++) if (g->objects[i].ambient) game_paint(g, &g->objects[i]);
     map_scene_draw(&g->scene,MAP_OVERLAY,g->time);
     game_draw_context(g);game_draw_hud(g);
 }

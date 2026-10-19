@@ -132,8 +132,11 @@ Coordinates and transforms must fit finite float32 values. The runtime supports
 127 background bytes, 511 name bytes, and 4095 bytes each for `params` and `extra`;
 strings cannot contain NUL. New text is UTF-8. Decompilation uses escaped
 surrogates for any non-UTF-8 retail bytes, preserving them on recompilation.
-The runtime positions gameplay using `x,y`; most original rotation, scale, and
-layer values are retained as data rather than applied as arbitrary transforms.
+The runtime positions gameplay using `x,y`; most original rotation and scale
+values are retained as data rather than applied as arbitrary transforms. World
+objects draw by ascending `layer`, then descending world `y` within each layer,
+with entity order breaking ties. Use layer 5 for ordinary buildings, obstacles
+and supplies, layer 6 for characters, and higher layers for foreground scenery.
 Do not use scale to resize obstacle collision or rotate a road network.
 Sprite positions use the original atlas pivots, which differ from the visible
 image centers. When centering a building in a painted clearing, check the
@@ -294,7 +297,7 @@ all referenced local atlas images beside the binary, and decompilation copies
 them beside the new source. Regions are read directly from the authored atlas.
 
 `stage=ground` draws over terrain and under actors. `stage=world` shares the
-actor depth sort using the visual's ground position. `stage=overlay` draws over
+actor layer/Y sort using the record's `layer` and the visual's ground position. `stage=overlay` draws over
 the world and under the HUD. Sprites default to world, foam and sparkles to
 ground, and insects/motes to overlay. Keep large trees clear of clickable jobs
 and trail centers; use small plants at meadow edges and riverbank glints only

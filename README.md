@@ -60,7 +60,9 @@ idempotent and releases the active world before SDL resources are destroyed.
 Update order remains workers → queued jobs → followers → production → vehicles
 → automatic rescues → animals → victory. Timed jobs begin returning in the same
 update; immediate pickups begin moving home on the next update. Rendering
-computes depth keys before sorting, so its comparator needs no hidden world.
+computes source-layer and ground-Y keys before sorting, so its comparator needs
+no hidden world. Lower layers draw first; within a layer, higher world Y draws
+first, with original entity order breaking ties.
 
 Further architectural boundaries remain explicit: the resource cache, renderer
 and diagnostic buffer are still application-wide; vehicles and evacuees keep
@@ -192,11 +194,13 @@ their displayed position. All scenery pauses and resets with the level.
 
 The binary format contains length-prefixed strings as well as numeric fields.
 Our reader calls one of these strings `extra`; rooftop survivors store `roof`
-there. They have source layer 6, flooded decor has layer 3, and ambient objects
-have layer 9. The available prototype scripts discard this metadata and provide
-no retail motion implementation. This restoration associates each `roof`
-survivor with the flooded house underneath it (these records have no link ID),
-shares the house's visual transform, and sorts its occupants after the house.
+there. They have source layer 6, flooded decor has layers 2–3, and ambient objects
+normally have layer 9. Rendering respects these source layers, so rooftop
+survivors draw above their houses without a special depth override. The available
+prototype scripts discard this metadata and provide no retail motion
+implementation. This restoration associates each `roof` survivor with the flooded
+house underneath it (these records have no link ID) and shares the house's visual
+transform so they bob and rock together.
 
 Click a building lot to open the four-button construction menu: Sawmill and
 Burger Cafe cost 40 wood, House costs 60, and Gas Station costs 80. Choosing an

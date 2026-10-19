@@ -74,6 +74,37 @@ static bool particles_selftest(void)
     puts("PASS: only the two fire-marked trees burn; unmarked trees/other barriers stay unlit; fire animates, pauses, fades after clearing and resets on restart.");
     return true;
 }
+static bool draw_order_selftest(void)
+{
+    if (!game_init(34)) return false;
+    int worker=game.workers[0].entity,barrier=-1,foreground=-1;
+    for (int i=0;i<game.object_count;i++) {
+        Entity *e=&game.objects[i];uint32_t layer=game.level.objects[e->source].layer;
+        if (e->kind==BARRIER && layer==5) barrier=i;
+        if (e->kind==DECOR && layer==7) foreground=i;
+    }
+    if (barrier<0 || foreground<0 || game.level.objects[game.objects[worker].source].layer!=6)
+        return game_fail("Missing original layer-order fixtures");
+    Entity actor=game.objects[worker],obstacle=game.objects[barrier],front=game.objects[foreground];
+    /* Put the actor behind the obstacle by Y: its higher layer must still win.
+     * Foreground scenery must cover the actor even with the opposite Y order. */
+    actor.p.y=700;obstacle.p.y=100;front.p.y=750;
+    const Entity *pair[]={&obstacle,&actor,&front};
+    for (int i=0;i<2;i++) {
+        if (game_depth_compare(game_current(),&pair[i],&pair[i+1])>=0 ||
+            game_depth_compare(game_current(),&pair[i+1],&pair[i])<=0)
+            return game_fail("Source layers failed to override Y order");
+    }
+    obstacle.source=actor.source;
+    if (game_depth_compare(game_current(),&pair[1],&pair[0])>=0)
+        return game_fail("Same-layer objects failed to sort by descending world Y");
+    obstacle.p.y=actor.p.y;obstacle.order=actor.order+1;
+    if (game_depth_compare(game_current(),&pair[1],&pair[0])>=0 ||
+        game_depth_compare(game_current(),&pair[1],&pair[1])!=0)
+        return game_fail("Equal-depth objects lost their stable entity order");
+    puts("PASS: original source layers override Y; same-layer objects sort by ground Y with stable ties, including foreground scenery.");
+    return true;
+}
 static bool scenery_selftest(void)
 {
     if (!game_init(0)) return false;
@@ -92,6 +123,12 @@ static bool scenery_selftest(void)
             Entity *support=&game.objects[e->support];
             const Entity *pair[]={support,e};
             if (game_depth_compare(game_current(), &pair[0],&pair[1])>=0) return game_fail("Roof occupant sorts behind the house");
+            /* A same-layer neighbor below the survivor must draw after it.
+             * Attaching to a roof must not substitute the house's depth. */
+            Entity neighbor=*support;neighbor.source=e->source;neighbor.p.y=e->p.y-1;
+            const Entity *same_layer[]={e,&neighbor};
+            if (game_depth_compare(game_current(),&same_layer[0],&same_layer[1])>=0)
+                return game_fail("Roof attachment still overrides character ground Y");
         }
     }
     if (birds!=3 || clouds!=2 || roofs!=4 || floating!=17 || wood<0 || house<0 || land<0)
@@ -570,5 +607,5 @@ bool game_selftest(void)
     game_key(SDLK_ESCAPE);
     if(last_error[0])return false;
     puts("PASS: retail HUD fonts/atlas states, pause, Continue, Play again and Escape controls.");
-    return particles_selftest() && scenery_selftest() && interaction_selftest() && campaign_selftest() && missions_4_6_selftest();
+    return particles_selftest() && draw_order_selftest() && scenery_selftest() && interaction_selftest() && campaign_selftest() && missions_4_6_selftest();
 }
