@@ -86,8 +86,12 @@ twisted-tracks: all build/levels/twisted-tracks.lvl.rules build/levels/twisted-t
 	./build/volcano --assets "$(ASSETS)" --level-file build/levels/twisted-tracks.lvl
 twisted-tracks-app: all build/levels/twisted-tracks.lvl.rules build/levels/twisted-tracks-interior.png build/levels/twisted-tracks-debris.png
 	python3 tools/package_custom_level.py "Twisted Tracks" build/levels/twisted-tracks.lvl "$(ASSETS)"
-test-twisted-tracks: build/check_custom_level build/levels/twisted-tracks.lvl.rules build/levels/twisted-tracks-interior.png build/levels/twisted-tracks-debris.png
+build/check_coaster_debris: tests/check_coaster_debris.c $(CORE_SOURCES) $(TEST_SOURCES) $(HEADERS)
+	@mkdir -p build
+	$(CC) $(CPPFLAGS) $(CFLAGS) tests/check_coaster_debris.c $(CORE_SOURCES) $(TEST_SOURCES) -o $@ $(LDFLAGS) $(LDLIBS)
+test-twisted-tracks: build/check_custom_level build/check_coaster_debris build/levels/twisted-tracks.lvl.rules build/levels/twisted-tracks-interior.png build/levels/twisted-tracks-debris.png
 	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(ASSETS)" build/levels/twisted-tracks.lvl --coaster
+	SDL_VIDEODRIVER=dummy ./build/check_coaster_debris "$(ASSETS)" build/levels/twisted-tracks.lvl
 build/levels/ground-zero.lvl: levels/ground-zero.level.json levels/ground-zero.png levels/ground-zero-props.png tools/level_source.py
 	python3 tools/level_source.py compile $< $@
 build/levels/ground-zero.lvl.rules build/levels/ground-zero.png build/levels/ground-zero-props.png: build/levels/ground-zero.lvl
