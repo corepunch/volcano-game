@@ -1,419 +1,245 @@
-# Volcano SDL2
+# Volcano
 
-A standalone **C11 + SDL2** restoration of ORCA's Volcano game prototype,
-using the exact **Rescue Team 5** resources copied into `reference/rescue-team/`.
+A disaster-rescue strategy game in **C11 + SDL2**. Clear debris, repair
+producers and send workers out to bring people and animals home. It plays the
+project's own missions and can import the original **Rescue Team 5** scenes
+from a local copy of that game.
 
-The source files in `~/Documents/Rescue Team` stay in place. The `reference/`
-folder is ignored by Git, with each game in its own subfolder:
-`rescue-team/` supplies this game's assets, while `my-kingdom-for-the-princess/`
-holds the separate editor reference. The program reads binary `.lvl` files,
-PNG/JPEG atlases, JPEG `.alpha` masks, and bitmap font metrics directly at
-runtime. Its small data parser accepts the original Lua-shaped atlas/font
-syntax as declarations. **There is no Lua library, script execution, asset
-conversion, generated XML, or dependency on ORCA.**
+All of the game's own content is plain data: object kinds, prices, rules and
+missions are XML files, and art comes from mountable asset packs. Retail Rescue
+Team files are one optional asset source and import format. They are never the
+engine's data model.
 
-## Game architecture
+## Quick start
 
-The game uses fixed entity/actor arrays, immutable definition tables, and C
-callbacks. The SDL-facing API in `volcano.h` owns a single active world;
-implementation modules receive an explicit `Game *`. `game_internal.h` is the
-private contract between those modules, not an application API.
-
-| Module | Responsibility |
-| --- | --- |
-| `src/game.c` | Active-world ownership, transactional initialization, public API, shutdown |
-| `src/game_spawn.c` | Retail type → spawn callback registry; validation and entity links |
-| `src/game_rules.c` | Building, obstacle, pickup and mission definitions; economy queries |
-| `src/game_jobs.c` | Reservation, exact-once spending, completion callbacks and home delivery |
-| `src/game_navigation.c` | Route finding, barriers, vehicle access and reachability |
-| `src/game_sim.c` | Worker state callbacks, production, vehicles, rescues, animals and victory |
-| `src/game_render.c` | Visual poses, depth sorting, effects, HUD, hit testing and tooltips |
-| `src/game_input.c` | Pointer/key translation, menu commands and lifecycle requests |
-| `src/game_util.c` | Shared geometry, deterministic randomness and diagnostics |
-| `tests/game_selftest.c` | Campaign, interaction and rendered regressions linked to production code |
-| `tests/game_architecture.c` | World isolation, callback behavior, art independence and failed-load rollback |
-
-The review found four sources of coupling in the former `game.c`: a hidden
-current-world macro, duplicated building arrays, gameplay inferred repeatedly
-from animation strings, and tests that included the implementation file. These
-are replaced by explicit context, shared records, spawn-time rule resolution,
-and tests linked against the same modules as the executable.
-
-To add a retail object type, register its `SpawnDef` and callback in
-`game_spawn.c`. To add an interaction, define its `JobDef` in `game_jobs.c`:
-duration, work animation, completion callback, delivery policy, cost and click
-eligibility. The scheduler chooses and reserves the worker, spends once after
-finding a route, and starts the return journey after the callback. Construction
-uses this same spending path. Completion callbacks change the target and world;
-they do not dispatch another job. Building records supply menu labels, prices,
-sprites, output resource and bonus pickup together. Obstacle and pickup rules
-resolve once from the original level data, so replacing their displayed sprites
-does not change fees, wood rewards, cargo amounts or worker compatibility.
-
-Loading builds and validates a fresh zeroed candidate. A successful public init
-replaces and frees the old world; failure frees the candidate and preserves the
-active world. Entity indices stay stable for a world's lifetime. A successful
-init/restart invalidates all old world/entity pointers. Input returns lifecycle
-commands; the application applies them after the input handler returns. `game_destroy()` is
-idempotent and releases the active world before SDL resources are destroyed.
-
-Update order remains workers → queued jobs → followers → production → vehicles
-→ automatic rescues → animals → victory. Timed jobs begin returning in the same
-update; immediate pickups begin moving home on the next update. Rendering
-computes source-layer and ground-Y keys before sorting, so its comparator needs
-no hidden world. Lower layers draw first; within a layer, higher world Y draws
-first, with original entity order breaking ties.
-
-Further architectural boundaries remain explicit: the resource cache, renderer
-and diagnostic buffer are still application-wide; vehicles and evacuees keep
-their specialized movement loops; route queries still scan the traffic graph
-and barriers. Cached graph adjacency and a fixed simulation tick are useful
-future changes, but need separate behavior/performance validation. Callback
-addresses are runtime code references; future saves must serialize stable IDs
-and resolve definitions again, rather than persisting pointers.
-
-## Build and run
-
-Requires a C11 compiler, `make`, `pkg-config`, and SDL2. These are already
-available on this Mac.
+Requires a C11 compiler, `make`, `pkg-config`, SDL2 and Python 3 with Pillow
+(Pillow is only needed for tools and tests).
 
 ```sh
-cd ~/Developer/volcano-sdl2
-make run
+make                                   # build/volcano
+make test                              # retail-free test suites
+make run MISSION=library-rescue        # needs the retail assets, see below
 ```
 
-Run a custom level (builds the game and compiles the level as needed):
-
-```sh
-make run-emerald-falls
-make run-forest-mayday
-make run-ancient-echoes
-make run-twisted-tracks
-```
-
-To build our new static sprites at twice the original texture resolution:
-
-```sh
-make hd-app
-make run-emerald-falls-hd
-make run-forest-mayday-hd
-```
-
-`make hd-app` creates the self-contained `build/Volcano HD.app`, opening Emerald
-Falls, plus `build/Emerald Falls HD.app` and `build/Forest Mayday HD.app` launchers.
-Keep those small launchers beside `Volcano HD.app`. The main bundle includes both
-missions and their backgrounds. The original run targets continue to use retail
-sprites. HD artwork covers every interactive building, debris and resource sprite
-used by the two custom missions, plus the fuel station and construction lot:
-23 sprites and 46 authored damage/repair states. HD workers and civilians use
-our [Kenney character adaptation](assets/kenney-characters/README.md), rendered
-from an editable Blender rig in eight directions. See the [character rendering
-guide](docs/rendering-characters.md) to render saved models, rebuild animations,
-refresh selected sprite clips and verify the HD output. Animals, scenery animations
-and HUD artwork retain their original textures.
-
-Both HD missions also use AI-upscaled **3344×1882** backgrounds, exactly twice
-the original **1672×941** image dimensions. The logical playfield remains
-1366×768; paths, objects and click targets keep their original coordinates.
-The originals remain in `levels/SLUG.png`; Retina artwork is saved separately as
-`levels/SLUG@2x.png`. `make hd-levels` compiles the same mission data into
-`build/hd-levels`, with the Retina backgrounds alongside it. All HD run targets
-and the HD app use that directory. Upscale settings and source/output hashes
-are recorded in [`levels/retina-backgrounds.json`](levels/retina-backgrounds.json).
-
-The ImageGen source sheets, exact prompts and extraction manifest live in
-[`assets/hd-static`](assets/hd-static). `tools/build_hd_assets.py` requires Pillow
-and packs the authored frames into `build/hd-assets/texture/lazy/volcano-static.png`.
-Texture regions have two pixels per world unit, including padding for shadows;
-frame order and frame rates stay unchanged. Optional per-frame `pivot: [x,y]`
-points in `atlas.json` use top-left source-sheet pixels. The packer maps them
-through trimming, resizing and shadow padding into the existing `dx,dy` fields;
-click bounds follow the artwork while the ground highlight and level positions
-stay fixed. Headquarters uses the lower ground pivot marked in the placement
-review, with camp supplies, rolled tarps, rope and stones breaking up the tent's
-rectangular perimeter. Its revised source sheet and built-in ImageGen edit
-prompt are `assets/hd-static/buildings-hq-rounded.*`; the original sheet remains
-available. Only the HQ uses the revised sheet. Its `extraction: "rect"` region
-retains all scattered props, including detached pieces; other entries use the
-original connected-alpha extraction. Frames
-without an explicit pivot retain their original placement and bounds.
-`make hd-pivot-previews` renders all 46 packed states into `build/pivot-previews/`,
-including individual PNGs, building/obstacle/supply sheets, a combined sheet and
-a ZIP. Pink crosses show the runtime pivot, cyan rectangles show body bounds,
-and green ellipses use the in-game highlight artwork and dimensions. All states
-share a ground position within their cells and display at native 2x resolution.
-Body artwork is only downsampled when packing, with no enlargement or
-script-generated work states.
-Original resources under `reference/rescue-team` stay untouched. macOS windows
-support Retina backing pixels. `make test-hd` runs the conversion, mission,
-resource and campaign checks with the HD asset directory.
-
-HD buildings, debris, bridges, road damage and supplies also have short, soft
-ground shadows in the retail style. All 46 shadow states were authored together
-in `assets/hd-static/shadows.generated.png`; `shadows.prompt.txt` records the
-ImageGen prompt and `shadows.json` records source regions and footprint placement.
-The packer combines each authored shadow with its object into one transparent
-sprite, as retail buildings do. Shadows project northwest (upper-left) at 45°,
-with a grounded near edge and a cast distance proportional to object height;
-road damage retains only contact shading. The 55% shadow strength is baked into
-the alpha. Runtime draws each object once, with no separate static shadow layer.
-Padded frames retain the original body bounds for clicks and highlights.
-Retail character shadows remain in use.
-
-On macOS, `make app` also creates the double-clickable `build/Volcano.app`
-with its own bundled resource copy. The app does not need the Documents folder.
-The tracked bundle metadata lives in `packaging/Info.plist`.
-
-The default is campaign level 1. Select a campaign position with
-`./build/volcano --campaign 3`; `--level 19` selects an original source file.
-Campaign order is recovered from the original map's prerequisite chain:
-the first three missions are `level015`, `level018`, and `level019`.
-Campaign levels 4–6 are `level012`, `level013`, and `level011`.
-The original prototype, `level000`, is campaign level 38.
-
-To populate the ignored assets on a fresh checkout:
+The game draws shared sprites (HUD, fonts, headquarters, workers, original
+obstacles) from the original Rescue Team 5 resources. They are not part of
+this repository:
 
 ```sh
 mkdir -p reference/rescue-team
 rsync -a --exclude='.DS_Store' "$HOME/Documents/Rescue Team/" reference/rescue-team/
 ```
 
-To use another original resource folder:
+`reference/` is ignored by Git. You can also pass `--assets PATH` or set
+`RESCUE_TEAM_ASSETS`. Without retail assets, every test still runs on a
+generated placeholder pack (`make test`).
+
+## Running
 
 ```sh
-./build/volcano --assets "/path/to/Rescue Team"
+./build/volcano --mission missions/emerald-falls/mission.xml
+./build/volcano --campaign 3              # original campaign position 1-50
+./build/volcano --level 19                # original level file number
+./build/volcano --pack build/packs/hd --hd --mission missions/forest-mayday/mission.xml
 ```
 
-`RESCUE_TEAM_ASSETS` also sets the resource folder; `--assets` takes precedence.
-The default is `reference/rescue-team/`, resolved from the working directory
-or executable location, with the older `resources/` folder still supported as
-a fallback. `make app` bundles assets from `reference/rescue-team/` into
-`Contents/Resources`; override the packaging source with `make app ASSETS=/path/to/assets`.
+| Option | Meaning |
+| --- | --- |
+| `--assets DIR` | Base asset folder (default `$RESCUE_TEAM_ASSETS` or `reference/rescue-team`) |
+| `--pack DIR` | Mount another asset folder above it; later packs win |
+| `--content DIR` | Content folder (default `content/`) |
+| `--hd` | Prefer `background@2x.png` mission backgrounds |
+| `--frames N`, `--screenshot FILE.bmp`, `--hidden`, `--software` | Headless runs and captures |
 
-Click debris to send an available worker and collect supplies. In campaign
-levels 1–6, people return to headquarters once their route is clear; stranded
-workers join the crew after returning and count toward the rescue goal.
-Later inspection levels retain the prototype's click-to-escort behavior.
-Workers follow the original traffic points, clear blocked paths,
-perform timed work, and return home. Pickups happen immediately on arrival;
-workers carry supplies back before crediting the inventory. After clearing or
-building, workers immediately return to HQ before taking another order.
-Fishing boats collect food in level 6; prototype boats collect floating wood
-in later inspection levels. Small and large supply piles yield 10 and 20 units. The top bar
-uses the retail atlas, original Calibri bitmap fonts, resource icons, timer
-meter, three objective rows, and the authored hover/pressed button states.
-The pause button opens the retail panel with Continue and Play again controls.
-Hover over targets for tooltips and green/red selection circles. Accepted and
-queued jobs show green checkmarks; click a queued job again to cancel it.
-Working targets use the original progress-bar artwork. Available workers inside
-HQ appear as helmet icons above its roof and emerge when dispatched.
+| Make target | Does |
+| --- | --- |
+| `make run MISSION=NAME` | Play `missions/NAME` |
+| `make run-campaign CAMPAIGN=N` | Play an original campaign mission |
+| `make hd-pack`, `make run-hd MISSION=NAME` | Build the HD statics overlay and play with it |
+| `make app [APP_MISSION=NAME]` | Self-contained macOS bundle in `build/` |
 
-Log obstructions whose level object name is `fire` burn with two layers of
-40-frame flame animation, restrained warm light, rising embers and expanding,
-drifting smoke. The downloaded CC0 textures and their credits live in
-[`assets/particles`](assets/particles/README.md). In level000 these are
-objects 1249 and 1204, the two trees on the right; the two unmarked trees stay
-unlit. Each fire has its own timing; effects pause with the game and
-restart with the level. Clearing logs stops emission while existing flames and
-smoke finish fading. Independently phased flame patches stay rooted across the
-wood and bend in the updraft; smoke dissipates within seven seconds of clearing.
+**Controls.** Click debris, supplies, buildings or animals to send a worker.
+Click a queued job again to cancel it.
 
-Birds fly left to right at a new random height on each pass, and translucent
-clouds drift across the scene. Both wrap fully off screen and use the original
-type-6 ambient sprites. Boats, floating wood, flooded houses, and water trees
-bob and rock gently without moving their gameplay coordinates. Rooftop survivors
-move with their supporting house and draw above its roof; picking them uses
-their displayed position. All scenery pauses and resets with the level.
+- **Space / P:** pause or resume
+- **R:** restart
+- **Enter / N:** next level after a campaign victory
+- **F1:** show traffic links and worker paths
+- **Escape:** close the construction menu, or pause
 
-The binary format contains length-prefixed strings as well as numeric fields.
-Our reader calls one of these strings `extra`; rooftop survivors store `roof`
-there. They have source layer 6, flooded decor has layers 2–3, and ambient objects
-normally have layer 9. Rendering respects these source layers, so rooftop
-survivors draw above their houses without a special depth override. The available
-prototype scripts discard this metadata and provide no retail motion
-implementation. This restoration associates each `roof` survivor with the flooded
-house underneath it (these records have no link ID) and shares the house's visual
-transform so they bob and rock together.
+## Missions
 
-Click a building lot to open the four-button construction menu: Sawmill and
-Burger Cafe cost 40 wood, House costs 60, and Gas Station costs 80. Choosing an
-affordable building dispatches a worker for five seconds of construction once
-the route is clear. Prices turn red and authored disabled artwork appears when
-wood is insufficient. Escape or clicking outside dismisses the menu.
+| Mission | Theme |
+| --- | --- |
+| `first-rescue` | Two-route starter: earn wood from a tree, repair a bridge |
+| `emerald-falls` | Forest and waterfalls; three branches tie timber, food and money together |
+| `forest-mayday` | Airliner crash in a forest; restore a cafe, forestry shed and ranger house |
+| `ancient-echoes` | Collapsed temple; makeshift tracks through shattered colonnades |
+| `twisted-tracks` | Wrecked roller coaster; ten themed debris jobs |
+| `library-rescue` | Collapsed library; field kitchen, salvage and logistics stations; project-rendered characters |
 
-Campaign levels 1–6 have repairable production buildings, automatic income,
-recurring worker-collected bonus supplies, resource costs and wood rewards
-for debris. Linked supplies stay hidden until their building operates.
-Click a functioning building and its authored demolition button to release
-the lot for a different building. Existing deliveries finish before demolition
-can start; pickups cannot be reserved while their owner is being demolished.
-Level 3 supports the tutorial's house-to-cafe replacement sequence.
+Each mission is a folder under `missions/` with its `mission.xml`, background,
+art and provenance notes. Mission-specific objects are archetypes that extend
+shared ones. Library Rescue's field kitchen extends the cafe, so it has the
+cafe's rules with its own title and art. Twisted Tracks' derailed car extends
+the boulder. See [docs/creating-missions.md](docs/creating-missions.md) to write
+your own, and check one with:
 
-The initial food/wood/money inventories (20/0/0, 50/30/20, 10/100/30) and
-rescue goals (3, 3, 5) match the original screenshots and walkthrough:
-[GameHouse Rescue Team 5 walkthrough](https://www.gamehouse.com/blog/2015/10/rescue-team-5-walkthrough/).
-Repair costs are half construction costs. Trees cost 20 food and yield 20 wood;
-small stones cost 20 food, large stones 40 food and 100 money, wooden bridges
-20 wood, and large bridges 20 food and 40 wood. Working buildings pay 5 units
-every 5 seconds and expose a 10-unit bonus every 10 seconds when no previous
-bonus is outstanding. **These costs and intervals are explicit restoration
-balance, not recovered retail constants.** The supplied resources do not
-contain the original rules or time limits. The first six missions currently
-play without a deadline, display elapsed time and finish on their actual
-rescue goals, with Next level and Play again controls. Timed stars, upgrades,
-save profiles and later campaign mechanics remain unimplemented.
+```sh
+python3 tools/mission.py check missions/NAME/mission.xml
+```
 
-Levels 4–6 add the following restored rules, using original worker, vehicle,
-animal and building artwork:
+## Gameplay
+
+Workers leave headquarters along the authored traffic network, which links
+points closer than 50 units. Live obstacles block any link passing within 20
+units. A worker walks up to the edge of an obstacle or building, stopping on
+the selection ring you see on hover, faces it and works. Then it goes straight
+back to headquarters. Supplies are picked up on arrival and credited once
+carried home. Survivors walk home by themselves when a route opens. Workers
+stranded far from headquarters join the crew once they reach it.
+
+Producers that are working pay 5 units every 5 seconds. They also offer a
+10-unit bonus at their linked supply point every 10 seconds while none is
+outstanding. Damaged producers cost half their construction price to repair.
+Lots open a four-button construction menu (Sawmill and Burger Cafe 40 wood,
+House 60, Gas Station 80). A working producer can be demolished to free its
+lot.
+
+| Job | Cost | Result |
+| --- | --- | --- |
+| Tree | 20 food | +20 wood |
+| Stone / large stone | 20 food / 40 food + 100 money | Opens the route |
+| Wooden bridge / large bridge / road | 20 wood / 20 food + 40 wood / 20 wood | Opens the route |
+| Animal capture | 10 food | Rescued when led home |
+| Valve | 20 money | Clears its fog or pollution group |
+| Pier or garage repair | 40 wood | Enables the boat or ATV |
+| ATV or fishing trip | 10 fuel | Recruit delivered, or food caught |
+
+**These prices and intervals are this restoration's balance, not recovered
+retail constants.** They live in `content/archetypes.xml`.
+
+### Original campaign
+
+Positions 1–6 use the restored rescue rules. The campaign order is recovered
+from the original map's prerequisite chain, starting with `level015`,
+`level018` and `level019`. Starting stock and goals are in
+`content/campaign.xml`. Levels 1–3 match the original screenshots and the
+[GameHouse walkthrough](https://www.gamehouse.com/blog/2015/10/rescue-team-5-walkthrough/).
 
 | Campaign level | Objectives | Starting food / wood / money / fuel |
 | --- | --- | --- |
+| 1 | Rescue 3 people | 20 / 0 / 0 / 0 |
+| 2 | Rescue 3 people | 50 / 30 / 20 / 0 |
+| 3 | Rescue 5 people | 10 / 100 / 30 / 0 |
 | 4 | Rescue 13 people, including 5 workers requiring the ATV | 60 / 80 / 70 / 70 |
 | 5 | Rescue 6 people and 16 animals | 70 / 80 / 40 / 0 |
 | 6 | Purify 2 basins and rescue 2 people and 6 animals | 60 / 90 / 40 / 220 |
 
-Click an offroad worker to dispatch the ATV from its garage. Each trip reserves
-10 fuel once; the worker joins after being delivered and returning to HQ.
-Animals wander along opened routes. Clicking one reserves a worker and 10 food;
-the animal stops wandering during capture and follows the worker home before
-counting as rescued. Fog is cleared through its linked valve.
+Level 4 sends the ATV from its garage to offroad workers. Level 5 adds roaming
+animals and fog cleared through valves. In level 6, valves purify basins and
+unlock piers; boats fish within their basin, and the cafe cannot be built.
+Positions 7–50 and `level000` run the original prototype interactions:
+clicking survivors escorts them, and the level ends when every job is done.
+Timed stars, upgrades, save profiles and later campaign systems are not
+implemented.
 
-In level 6, valves purify their own basins and unlock the associated piers.
-Repairing a pier costs 40 wood, then its boat can fish only within that basin's
-traffic network. A fishing trip costs 10 fuel; food is credited after the boat
-returns to its pier. Fishing spots replenish after 10 seconds. Valve work costs
-20 money. These fees and intervals use the same provisional restoration balance
-as levels 1–3. Cafe construction is disabled in level 6 using the authored locked
-menu artwork. Victory requires every people, animal and basin objective.
+Scenery from the original files is preserved. Birds and clouds cross the
+sky, floating objects bob, and rooftop survivors ride their flooded house.
+Logs named `fire` burn with CC0 flame and smoke textures from
+[`assets/particles`](assets/particles/README.md).
 
-- **Space / P:** pause or resume
-- **R:** restart the current level
-- **Enter / N:** advance after completing a restored mission
-- **F1:** show traffic connections and worker paths
-- **Escape:** dismiss the construction menu, or open/close the pause menu
-- Close the window to quit
+## Art and asset packs
 
-## Create your own levels
+The game looks up every sprite by name in a catalog built from mounted asset
+folders, from lowest to highest precedence:
 
-Levels now have an editable JSON source format, a lossless compiler/decompiler,
-and a playable example:
+1. the retail folder (`--assets`)
+2. `assets/particles` (fire and smoke)
+3. `--pack` folders
+4. the mission's own `<pack>` folders and sprite sheets
 
-```sh
-make level-example
-python3 tools/level_source.py check levels/first-rescue.level.json
-python3 tools/level_source.py compile levels/first-rescue.level.json build/levels/first-rescue.lvl
-./build/volcano --level-file build/levels/first-rescue.lvl
+A higher layer replaces sprites of the same name. Two packs come with the
+project:
+
+- **Kenney characters** (`assets/kenney-characters`): workers and civilians
+  rendered from an editable Blender rig in eight directions. They replace the
+  retail character sprites by name. Library Rescue mounts this pack itself.
+  See the [character rendering guide](docs/rendering-characters.md).
+- **HD statics** (`make hd-pack` → `build/packs/hd`): every interactive
+  building, obstacle and supply sprite at twice the texture resolution, with
+  authored ground shadows baked in. The sources, prompts and manifest are in
+  [`assets/hd-static`](assets/hd-static). This pack is built from the retail
+  declarations, so it needs `ASSETS`.
+
+Mission backgrounds may have a `background@2x.png` (3344×1882) beside the
+1672×941 original. `--hd` uses it, and the logical playfield stays 1366×768.
+See the [background guide](docs/creating-backgrounds.md) for generation and
+placement.
+
+## Architecture
+
+```
+app → game → render → sim → content → assets → core
 ```
 
-The [level authoring guide](docs/creating-levels.md) explains source fields,
-object types, traffic spacing, obstacle gates, resource budgets, building
-outputs, vehicle markers, and patterns recovered from the original campaign.
-The [background production guide](docs/creating-backgrounds.md) covers ImageGen
-generation and edits, large disaster compositions, makeshift rescue trails,
-measuring the painting, sprite placement, verification and packaging. The
-[background history](levels/background-history/README.md) preserves the source
-images, per-call prompts and provenance for the two disaster missions.
-The [starter source](levels/first-rescue.level.json) has editor support through
-the [JSON Schema](docs/level-source.schema.json).
-The reusable [Rescue Team level skill](skills/rescue-team-levels/SKILL.md) provides
-the full authoring workflow, a tested starter, and helpers for traffic sampling
-and placement using original sprite pivots. Invoke it as `$rescue-team-levels`
-after installing the skill in your personal Codex skills folder.
-Custom mission supplies and goals compile to a `.lvl.rules` companion;
-the `.lvl` retains the original version 301 binary layout. Custom levels load
-directly without modifying the retail resources. Press R after recompiling to
-reload a custom level. `make analyze-levels` inventories the original campaign;
-`make test-levels` checks conversion and completes the starter through normal play.
-
-Play **Emerald Falls**, our original forest-and-waterfall level, with
-`make emerald-falls`. Its three branches contain seven people, two animals,
-and a resource puzzle linking timber, food production, money production, and
-the final river crossing. The original painted background preserves the forest's
-integrated lighting and shadows. Original Rescue Team butterflies, water glints,
-light motes and six white foam patches animate independently over it.
-These effects share a layered scene system, pause and reset with the mission,
-and remain editable as placed objects.
-The editable source is
-[`levels/emerald-falls.level.json`](levels/emerald-falls.level.json); its baked
-background is `levels/emerald-falls.png`. Regressions complete
-the mission with three different production repair priorities.
-
-Play **Forest Mayday**, a forest crash-site rescue around an A320-sized
-passenger jet, with `make forest-mayday`. Ten people and two animals wait behind
-fallen trees, a rockfall and a damaged evacuation trail. Restore the cafe,
-forestry shed and ranger house to fund the rescue. The aircraft, forest and
-shadows are baked into the painting; creek foam, water glints, butterflies and
-light motes animate independently. Its editable source is
-[`levels/forest-mayday.level.json`](levels/forest-mayday.level.json), and the
-background and built-in ImageGen prompt are saved as
-[`levels/forest-mayday.png`](levels/forest-mayday.png) and
-[`levels/forest-mayday.prompt.txt`](levels/forest-mayday.prompt.txt).
-`make forest-mayday-app` creates a local macOS launcher in `build/Forest Mayday.app`.
-Regressions complete all rescues with three different production repair priorities.
+The layers below `render/` build without SDL headers into
+`libvolcano_core.a`. Our missions and retail scenes both become a
+format-neutral `LevelSpec`. `content/retail_import.c` is the only code that
+knows retail type codes and naming heuristics. The simulation stores state,
+not sprite names, and advances in fixed 1/60 s ticks. Loading is
+transactional: a failed load leaves the running level untouched. See
+[docs/architecture.md](docs/architecture.md) and the
+[content reference](docs/content.md).
 
 ## Verification
 
 ```sh
-make test
-make sanitize
+make test                 # core (no SDL), all missions on placeholder art, tool tests
+make sanitize             # the same under ASan/UBSan
+make test-retail          # original campaign and retail art (needs ASSETS)
+VOLCANO_TEST_SHOTS=1 make test   # also save frames to build/
 ```
 
-Tests read all 52 original levels to their exact end, validate atlas frames,
-reject malformed data, and simulate the recovered level through its 31 jobs:
-10 obstacles, 15 supply pickups, and 6 escorted survivors. They check movement,
-blocked paths, work timing, pause, return journeys, inventories, boats, and
-restart, HUD hit regions, retail font bounds, and button artwork in normal,
-hover, and pressed states. Additional regressions cover all four construction
-choices and costs, immediate pickups and cargo delivery, immediate HQ returns,
-queued-job cancellation, and in-house helmets. Rendered particle checks
-cover fire animation, pause, restart, and smoke fading after clearing, including
-that unmarked trees and other barriers do not burn. Tests use SDL's software renderer without opening
-a window. Set `VOLCANO_TEST_SHOTS=1` with `make test`
-to save deterministic interaction frames under `build/`.
-Scenery checks cover travel and off-screen wrapping, bobbing and rotation,
-stationary land, roof attachment/draw order and clicking, release on rescue,
-and pause/restart.
+- **Core suite:** the XML reader, mounts, sprite catalog, content inheritance,
+  every mission file, and headless checks that workers stop at the footprint
+  edge facing their target.
+- **Mission suite:** plays all six missions through normal clicks with three
+  repair orders each, without injecting resources. It checks gates, exact
+  budgets, queued jobs, production, recruits, victory, pause and restart. It
+  also covers world isolation, rollback after a failed load, and the coaster
+  debris lifecycle.
+- **Retail suite:** reads all 52 original binaries to their exact end,
+  completes campaign levels 1–6, and exercises construction, vehicles,
+  valves, fishing, fire, scenery and draw order.
 
-Campaign regressions initialize and render all 50 missions, verify the map
-order, and complete the first six missions through the normal click and
-queue interfaces without injecting resources or clearing obstacles directly.
-They cover damaged buildings, exact-once spending, automatic income, recurring
-bonus delivery, demolition ownership, recruitment, the house-to-cafe sequence,
-mission completion, advancement and restart.
-Additional checks cover ATV-only access and exact-once fuel reservations,
-vehicle pause/restart, wandering animals and food costs, linked fog and
-pollution gates, blocked pier repair/fishing, the cafe restriction, boat cargo
-delivery, and independent completion of multiple objectives. Level 5's test
-clears only its necessary large boulder; all three new runs finish without
-injecting resources or marking tasks complete directly.
+## Tools
 
-A reproducible frame can be saved without a window:
-
-```sh
-SDL_VIDEODRIVER=dummy ./build/volcano --software --hidden \
-  --frames 60 --screenshot build/preview.bmp
-```
+| Tool | Purpose |
+| --- | --- |
+| `tools/mission.py check` | Validate missions and warn about likely design problems |
+| `tools/retail_levels.py` | Dump or analyze original level binaries |
+| `tools/make_test_pack.py` | Generate the placeholder asset pack used by tests |
+| `tools/build_hd_assets.py`, `tools/preview_hd_pivots.py` | Build and review the HD statics overlay |
+| `tools/pack_rescue_characters.py` | Pack rendered characters and write their sprite sheet |
+| `tools/package_app.py` | Self-contained macOS bundle (`make app`) |
+| `tools/audit_rescue_team.py` | Audit report of original campaign coverage |
 
 ## Scope and provenance
 
 The restored gameplay follows the former `samples/Volcano` prototype, first
 introduced in ORCA commit `09a68b1d` (2026-02-25). Its later movement and work
 callbacks were commented out. This project restores those interactions in C
-and reads the original binary level instead of the archived Lua level table.
+and reads the original binary levels instead of the archived Lua level table.
 
 The installed resources identify themselves as Rescue Team 5 in
-`conf/locale_en.lua`. The worker atlas matches the former Volcano atlas byte
-for byte. Original artwork and data are kept in the ignored `reference/rescue-team/` directory
-and are not intended to be committed.
+`conf/locale_en.lua`. Original artwork and data stay in the ignored
+`reference/rescue-team/` directory and are not redistributable; a shipping
+build needs its own replacements for the shared sprites. All 50 original
+missions load and render. Unknown retail controllers stay in the parsed data
+without being mistaken for missing art, and unknown sprite references fail
+explicitly.
 
-All 50 missions load and render; the binary reader also accepts the original
-map and menu. Artwork aliases resolve money, large stones and building names;
-fog and road fire use their authored effect textures. Known editor tiles and
-unrestored scene controllers stay in the parsed data without being mistaken
-for missing animations. Unknown animation references still fail explicitly.
-Only campaign levels 1–6 have the expanded mission rules described above.
-Later levels remain available for inspection and prototype interactions.
-
-The image decoder is the existing `stb_image.h`, copied with its license
-intact from ORCA. All authored application sources are `.c` and `.h` files;
-SDL2 is the only external runtime library.
+The image decoder is `stb_image.h`, copied with its license intact from ORCA.
+All application sources are `.c` and `.h` files; SDL2 is the only external
+runtime library.

@@ -5,7 +5,7 @@
 # to depend on the renderer. render/ and game/ add SDL; app/ is the executable.
 #
 #   make                       game executable
-#   make test                  retail-free suites (placeholder art)
+#   make test                  retail-free suites (placeholder art) and tool tests
 #   make test-retail           retail suites (needs ASSETS)
 #   make run MISSION=library-rescue
 #   make run-campaign CAMPAIGN=3
@@ -21,6 +21,7 @@ LDLIBS += -lm
 
 ASSETS ?= reference/rescue-team
 MISSION ?= first-rescue
+APP_MISSION ?=
 CAMPAIGN ?= 1
 OUT ?= build
 TEST_PACK := $(OUT)/packs/test
@@ -37,7 +38,7 @@ ENGINE_LIB := $(OUT)/libvolcano_engine.a
 TEST_SUPPORT := $(OUT)/obj/tests/test_support.o $(OUT)/obj/tests/architecture.o
 MISSIONS := $(patsubst missions/%/mission.xml,%,$(wildcard missions/*/mission.xml))
 
-.PHONY: all test test-core test-missions test-retail test-all run run-campaign run-hd hd-pack app sanitize analyze-levels clean
+.PHONY: all test test-core test-missions test-tools test-retail test-all run run-campaign run-hd hd-pack app sanitize analyze-levels clean
 .DELETE_ON_ERROR:
 
 all: $(OUT)/volcano
@@ -75,7 +76,7 @@ $(OUT)/test_coaster: $(OUT)/obj/tests/coaster_main.o $(TEST_SUPPORT) $(ENGINE_LI
 $(OUT)/test_retail: $(OUT)/obj/tests/retail_main.o $(OUT)/obj/tests/game_selftest.o $(TEST_SUPPORT) $(ENGINE_LIB) $(CORE_LIB)
 	$(CC) $(LDFLAGS) $^ -o $@ $(SDL_LIBS) $(LDLIBS)
 
-test: test-core test-missions
+test: test-core test-missions test-tools
 
 test-core: $(OUT)/test_core $(TEST_PACK)
 	./$(OUT)/test_core $(TEST_PACK)
@@ -90,11 +91,14 @@ test-missions: $(OUT)/test_missions $(OUT)/test_coaster $(TEST_PACK)
 	$(RUN) ./$(OUT)/test_missions $(MISSION_ASSETS) missions/library-rescue/mission.xml --library-rescue
 	$(RUN) ./$(OUT)/test_coaster $(MISSION_ASSETS) missions/twisted-tracks/mission.xml
 
+test-tools:
+	python3 -m unittest discover -s tests -p 'test_tools.py'
+
 # Original campaign, prototype scenes and retail art (not redistributable).
 test-retail: $(OUT)/test_retail
 	$(RUN) ./$(OUT)/test_retail "$(ASSETS)"
 	$(MAKE) test-missions MISSION_ASSETS="$(ASSETS)"
-	RESCUE_TEAM_ASSETS="$(ASSETS)" python3 -m unittest discover -s tests -p 'test_level_source.py'
+	RESCUE_TEAM_ASSETS="$(ASSETS)" python3 -m unittest discover -s tests -p 'test_tools.py'
 
 test-all: test test-retail
 
@@ -118,8 +122,9 @@ run-hd: $(OUT)/volcano hd-pack
 
 # Self-contained macOS bundle: retail assets, content, missions and packs are
 # copied in; the launcher only refers to paths inside the bundle.
+# APP_MISSION=library-rescue opens that mission instead of the campaign.
 app: $(OUT)/volcano
-	python3 tools/package_app.py --binary $(OUT)/volcano --assets "$(ASSETS)" --mission "$(MISSION)" --output $(OUT)
+	python3 tools/package_app.py --binary $(OUT)/volcano --assets "$(ASSETS)" --mission "$(APP_MISSION)" --output $(OUT)
 
 # ---- Retail analysis
 
@@ -127,7 +132,7 @@ $(OUT)/audit_levels: $(OUT)/obj/tools/audit_levels.o $(ENGINE_LIB) $(CORE_LIB)
 	$(CC) $(LDFLAGS) $^ -o $@ $(SDL_LIBS) $(LDLIBS)
 
 analyze-levels:
-	python3 tools/level_source.py analyze "$(ASSETS)/level" $(OUT)/level-analysis.json
+	python3 tools/retail_levels.py analyze "$(ASSETS)/level" $(OUT)/level-analysis.json
 
 clean:
 	rm -rf build

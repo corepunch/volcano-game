@@ -78,7 +78,7 @@ def sheet(cards, title, path, columns=4):
     image.save(path)
 
 
-def build(assets, output):
+def build(assets, output, retail):
     frames = json.loads((assets/"hd-static-report.json").read_text())
     manifest = json.loads((ROOT/"assets/hd-static/atlas.json").read_text())
     order = {(e["animation"], e["frame"]): i for i, e in enumerate(manifest["frames"])}
@@ -86,8 +86,8 @@ def build(assets, output):
         raise ValueError("packed report does not cover every authored sprite state")
     frames.sort(key=lambda e: order[e["animation"], e["frame"]])
     atlas = Image.open(assets/"texture/lazy/volcano-static.png").convert("RGBA")
-    source = Image.open(assets/"texture/gui/highlight.png").convert("RGBA")
-    # Same selected UV rectangle and bottom-left UV convention as game_render.c.
+    source = Image.open(retail/"texture/gui/highlight.png").convert("RGBA")
+    # Same selected UV rectangle and bottom-left UV convention as render/world_view.c.
     u, v, cu, cv = .0078125, .140625, .6171875, .421875
     x, y, w, h = round(u*source.width), round((1-v-cv)*source.height), round(cu*source.width), round(cv*source.height)
     highlight = source.crop((x, y, x+w, y+h))
@@ -117,7 +117,8 @@ def build(assets, output):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--assets", type=Path, default=ROOT/"build/hd-assets")
+    parser.add_argument("--assets", type=Path, default=ROOT/"build/packs/hd")
+    parser.add_argument("--retail", type=Path, default=ROOT/"reference/rescue-team")
     parser.add_argument("--output", type=Path, default=ROOT/"build/pivot-previews")
     args = parser.parse_args()
-    build(args.assets.resolve(), args.output.resolve())
+    build(args.assets.resolve(), args.output.resolve(), args.retail.resolve())

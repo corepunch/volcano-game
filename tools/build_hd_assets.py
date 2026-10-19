@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Pack authored static sprite states at 2x resolution into a separate asset tree.
+"""Pack authored static sprite states at 2x resolution into an overlay asset pack.
+
+The output holds only the retail declaration files that gain HD frames and
+their atlas; mount it above the retail folder with --pack.
 
 Requires Pillow. Art and all damage/repair stages come from ImageGen sheets.
 Each authored shadow is combined with its body during packing, so runtime uses
@@ -13,7 +16,6 @@ import json
 import math
 from pathlib import Path
 import re
-import subprocess
 
 from PIL import Image, ImageChops, ImageFilter
 
@@ -273,15 +275,14 @@ def build(assets, output, art):
             replacements[path.name] = source.encode(encoding)
     if len(report) != len(manifest["frames"]):
         raise ValueError("some authored frames have no matching original declaration")
-    output.mkdir(parents=True, exist_ok=True)
-    # Always refresh the declarations before applying replacements: repeated
-    # builds and an updated ASSETS path cannot accumulate duplicate sprites.
-    subprocess.run(["rsync", "-a", "--exclude=.DS_Store", str(assets) + "/", str(output) + "/"], check=True)
+    # The output is an overlay pack: only declaration files that gained HD
+    # frames, plus their atlas. Mount it above the retail folder (--pack);
+    # same-named declaration files shadow the originals.
     folder = output / "texture/lazy"
-    # Migrate previously built HD trees; there are no shadow-only animations now.
-    for stale in (folder / "volcano-static-shadows.lua", folder / "volcano-static-shadows.png",
-                  output / "hd-static-shadows-report.json"):
-        stale.unlink(missing_ok=True)
+    folder.mkdir(parents=True, exist_ok=True)
+    for stale in folder.glob("*.lua"):
+        if stale.name not in replacements:
+            stale.unlink()
     for name, content in replacements.items():
         (folder / name).write_bytes(content)
     atlas.save(folder / "volcano-static.png")
@@ -294,7 +295,7 @@ def build(assets, output, art):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--assets", type=Path, default=ROOT / "reference/rescue-team")
-    parser.add_argument("--output", type=Path, default=ROOT / "build/hd-assets")
+    parser.add_argument("--output", type=Path, default=ROOT / "build/packs/hd")
     parser.add_argument("--art", type=Path, default=ROOT / "assets/hd-static")
     args = parser.parse_args()
     try:

@@ -1,5 +1,29 @@
 # Architecture review — October 2026
 
+> **Status (implemented).** The review below led to the current design in
+> [architecture.md](architecture.md). Data uses XML rather than the JSON
+> sketched below. Done:
+>
+> - phases 0–3 (separate test runners, a retail-free placeholder pack,
+>   layered `libvolcano_core`, data-defined archetypes/rulesets/campaign,
+>   native XML missions, the retail importer as the only retail-aware code,
+>   mounted asset packs)
+> - most of phase 4: world storage sized from the level, string-free poses,
+>   fixed ticks, a precomputed route graph, and footprint-edge approach for
+>   workers
+> - a self-contained app packager
+>
+> Still open:
+>
+> - entities are leaner but not split into components
+> - mission scenario tests are C with per-mission flags rather than data
+> - large binaries are not yet in Git LFS
+> - no CI workflow is configured
+> - the retail suite (`make test-retail`) has been ported but must be run
+>   where the retail assets are available
+>
+> The text below is the original review, kept as written.
+
 **Verdict:** the C modules are reasonably clean, but the system around them is
 still a prototype. The core problem is that **the retail Rescue Team 5 data
 model is the engine's canonical model**, and everything we author ourselves is
