@@ -1,0 +1,794 @@
+{
+  "format": "volcano-static-shadows-1",
+  "sheet": "shadows.generated.png",
+  "sheet_size": [
+    1448,
+    1086
+  ],
+  "sha256": "5c91d2499422523a7d2374009feaca72d086d684d1a8962477794e0f797f9d93",
+  "opacity": 0.55,
+  "frames": [
+    {
+      "animation": "base0",
+      "frame": 0,
+      "region": [
+        28,
+        98,
+        172,
+        191
+      ],
+      "footprint": {
+        "width": 1.1,
+        "height": 0.46,
+        "offset_x": 0.035,
+        "inset": 0.18,
+        "drop": 1.5
+      }
+    },
+    {
+      "animation": "burger0_br",
+      "frame": 0,
+      "region": [
+        205,
+        95,
+        351,
+        190
+      ],
+      "footprint": {
+        "width": 1.1,
+        "height": 0.46,
+        "offset_x": 0.035,
+        "inset": 0.18,
+        "drop": 1.5
+      }
+    },
+    {
+      "animation": "burger0_br",
+      "frame": 1,
+      "region": [
+        382,
+        93,
+        525,
+        194
+      ],
+      "footprint": {
+        "width": 1.1,
+        "height": 0.46,
+        "offset_x": 0.035,
+        "inset": 0.18,
+        "drop": 1.5
+      }
+    },
+    {
+      "animation": "burger0_br",
+      "frame": 2,
+      "region": [
+        560,
+        93,
+        711,
+        194
+      ],
+      "footprint": {
+        "width": 1.1,
+        "height": 0.46,
+        "offset_x": 0.035,
+        "inset": 0.18,
+        "drop": 1.5
+      }
+    },
+    {
+      "animation": "burger0",
+      "frame": 0,
+      "region": [
+        739,
+        92,
+        888,
+        194
+      ],
+      "footprint": {
+        "width": 1.1,
+        "height": 0.46,
+        "offset_x": 0.035,
+        "inset": 0.18,
+        "drop": 1.5
+      }
+    },
+    {
+      "animation": "sawmill0_br",
+      "frame": 0,
+      "region": [
+        918,
+        92,
+        1069,
+        194
+      ],
+      "footprint": {
+        "width": 1.1,
+        "height": 0.46,
+        "offset_x": 0.035,
+        "inset": 0.18,
+        "drop": 1.5
+      }
+    },
+    {
+      "animation": "sawmill0_br",
+      "frame": 1,
+      "region": [
+        1098,
+        91,
+        1248,
+        193
+      ],
+      "footprint": {
+        "width": 1.1,
+        "height": 0.46,
+        "offset_x": 0.035,
+        "inset": 0.18,
+        "drop": 1.5
+      }
+    },
+    {
+      "animation": "sawmill0_br",
+      "frame": 2,
+      "region": [
+        1274,
+        93,
+        1429,
+        192
+      ],
+      "footprint": {
+        "width": 1.1,
+        "height": 0.46,
+        "offset_x": 0.035,
+        "inset": 0.18,
+        "drop": 1.5
+      }
+    },
+    {
+      "animation": "sawmill0",
+      "frame": 0,
+      "region": [
+        21,
+        262,
+        171,
+        359
+      ],
+      "footprint": {
+        "width": 1.1,
+        "height": 0.46,
+        "offset_x": 0.035,
+        "inset": 0.18,
+        "drop": 1.5
+      }
+    },
+    {
+      "animation": "house0_br",
+      "frame": 0,
+      "region": [
+        199,
+        261,
+        350,
+        363
+      ],
+      "footprint": {
+        "width": 1.1,
+        "height": 0.46,
+        "offset_x": 0.035,
+        "inset": 0.18,
+        "drop": 1.5
+      }
+    },
+    {
+      "animation": "house0_br",
+      "frame": 1,
+      "region": [
+        378,
+        256,
+        528,
+        365
+      ],
+      "footprint": {
+        "width": 1.1,
+        "height": 0.46,
+        "offset_x": 0.035,
+        "inset": 0.18,
+        "drop": 1.5
+      }
+    },
+    {
+      "animation": "house0_br",
+      "frame": 2,
+      "region": [
+        559,
+        263,
+        710,
+        366
+      ],
+      "footprint": {
+        "width": 1.1,
+        "height": 0.46,
+        "offset_x": 0.035,
+        "inset": 0.18,
+        "drop": 1.5
+      }
+    },
+    {
+      "animation": "house0",
+      "frame": 0,
+      "region": [
+        737,
+        264,
+        887,
+        366
+      ],
+      "footprint": {
+        "width": 1.1,
+        "height": 0.46,
+        "offset_x": 0.035,
+        "inset": 0.18,
+        "drop": 1.5
+      }
+    },
+    {
+      "animation": "gas0_br",
+      "frame": 0,
+      "region": [
+        911,
+        260,
+        1069,
+        360
+      ],
+      "footprint": {
+        "width": 1.1,
+        "height": 0.46,
+        "offset_x": 0.035,
+        "inset": 0.18,
+        "drop": 1.5
+      }
+    },
+    {
+      "animation": "gas0_br",
+      "frame": 1,
+      "region": [
+        1089,
+        260,
+        1249,
+        362
+      ],
+      "footprint": {
+        "width": 1.1,
+        "height": 0.46,
+        "offset_x": 0.035,
+        "inset": 0.18,
+        "drop": 1.5
+      }
+    },
+    {
+      "animation": "gas0_br",
+      "frame": 2,
+      "region": [
+        1272,
+        260,
+        1432,
+        361
+      ],
+      "footprint": {
+        "width": 1.1,
+        "height": 0.46,
+        "offset_x": 0.035,
+        "inset": 0.18,
+        "drop": 1.5
+      }
+    },
+    {
+      "animation": "gas0",
+      "frame": 0,
+      "region": [
+        15,
+        431,
+        179,
+        530
+      ],
+      "footprint": {
+        "width": 1.1,
+        "height": 0.46,
+        "offset_x": 0.035,
+        "inset": 0.18,
+        "drop": 1.5
+      }
+    },
+    {
+      "animation": "bar_tree00",
+      "frame": 0,
+      "region": [
+        198,
+        433,
+        359,
+        531
+      ],
+      "footprint": {
+        "width": 1.08,
+        "height": 0.52,
+        "offset_x": 0.025,
+        "inset": 0.22,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "bar_tree00",
+      "frame": 1,
+      "region": [
+        378,
+        433,
+        532,
+        533
+      ],
+      "footprint": {
+        "width": 1.08,
+        "height": 0.52,
+        "offset_x": 0.025,
+        "inset": 0.22,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "bar_tree00",
+      "frame": 2,
+      "region": [
+        564,
+        441,
+        707,
+        526
+      ],
+      "footprint": {
+        "width": 1.08,
+        "height": 0.52,
+        "offset_x": 0.025,
+        "inset": 0.22,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "bar_tree00",
+      "frame": 3,
+      "region": [
+        746,
+        446,
+        878,
+        529
+      ],
+      "footprint": {
+        "width": 1.08,
+        "height": 0.52,
+        "offset_x": 0.025,
+        "inset": 0.22,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "bar_stone00",
+      "frame": 0,
+      "region": [
+        925,
+        432,
+        1072,
+        545
+      ],
+      "footprint": {
+        "width": 1.08,
+        "height": 0.52,
+        "offset_x": 0.025,
+        "inset": 0.22,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "bar_stone00",
+      "frame": 1,
+      "region": [
+        1100,
+        435,
+        1253,
+        541
+      ],
+      "footprint": {
+        "width": 1.08,
+        "height": 0.52,
+        "offset_x": 0.025,
+        "inset": 0.22,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "bar_stone00",
+      "frame": 2,
+      "region": [
+        1283,
+        439,
+        1426,
+        537
+      ],
+      "footprint": {
+        "width": 1.08,
+        "height": 0.52,
+        "offset_x": 0.025,
+        "inset": 0.22,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "bar_stone00",
+      "frame": 3,
+      "region": [
+        19,
+        616,
+        182,
+        706
+      ],
+      "footprint": {
+        "width": 1.08,
+        "height": 0.52,
+        "offset_x": 0.025,
+        "inset": 0.22,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "bar_stone_big00",
+      "frame": 0,
+      "region": [
+        200,
+        608,
+        359,
+        714
+      ],
+      "footprint": {
+        "width": 1.08,
+        "height": 0.52,
+        "offset_x": 0.025,
+        "inset": 0.22,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "bar_stone_big00",
+      "frame": 1,
+      "region": [
+        380,
+        604,
+        540,
+        714
+      ],
+      "footprint": {
+        "width": 1.08,
+        "height": 0.52,
+        "offset_x": 0.025,
+        "inset": 0.22,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "bar_stone_big00",
+      "frame": 2,
+      "region": [
+        564,
+        610,
+        709,
+        706
+      ],
+      "footprint": {
+        "width": 1.08,
+        "height": 0.52,
+        "offset_x": 0.025,
+        "inset": 0.22,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "bar_stone_big00",
+      "frame": 3,
+      "region": [
+        737,
+        621,
+        893,
+        704
+      ],
+      "footprint": {
+        "width": 1.08,
+        "height": 0.52,
+        "offset_x": 0.025,
+        "inset": 0.22,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "bridge_wood00",
+      "frame": 0,
+      "region": [
+        912,
+        606,
+        1078,
+        720
+      ],
+      "footprint": {
+        "width": 1.06,
+        "height": 0.47,
+        "offset_x": 0.025,
+        "inset": 0.2,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "bridge_wood00",
+      "frame": 1,
+      "region": [
+        1092,
+        603,
+        1259,
+        719
+      ],
+      "footprint": {
+        "width": 1.06,
+        "height": 0.47,
+        "offset_x": 0.025,
+        "inset": 0.2,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "bridge_wood00",
+      "frame": 2,
+      "region": [
+        1274,
+        605,
+        1435,
+        720
+      ],
+      "footprint": {
+        "width": 1.06,
+        "height": 0.47,
+        "offset_x": 0.025,
+        "inset": 0.2,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "bridge_wood00",
+      "frame": 3,
+      "region": [
+        17,
+        772,
+        181,
+        886
+      ],
+      "footprint": {
+        "width": 1.06,
+        "height": 0.47,
+        "offset_x": 0.025,
+        "inset": 0.2,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "broken_road0",
+      "frame": 0,
+      "region": [
+        204,
+        788,
+        347,
+        874
+      ],
+      "footprint": {
+        "width": 1.06,
+        "height": 0.62,
+        "offset_x": 0.015,
+        "inset": 0.29,
+        "drop": 0.5
+      }
+    },
+    {
+      "animation": "broken_road0",
+      "frame": 1,
+      "region": [
+        381,
+        792,
+        528,
+        867
+      ],
+      "footprint": {
+        "width": 1.06,
+        "height": 0.62,
+        "offset_x": 0.015,
+        "inset": 0.29,
+        "drop": 0.5
+      }
+    },
+    {
+      "animation": "broken_road0",
+      "frame": 2,
+      "region": [
+        569,
+        796,
+        705,
+        866
+      ],
+      "footprint": {
+        "width": 1.06,
+        "height": 0.62,
+        "offset_x": 0.015,
+        "inset": 0.29,
+        "drop": 0.5
+      }
+    },
+    {
+      "animation": "broken_road0",
+      "frame": 3,
+      "region": [
+        745,
+        795,
+        882,
+        863
+      ],
+      "footprint": {
+        "width": 1.06,
+        "height": 0.62,
+        "offset_x": 0.015,
+        "inset": 0.29,
+        "drop": 0.5
+      }
+    },
+    {
+      "animation": "food",
+      "frame": 0,
+      "region": [
+        935,
+        796,
+        1052,
+        865
+      ],
+      "footprint": {
+        "width": 1.1,
+        "height": 0.52,
+        "offset_x": 0.025,
+        "inset": 0.22,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "food_big",
+      "frame": 0,
+      "region": [
+        1097,
+        788,
+        1258,
+        875
+      ],
+      "footprint": {
+        "width": 1.1,
+        "height": 0.52,
+        "offset_x": 0.025,
+        "inset": 0.22,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "wood",
+      "frame": 0,
+      "region": [
+        1282,
+        783,
+        1426,
+        880
+      ],
+      "footprint": {
+        "width": 1.1,
+        "height": 0.52,
+        "offset_x": 0.025,
+        "inset": 0.22,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "wood_big",
+      "frame": 0,
+      "region": [
+        26,
+        944,
+        175,
+        1040
+      ],
+      "footprint": {
+        "width": 1.1,
+        "height": 0.52,
+        "offset_x": 0.025,
+        "inset": 0.22,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "money",
+      "frame": 0,
+      "region": [
+        205,
+        945,
+        345,
+        1035
+      ],
+      "footprint": {
+        "width": 1.1,
+        "height": 0.52,
+        "offset_x": 0.025,
+        "inset": 0.22,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "money_big",
+      "frame": 0,
+      "region": [
+        375,
+        942,
+        539,
+        1033
+      ],
+      "footprint": {
+        "width": 1.1,
+        "height": 0.52,
+        "offset_x": 0.025,
+        "inset": 0.22,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "gas",
+      "frame": 0,
+      "region": [
+        575,
+        956,
+        694,
+        1028
+      ],
+      "footprint": {
+        "width": 1.1,
+        "height": 0.52,
+        "offset_x": 0.025,
+        "inset": 0.22,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "gas_big",
+      "frame": 0,
+      "region": [
+        737,
+        951,
+        889,
+        1034
+      ],
+      "footprint": {
+        "width": 1.1,
+        "height": 0.52,
+        "offset_x": 0.025,
+        "inset": 0.22,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "build_place",
+      "frame": 0,
+      "region": [
+        912,
+        933,
+        1077,
+        1048
+      ],
+      "footprint": {
+        "width": 1.08,
+        "height": 0.5,
+        "offset_x": 0.025,
+        "inset": 0.21,
+        "drop": 1
+      }
+    }
+  ]
+}
