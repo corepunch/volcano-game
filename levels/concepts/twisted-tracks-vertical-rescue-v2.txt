@@ -1,0 +1,78 @@
+Twisted Tracks: construction kits and corrected crossings
+
+Visual concept only. No runtime gameplay, route, animation or background change.
+The earlier concept and production background are retained for comparison.
+
+Generation: built-in ImageGen edit, using both the first annotated concept and
+levels/background-history/twisted-tracks-expanded.png. The latter preserves the
+eastern wreckage before the sandy access corridor was added. The exact prompt
+is saved beside this file.
+
+Crossing review and design requirements
+1. Southeast, beside the blue train: restore red rails and debris beneath the
+   later sandy shortcut. A supported timber footbridge crosses OVER those rails
+   from the southern perimeter to the eastern landing. Dirt ends at the landing;
+   planks, cross beams, posts and shadows explain the crossing's height.
+2. Central southern entrance: make a short supported plank crossing over the
+   low rail, instead of painting earth through a steel tube.
+3. Central lower passage: keep it on exposed ground, beneath a braced yellow
+   support with real headroom. Any intersecting low rail needs a plank crossing
+   or a real opening. The foreground beam hides the passing actor correctly.
+4. Upper catwalk: route arrows must rest on completed physical decking. An
+   unfinished gap blocks its route until its construction job is complete.
+5. Train-side platform: connect its exit to the southeast bridge. Rescue pockets
+   cannot be isolated decorations. Ladders need upper and lower landings.
+6. Perimeter and western dirt paths: keep earth where it follows exposed ground.
+   A bridge is needed only where an actual rail/debris obstruction is crossed.
+
+Construction kit mechanic: proposed first prototype
+One clickable task family with several authored results. At each missing link,
+place a box of parts on the reachable side: brackets, rope, timber or ladder
+sections. Clicking assigns an ordinary worker to assemble that location's
+predefined ladder, bridge or brace. There is no construction choice menu.
+
+Unbuilt: crate + visibly missing/blocked connection; no path beyond it.
+Queued/working: use the ordinary task queue, worker and resource requirements.
+Built: crate is consumed, the authored structure appears and the link opens.
+The main illustration shows completed routes; an open crate alongside a landing
+is explanatory set dressing. The before/after study explains the actual states.
+
+For simplicity, the crate is the site task rather than a new global resource.
+Use existing wood/food costs if costs are needed; exact balancing is undecided.
+Do not add separate rope, nails, ladder, bridge or parts inventories. Appearance
+can vary naturally while every kit follows the same interaction rule.
+Keep ordinary clearance jobs, such as opening a fence, where physically useful;
+the kit unifies construction without making every object identical.
+
+Validation requirements for a future playable implementation
+- Reach the crate's work position from the open side before construction.
+- Apply cost once, support queue cancellation, prevent duplicate assignments.
+- Construction must open only the intended route, with no nearby bypass.
+- Keep ground and raised links separate at screen-space crossings.
+- Preserve a viable resource order for all mandatory kits; no kit needed to
+  reach the only materials that can build that same kit.
+- Give workers and rescued tourists working ascent, descent and return routes.
+- Add foreground occlusion for underpasses and actor-above-deck rendering.
+- Author production prop states together as an atlas where needed; this concept
+  and its inset sketches are not production assets or a playable climb animation.
+
+Visual review of generated revision
+The southeastern sandy shortcut is replaced with a clearly supported timber
+crossing, with red rails visible beneath it. The train rescue platform has a
+wooden connection to that crossing. The upper catwalk gap is now decked, the
+central entrance has boards, and the underpass has visible timber bracing.
+The kit and its before/after example communicate a single construction job.
+The resulting connected catwalk is more extensive than the minimum prototype;
+start implementation with one short crossing and one ladder rather than assuming
+that every illustrated span is required for the first playable test.
+This is an annotated concept sheet, not a measured background or route graph.
+
+Comparable mechanics, checked 2026-10-19
+GameHouse's Rescue Team 5 guide documents collecting resources, clearing
+obstructions and spending wood to repair bridges. Its Roads of Rome: New
+Generation guide documents workers constructing bridges and gathering materials.
+These support the familiar gather/build/open-route loop, not a claim that either
+game uses this exact shared construction-crate mechanic. The site-specific
+crate-to-ladder/bridge/brace interaction is this prototype's design proposal.
+https://www.gamehouse.com/blog/2015/10/rescue-team-5-walkthrough/
+https://www.gamehouse.com/blog/2016/02/roads-of-rome-new-generation-walkthrough/
