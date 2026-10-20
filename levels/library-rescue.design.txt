@@ -1,5 +1,17 @@
 LIBRARY RESCUE — replacement art and layout, 2026-10-19
 
+ARCHITECTURAL CONTINUITY CORRECTION — 2026-10-20
+Built-in ImageGen edited the existing background to separate the two-storey
+rear-center and central-right fragments from adjacent single-storey wings.
+Distinct intermediate slabs, aligned supports, exposed slab edges and shadows
+prevent upper paving and balconies from merging visually into ground-level roofs
+or paths. Central-left roof fragments now have clearer eaves and broken ends.
+Staging pads and main routes are retained. Gameplay inspection caught three
+central civilians overlapping the clarified upper-floor edge. Their rescue pocket
+and the dog now occupy the ground passage at screen y=230..260; the central
+route ends at y=230, still behind barrier 25 at y=310.
+Edit specification: library-rescue-architecture.prompt.txt.
+
 User correction: the initial aerial background had incompatible scale/projection,
 was too close to the real site's composition, and changed the HQ unnecessarily.
 The active mission is now an original fictional municipal library collapse.
