@@ -476,8 +476,8 @@
       "sheet": "bridges.generated.png",
       "extraction": "rect",
       "region": [
-        0,
-        4,
+        17,
+        35,
         325,
         250
       ]
@@ -489,9 +489,9 @@
       "extraction": "rect",
       "region": [
         325,
-        25,
+        31,
         630,
-        241
+        250
       ]
     },
     {
@@ -501,9 +501,9 @@
       "extraction": "rect",
       "region": [
         630,
-        25,
-        934,
-        248
+        29,
+        940,
+        249
       ]
     },
     {
@@ -512,9 +512,9 @@
       "sheet": "bridges.generated.png",
       "extraction": "rect",
       "region": [
-        941,
-        15,
-        1240,
+        940,
+        27,
+        1236,
         249
       ]
     },
@@ -524,10 +524,10 @@
       "sheet": "bridges.generated.png",
       "extraction": "rect",
       "region": [
-        0,
+        31,
         250,
-        325,
-        620
+        322,
+        619
       ]
     },
     {
@@ -536,10 +536,10 @@
       "sheet": "bridges.generated.png",
       "extraction": "rect",
       "region": [
-        325,
-        257,
-        630,
-        619
+        326,
+        250,
+        629,
+        612
       ]
     },
     {
@@ -549,9 +549,9 @@
       "extraction": "rect",
       "region": [
         630,
-        272,
-        940,
-        620
+        252,
+        925,
+        613
       ]
     },
     {
@@ -560,9 +560,9 @@
       "sheet": "bridges.generated.png",
       "extraction": "rect",
       "region": [
-        940,
-        250,
-        1238,
+        962,
+        260,
+        1253,
         619
       ]
     },
@@ -572,10 +572,10 @@
       "sheet": "bridges.generated.png",
       "extraction": "rect",
       "region": [
-        14,
+        13,
         620,
         325,
-        840
+        830
       ]
     },
     {
@@ -585,9 +585,9 @@
       "extraction": "rect",
       "region": [
         325,
-        620,
+        626,
         630,
-        830
+        838
       ]
     },
     {
@@ -599,7 +599,7 @@
         630,
         620,
         940,
-        840
+        824
       ]
     },
     {
@@ -611,7 +611,7 @@
         940,
         620,
         1241,
-        840
+        826
       ]
     },
     {
@@ -621,7 +621,7 @@
       "extraction": "rect",
       "region": [
         0,
-        840,
+        849,
         325,
         1254
       ]
@@ -634,8 +634,8 @@
       "region": [
         325,
         849,
-        630,
-        1254
+        629,
+        1229
       ]
     },
     {
@@ -645,9 +645,9 @@
       "extraction": "rect",
       "region": [
         630,
-        845,
+        841,
         933,
-        1254
+        1206
       ]
     },
     {
@@ -656,10 +656,10 @@
       "sheet": "bridges.generated.png",
       "extraction": "rect",
       "region": [
-        943,
-        840,
-        1224,
-        1230
+        949,
+        843,
+        1248,
+        1200
       ]
     }
   ]
