@@ -9,20 +9,21 @@ import json
 import math
 from pathlib import Path
 import struct
+import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def check():
     dimensions = json.loads((ROOT / "assets/road-dimensions.json").read_text())
-    measurements = json.loads((ROOT / "levels/road-width-measurements.json").read_text())
-    expected = {p.stem.replace(".level", "") for p in (ROOT / "levels").glob("*.level.json")
-                if json.loads(p.read_text())["background"].startswith("@")}
+    measurements = json.loads((ROOT / "art-source/road-width-measurements.json").read_text())
+    expected = {p.parent.name for p in (ROOT / "missions").glob("*/mission.xml")
+                if (p.parent / ET.parse(p).getroot().get("background", "")).is_file()}
     if {entry["level"] for entry in measurements["images"]} != expected:
         raise ValueError("road calipers must cover every custom-painted level")
     target, tolerance = dimensions["road_clear_width"], dimensions["road_width_tolerance"]
     for entry in measurements["images"]:
-        path = ROOT / "levels" / (entry["level"] + ".png")
+        path = ROOT / "missions" / entry["level"] / "background.png"
         data = path.read_bytes()
         if hashlib.sha256(data).hexdigest() != entry["sha256"]:
             raise ValueError(f"re-measure changed artwork: {path.name}")

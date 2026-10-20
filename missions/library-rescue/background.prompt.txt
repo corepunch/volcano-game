@@ -16,3 +16,10 @@ Bare logistics pad centered (940,690), roughly 145 x 100 pixels, connected by sh
 All named pads are EMPTY for runtime sprites. Clear routes must visibly continue under every future removable obstruction. Build the ruin islands BETWEEN paths; do not put intact slabs, beams, wall faces, bookcases, roof sheets, bushes or pits across any route center. Preserve floor-tile traces and damaged curbs so the rescue paths look like the library's old access and corridors, not a new highway grid.
 Do not paint HQ, station tents, production buildings, resource piles, discrete clearable barriers, people, animals, workers, vehicles, cranes, text, icons, arrows, labels, grids, UI or watermark. No bodies, injuries, towers, trident-shaped steel facades, memorials or recognizable New York skyline. Keep all play clear of HUD corners x=0..446,y=0..100 and x=1010..1366,y=0..100.
 Generate one cohesive finished 16:9 game background.
+
+
+2026-10-20 road-width revision: ordinary route surfaces use 24 logical pixels on
+a 1366x768 playfield (about 29 pixels in this 1672x941 plate, 59 in the 2x
+background). Exact ImageGen edit prompts: art-source/road-width/library-rescue.prompts.json.
+Shared dimensions: assets/road-dimensions.json and docs/road-and-bridge-sizes.md.
+Preserve wide intentional courtyards/clearings; these are not ordinary roads.

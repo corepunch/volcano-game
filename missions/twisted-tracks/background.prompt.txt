@@ -13,3 +13,10 @@ Input 1 EDIT TARGET: the clean production map levels/twisted-tracks-interior.png
 Make ONLY ONE new empty service clearing at logical TOP-LEFT screen (740,675) on a 1366x768 canvas, equivalent to about pixel (906,827) on the supplied 1672x941 image. This is just SOUTH of the lower horizontal service road, between the existing lower-left round pad near pixel(580,805) and the existing lower-right round pad near pixel(1370,805).
 Clear a flat oval 115 logical pixels wide by 90 high centered at (740,675), removing the local small yellow broken support piece, nearby red scrap fragments and a little shrubbery inside that oval only. Keep all major red rails, tall towers and big wreck islands unchanged. Fill the oval with the same tan gravel/earth as the other empty service pads. Add a short 25px-wide dirt spur leading from this oval's north edge to the existing lower horizontal road near logical(740,625). Keep the road itself unchanged and open. The pad should remain inside the image and not touch the bottom boundary. Do not accidentally widen the whole lower road or erase the big central wreck island. All other existing pads and roads must remain as they are.
 No people, buildings, supplies, clickable debris, text, labels, UI, or markers. One narrowly targeted additional blank building pad, same production background quality.
+
+
+2026-10-20 road-width revision: ordinary route surfaces use 24 logical pixels on
+a 1366x768 playfield (about 29 pixels in this 1672x941 plate, 59 in the 2x
+background). Exact ImageGen edit prompts: art-source/road-width/twisted-tracks.prompts.json.
+Shared dimensions: assets/road-dimensions.json and docs/road-and-bridge-sizes.md.
+Preserve wide intentional courtyards/clearings; these are not ordinary roads.

@@ -1,0 +1,186 @@
+{
+  "format": "volcano-road-calipers-1",
+  "method": "Manual visual calipers, top-left source coordinates, perpendicular to road. Approximate painterly edges (about 2 source pixels); excludes curbs, shoulders, junctions and clearings. These are sampled measurements, not segmentation of every road pixel.",
+  "images": [
+    {
+      "level": "emerald-falls",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "sha256": "c4acef4a7efb6b66b23bd1e2aa240804de9636aab649fb16d33fcbd0311e62aa",
+      "calipers": [
+        {
+          "name": "main road",
+          "endpoints": [
+            [
+              550,
+              426
+            ],
+            [
+              550,
+              454
+            ]
+          ]
+        },
+        {
+          "name": "south branch",
+          "endpoints": [
+            [
+              780,
+              550
+            ],
+            [
+              811,
+              550
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "level": "forest-mayday",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "sha256": "34cb8c073423d9d8340b406e8ec1e546cb8b1025916f627c71ea4cc3f3512926",
+      "calipers": [
+        {
+          "name": "main road",
+          "endpoints": [
+            [
+              450,
+              536
+            ],
+            [
+              450,
+              566
+            ]
+          ]
+        },
+        {
+          "name": "south branch",
+          "endpoints": [
+            [
+              804,
+              620
+            ],
+            [
+              834,
+              620
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "level": "ancient-echoes",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "sha256": "850cae06cb17fda0e2ce9c3a226ce51fb055741a7cf3191d30fa6ab5f26b383b",
+      "calipers": [
+        {
+          "name": "west approach",
+          "endpoints": [
+            [
+              350,
+              540
+            ],
+            [
+              350,
+              569
+            ]
+          ]
+        },
+        {
+          "name": "temple approach",
+          "endpoints": [
+            [
+              950,
+              548
+            ],
+            [
+              950,
+              577
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "level": "twisted-tracks",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "sha256": "be98b4e90147b621fe0c23fa54a8abfe9cb759a4c577e168e57b133ed54e0f56",
+      "calipers": [
+        {
+          "name": "northwest approach",
+          "endpoints": [
+            [
+              350,
+              230
+            ],
+            [
+              336,
+              254
+            ]
+          ]
+        },
+        {
+          "name": "southern loop",
+          "endpoints": [
+            [
+              900,
+              756
+            ],
+            [
+              900,
+              787
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "level": "library-rescue",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "sha256": "ae0645d79d29bd166e4a80daa74f80b5796c2afa8ef85f0fdc3dd21d2978baa2",
+      "calipers": [
+        {
+          "name": "asphalt street",
+          "endpoints": [
+            [
+              1000,
+              704
+            ],
+            [
+              1000,
+              734
+            ]
+          ]
+        },
+        {
+          "name": "middle brick approach",
+          "endpoints": [
+            [
+              877,
+              590
+            ],
+            [
+              908,
+              590
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}
