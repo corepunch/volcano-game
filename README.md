@@ -122,7 +122,11 @@ and the HD app use that directory. Upscale settings and source/output hashes
 are recorded in [`levels/retina-backgrounds.json`](levels/retina-backgrounds.json).
 
 The ImageGen source sheets, exact prompts and extraction manifest live in
-[`assets/hd-static`](assets/hd-static). `tools/build_hd_assets.py` requires Pillow
+[`assets/hd-static`](assets/hd-static). The HD and character asset Make targets automatically create an isolated Python
+environment in `build/python-venv` and install Pillow from
+`requirements-assets.txt` (internet access is needed on the first build).
+`make clean` removes this environment along with the other build outputs.
+`tools/build_hd_assets.py` requires Pillow
 and packs the authored frames into `build/hd-assets/texture/lazy/volcano-static.png`.
 Texture regions have two pixels per world unit, including padding for shadows;
 frame order and frame rates stay unchanged. Optional per-frame `pivot: [x,y]`

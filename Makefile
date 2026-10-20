@@ -13,6 +13,8 @@ AUDIT_BINARY ?= build/audit_levels
 SOURCES = src/main.c $(CORE_SOURCES) $(TEST_SOURCES)
 HD_ASSETS = build/hd-assets
 CHARACTER_ASSETS = build/kenney-assets
+PYTHON ?= python3
+ASSET_PYTHON = build/python-venv/bin/python3
 
 .PHONY: all app run run-emerald-falls run-forest-mayday test test-levels level-example emerald-falls forest-mayday forest-mayday-app analyze-levels sanitize clean
 .PHONY: hd-assets hd-levels hd-app run-emerald-falls-hd run-forest-mayday-hd test-hd character-assets
@@ -103,13 +105,17 @@ library-rescue-app: character-assets all build/levels/library-rescue.lvl.rules b
 	python3 tools/package_custom_level.py "Library Rescue" build/levels/library-rescue.lvl "$(CHARACTER_ASSETS)"
 test-library-rescue: character-assets build/check_custom_level build/levels/library-rescue.lvl.rules build/levels/library-rescue.png build/levels/library-rescue-props.png
 	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(CHARACTER_ASSETS)" build/levels/library-rescue.lvl --library-rescue
-hd-assets:
-	python3 tools/build_hd_assets.py --assets "$(ASSETS)" --output "$(HD_ASSETS)"
-	python3 tools/pack_rescue_characters.py --assets "$(HD_ASSETS)" --output "$(HD_ASSETS)"
+build/python-venv/.dependencies: requirements-assets.txt
+	$(PYTHON) -m venv build/python-venv
+	$(ASSET_PYTHON) -m pip install -r requirements-assets.txt
+	@touch $@
+hd-assets: build/python-venv/.dependencies
+	$(ASSET_PYTHON) tools/build_hd_assets.py --assets "$(ASSETS)" --output "$(HD_ASSETS)"
+	$(ASSET_PYTHON) tools/pack_rescue_characters.py --assets "$(HD_ASSETS)" --output "$(HD_ASSETS)"
 hd-pivot-previews: hd-assets
-	python3 tools/preview_hd_pivots.py --assets "$(HD_ASSETS)"
-character-assets:
-	python3 tools/pack_rescue_characters.py --assets "$(ASSETS)" --output "$(CHARACTER_ASSETS)"
+	$(ASSET_PYTHON) tools/preview_hd_pivots.py --assets "$(HD_ASSETS)"
+character-assets: build/python-venv/.dependencies
+	$(ASSET_PYTHON) tools/pack_rescue_characters.py --assets "$(ASSETS)" --output "$(CHARACTER_ASSETS)"
 hd-levels:
 	python3 tools/build_hd_levels.py
 hd-app: all hd-assets hd-levels
