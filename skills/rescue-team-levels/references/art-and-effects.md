@@ -49,7 +49,7 @@ Adapt this brief to the actual mission rather than repeating its locations:
 > polished casual-PC-game detail, readable warm dirt trails and integrated
 > natural shadows. State the user's setting and focal static set piece. Specify
 > route centerlines and clearing centers in top-left design coordinates, trail
-> width around 40–50 pixels, bare HQ/building pads, rescue clearings and any
+> clear width 32 logical pixels (28–36 accepted), shared across levels, bare HQ/building pads, rescue clearings and any
 > missing bridge gap. Keep gameplay clear of the HUD corners. Bake the forest,
 > plants, rocks and overlapping shadows together. Leave trail centers and
 > interactive pads bare for runtime objects. No baked people, gameplay buildings,
@@ -170,3 +170,11 @@ apply that lip offset to a directly measured impact center.
 Inspect particles at several times, under pause, and after restart. Current
 samples: Emerald Falls has six marked foam anchors; Forest Mayday's stream has
 separate foam/glint placements. Copy effect syntax, not their coordinates.
+
+## Shared road and bridge sizes
+
+Read [the road and bridge drawing spec](../../../docs/road-and-bridge-sizes.md)
+before drawing roads or bridge sprites. Measure clear surface width perpendicular
+to travel. The 32-pixel road standard applies across levels; the HD bridge deck
+is 64 texture pixels wide, independent of railings and shadows. Record actual
+source cross-sections and inspect broken and repaired crossings.

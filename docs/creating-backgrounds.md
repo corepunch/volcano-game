@@ -54,8 +54,10 @@ not measured coverage guarantees. The retained images show the accepted result.
 
 Keep a short formal public approach near headquarters. Deeper rescue access
 should look improvised: narrow irregular dirt, crushed grass, gravel, ruts and
-swept gaps among debris. Request roughly 28–34 logical pixels of bare trail
-width, ragged uncurbed edges, broken-fence openings and bare rescue pockets.
+swept gaps among debris. Use the shared [road and bridge dimensions](road-and-bridge-sizes.md):
+32 logical pixels of clear road width (28–36 acceptance range), measured
+perpendicular to travel. Request this same width in every level, with ragged
+uncurbed edges, broken-fence openings and bare rescue pockets.
 Retain occasional cracked paving where it belongs to the original tourist site.
 Specify the desired surface separately for each branch; a generic request for
 "paths" tended to produce wide, tidy promenades everywhere.
