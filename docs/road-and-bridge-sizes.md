@@ -10,8 +10,8 @@ not count. Damage must not change the intended deck width or attachment points.
 
 | Element | Logical size | 1672 × 941 background | 3344 × 1882 background / HD texture |
 | --- | --- | --- | --- |
-| Ordinary single rescue road / trail, clear width | 32 (accept 28–36) | approximately 39 (34–44) | approximately 78 (69–88) |
-| Bridge usable deck, perpendicular to travel | exactly 32 | approximately 39 | exactly 64 texture pixels |
+| Ordinary single rescue road / trail, clear width | 24 (accept 22–26) | approximately 29 (27–32) | approximately 59 (54–64) |
+| Bridge usable deck, perpendicular to travel | exactly 24 | approximately 29 | exactly 48 texture pixels |
 | Short bridge deck span, along travel | 88 | approximately 108 | exactly 176 texture pixels |
 | Bridge art envelope, excluding shadow | up to 104 × 56 horizontal; 56 × 104 vertical | — | up to 208 × 112; 112 × 208 |
 
@@ -35,7 +35,7 @@ Manual edge measurements in the 1672 × 941 source PNGs, top-left coordinates:
 | Forest Mayday | (1000, 534) → (1000, 571) | 37 | 30.20 |
 
 Edges in painterly art are approximate (about ±2 source pixels). These straight
-sections share a 32-pixel nominal road class and fit the 28–36 tolerance. The
+sections share a previous, wider road class and must be narrowed to the retail-sized standard. The
 Retina images preserve the same geometry at twice the source resolution.
 Convert a vertical image distance with `logical = source * 768 / image_height`;
 convert a horizontal one with `logical = source * 1366 / image_width`.
@@ -50,9 +50,9 @@ on the road centerline, rather than centering the full shadowed sprite.
 
 Include these numeric requirements in every bridge atlas drawing prompt:
 
-> Shared 1366 × 768 logical game canvas. Ordinary road clear width is 32 logical
-> pixels. Bridge clear deck width is 32 pixels, span is 88 pixels; HD texture
-> deck dimensions are 176 × 64 pixels horizontal or 64 × 176 vertical.
+> Shared 1366 × 768 logical game canvas. Ordinary road clear width is 24 logical
+> pixels. Bridge clear deck width is 24 pixels, span is 88 pixels; HD texture
+> deck dimensions are 176 × 48 pixels horizontal or 48 × 176 vertical.
 > Rails/abutments may extend outside the deck, within a 104 × 56 logical-pixel
 > horizontal envelope, transposed for vertical bridges. Only horizontal and
 > vertical travel axes. Open level approaches, no stairs or crosswise thresholds
@@ -69,8 +69,23 @@ authored repair state. Do not rotate one bridge to invent another orientation.
 
 Measure at least two straight route cross-sections before accepting a painting;
 record source coordinates, image dimensions and converted logical widths. Keep
-normal routes within 28–36 pixels outside transitions and clearings. Measure
+normal routes within 22–26 pixels outside transitions and clearings. Measure
 both sides of every crossing and compare the usable deck against those routes.
 Inspect broken and repaired renders at the actual game scale. New or revised
 backgrounds must satisfy this standard, including non-forest themes. Existing
 unmeasured paintings must be audited before claiming compliance.
+
+## Retail comparison and pixel density
+
+The original 1366 × 768 plates `001_0.jpg`, `103_0.jpg`, `207_0.jpg` and
+`311_0.jpg` have ordinary straight asphalt surfaces approximately 20–24 pixels
+wide, excluding the dirt/dark shoulders. Example cross-sections (top-left):
+`001`: x=850, y=360–380; `103`: x=650, y=463–485; `207`: x=80,
+y=335–357; `311`: x=200, y=464–485. This is a sampled comparison, not a
+claim of pixel-exact equality across every retail map. The shared target is
+24 logical pixels. `assets/road-dimensions.json` is the machine-readable authority.
+
+A 2× sprite atlas uses 48 texture pixels for a 24-pixel deck. Backgrounds of
+1672 × 941 use about 29 source pixels, and their 3344 × 1882 Retina copies
+use about 59. These differ because backgrounds map to the 1366 × 768 canvas.
+Never double logical widths when adding Retina artwork.

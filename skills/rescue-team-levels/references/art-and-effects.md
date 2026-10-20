@@ -49,7 +49,7 @@ Adapt this brief to the actual mission rather than repeating its locations:
 > polished casual-PC-game detail, readable warm dirt trails and integrated
 > natural shadows. State the user's setting and focal static set piece. Specify
 > route centerlines and clearing centers in top-left design coordinates, trail
-> clear width 32 logical pixels (28–36 accepted), shared across levels, bare HQ/building pads, rescue clearings and any
+> clear width 24 logical pixels (22–26 accepted), shared across levels, bare HQ/building pads, rescue clearings and any
 > missing bridge gap. Keep gameplay clear of the HUD corners. Bake the forest,
 > plants, rocks and overlapping shadows together. Leave trail centers and
 > interactive pads bare for runtime objects. No baked people, gameplay buildings,
@@ -175,6 +175,6 @@ separate foam/glint placements. Copy effect syntax, not their coordinates.
 
 Read [the road and bridge drawing spec](../../../docs/road-and-bridge-sizes.md)
 before drawing roads or bridge sprites. Measure clear surface width perpendicular
-to travel. The 32-pixel road standard applies across levels; the HD bridge deck
-is 64 texture pixels wide, independent of railings and shadows. Record actual
+to travel. The 24-pixel road standard applies across levels; the HD bridge deck
+is 48 texture pixels wide, independent of railings and shadows. Record actual
 source cross-sections and inspect broken and repaired crossings.

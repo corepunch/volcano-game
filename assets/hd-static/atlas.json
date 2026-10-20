@@ -476,46 +476,74 @@
       "sheet": "bridges.generated.png",
       "extraction": "rect",
       "region": [
-        17,
-        35,
-        325,
-        250
-      ]
-    },
-    {
-      "animation": "bridge_wood00",
-      "frame": 1,
-      "sheet": "bridges.generated.png",
-      "extraction": "rect",
-      "region": [
-        325,
-        31,
-        630,
-        250
-      ]
-    },
-    {
-      "animation": "bridge_wood00",
-      "frame": 2,
-      "sheet": "bridges.generated.png",
-      "extraction": "rect",
-      "region": [
-        630,
-        29,
-        940,
-        249
-      ]
-    },
-    {
-      "animation": "bridge_wood00",
-      "frame": 3,
-      "sheet": "bridges.generated.png",
-      "extraction": "rect",
-      "region": [
-        940,
+        0,
         27,
-        1236,
-        249
+        325,
+        227
+      ],
+      "travel_axis": "horizontal",
+      "deck_region": [
+        47,
+        126,
+        287,
+        176
+      ]
+    },
+    {
+      "animation": "bridge_wood00",
+      "frame": 1,
+      "sheet": "bridges.generated.png",
+      "extraction": "rect",
+      "region": [
+        325,
+        25,
+        635,
+        227
+      ],
+      "travel_axis": "horizontal",
+      "deck_region": [
+        358,
+        126,
+        598,
+        176
+      ]
+    },
+    {
+      "animation": "bridge_wood00",
+      "frame": 2,
+      "sheet": "bridges.generated.png",
+      "extraction": "rect",
+      "region": [
+        635,
+        33,
+        943,
+        225
+      ],
+      "travel_axis": "horizontal",
+      "deck_region": [
+        670,
+        126,
+        910,
+        176
+      ]
+    },
+    {
+      "animation": "bridge_wood00",
+      "frame": 3,
+      "sheet": "bridges.generated.png",
+      "extraction": "rect",
+      "region": [
+        943,
+        21,
+        1242,
+        239
+      ],
+      "travel_axis": "horizontal",
+      "deck_region": [
+        978,
+        126,
+        1218,
+        176
       ]
     },
     {
@@ -524,34 +552,55 @@
       "sheet": "bridges.generated.png",
       "extraction": "rect",
       "region": [
-        31,
-        250,
-        322,
-        619
-      ]
-    },
-    {
-      "animation": "bridge_wood01",
-      "frame": 1,
-      "sheet": "bridges.generated.png",
-      "extraction": "rect",
-      "region": [
-        326,
-        250,
-        629,
-        612
-      ]
-    },
-    {
-      "animation": "bridge_wood01",
-      "frame": 2,
-      "sheet": "bridges.generated.png",
-      "extraction": "rect",
-      "region": [
-        630,
+        0,
         252,
-        925,
-        613
+        325,
+        620
+      ],
+      "travel_axis": "vertical",
+      "deck_region": [
+        127,
+        294,
+        207,
+        526
+      ]
+    },
+    {
+      "animation": "bridge_wood01",
+      "frame": 1,
+      "sheet": "bridges.generated.png",
+      "extraction": "rect",
+      "region": [
+        325,
+        254,
+        635,
+        619
+      ],
+      "travel_axis": "vertical",
+      "deck_region": [
+        438,
+        294,
+        518,
+        526
+      ]
+    },
+    {
+      "animation": "bridge_wood01",
+      "frame": 2,
+      "sheet": "bridges.generated.png",
+      "extraction": "rect",
+      "region": [
+        636,
+        248,
+        943,
+        620
+      ],
+      "travel_axis": "vertical",
+      "deck_region": [
+        750,
+        294,
+        830,
+        526
       ]
     },
     {
@@ -560,10 +609,17 @@
       "sheet": "bridges.generated.png",
       "extraction": "rect",
       "region": [
-        962,
-        260,
-        1253,
-        619
+        943,
+        240,
+        1240,
+        620
+      ],
+      "travel_axis": "vertical",
+      "deck_region": [
+        1058,
+        294,
+        1138,
+        526
       ]
     },
     {
@@ -572,10 +628,17 @@
       "sheet": "bridges.generated.png",
       "extraction": "rect",
       "region": [
-        13,
+        0,
         620,
         325,
-        830
+        838
+      ],
+      "travel_axis": "horizontal",
+      "deck_region": [
+        22,
+        700,
+        312,
+        788
       ]
     },
     {
@@ -585,9 +648,16 @@
       "extraction": "rect",
       "region": [
         325,
-        626,
-        630,
-        838
+        620,
+        635,
+        836
+      ],
+      "travel_axis": "horizontal",
+      "deck_region": [
+        333,
+        700,
+        623,
+        788
       ]
     },
     {
@@ -596,10 +666,17 @@
       "sheet": "bridges.generated.png",
       "extraction": "rect",
       "region": [
-        630,
+        635,
         620,
-        940,
-        824
+        943,
+        838
+      ],
+      "travel_axis": "horizontal",
+      "deck_region": [
+        645,
+        700,
+        935,
+        788
       ]
     },
     {
@@ -608,10 +685,17 @@
       "sheet": "bridges.generated.png",
       "extraction": "rect",
       "region": [
-        940,
+        943,
         620,
-        1241,
-        826
+        1243,
+        840
+      ],
+      "travel_axis": "horizontal",
+      "deck_region": [
+        953,
+        700,
+        1243,
+        788
       ]
     },
     {
@@ -621,9 +705,16 @@
       "extraction": "rect",
       "region": [
         0,
-        849,
+        853,
         325,
         1254
+      ],
+      "travel_axis": "vertical",
+      "deck_region": [
+        125,
+        864,
+        209,
+        1164
       ]
     },
     {
@@ -633,9 +724,16 @@
       "extraction": "rect",
       "region": [
         325,
-        849,
-        629,
-        1229
+        852,
+        635,
+        1230
+      ],
+      "travel_axis": "vertical",
+      "deck_region": [
+        436,
+        864,
+        520,
+        1164
       ]
     },
     {
@@ -644,10 +742,17 @@
       "sheet": "bridges.generated.png",
       "extraction": "rect",
       "region": [
-        630,
-        841,
-        933,
-        1206
+        635,
+        851,
+        943,
+        1220
+      ],
+      "travel_axis": "vertical",
+      "deck_region": [
+        748,
+        864,
+        832,
+        1164
       ]
     },
     {
@@ -656,10 +761,17 @@
       "sheet": "bridges.generated.png",
       "extraction": "rect",
       "region": [
-        949,
-        843,
-        1248,
-        1200
+        943,
+        840,
+        1238,
+        1229
+      ],
+      "travel_axis": "vertical",
+      "deck_region": [
+        1056,
+        864,
+        1140,
+        1164
       ]
     }
   ]

@@ -1,0 +1,12 @@
+{
+  "format": "volcano-road-dimensions-1",
+  "logical_canvas": [
+    1366,
+    768
+  ],
+  "road_clear_width": 24,
+  "road_width_tolerance": 2,
+  "bridge_deck_span": 88,
+  "hd_texture_scale": 2,
+  "notes": "Clear surfaces exclude rails, shoulders and shadows. Retina changes density, not logical size."
+}

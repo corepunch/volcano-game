@@ -23,6 +23,31 @@ FRAMES = re.compile(r"frames\s*=\s*\{(.*?)\}\s*(addTextureInfoExNodes\(texinfo, 
 FIELD = re.compile(r"\b(dx|dy|u|v|cu|cv|w|h)\s*=\s*([\d.eE+-]+)")
 
 
+def sized_bridge_frame(original, entry, sprite, dimensions):
+    """Pack the measured clear deck at the shared world size, outside retail bounds."""
+    left, top, right, bottom = entry["deck_region"]
+    x0, y0, x1, y1 = sprite.info["source_box"]
+    if not (x0 <= left < right <= x1 and y0 <= top < bottom <= y1):
+        raise ValueError("bridge deck must be inside its authored source crop")
+    axis = entry["travel_axis"]
+    if axis not in ("horizontal", "vertical"):
+        raise ValueError("bridges must be horizontal or vertical")
+    span, width = dimensions["bridge_deck_span"], dimensions["road_clear_width"]
+    target = (span * 2, width * 2) if axis == "horizontal" else (width * 2, span * 2)
+    sx, sy = target[0] / (right - left), target[1] / (bottom - top)
+    if max(sx, sy) > 1:
+        raise ValueError("bridge artwork is too small for a native 2x deck")
+    size = (round(sprite.width * sx), round(sprite.height * sy))
+    # Use the rounded full-image scale for an exact mapping in the audit report.
+    sx, sy = size[0] / sprite.width, size[1] / sprite.height
+    deck = [(left - x0) * sx, (top - y0) * sy,
+            (right - x0) * sx, (bottom - y0) * sy]
+    frame = dict(original, w=size[0] / 2, h=size[1] / 2,
+                 dx=(deck[0] + deck[2]) / 4,
+                 dy=(size[1] - (deck[1] + deck[3]) / 2) / 2)
+    return sprite.resize(size, Image.Resampling.LANCZOS), frame, deck
+
+
 def anchored_frame(original, pivot, source_box, sprite_size):
     """Map an authored sheet-space pivot through trimming and 2x packing.
 
@@ -188,6 +213,7 @@ def build(assets, output, art):
     if not (assets / "texture/lazy").is_dir():
         raise ValueError(f"missing original assets: {assets}")
     manifest = json.loads((art / "atlas.json").read_text())
+    dimensions = json.loads((ROOT / "assets/road-dimensions.json").read_text())
     if manifest["format"] != "volcano-static-atlas-1" or manifest["scale"] != 2:
         raise ValueError("expected the authored 2x static atlas manifest")
     selected = defaultdict(dict)
@@ -236,13 +262,17 @@ def build(assets, output, art):
                 entry = selected[name][index]
                 sprite = extracted[entry["sheet"]][tuple(entry["region"])]
                 source_box = sprite.info["source_box"]
-                w, h = round(frame["w"] * 2), round(frame["h"] * 2)
-                ratio = min((w - 2) / sprite.width, (h - 2) / sprite.height)
-                if ratio > 1:
-                    raise ValueError(f"source artwork too small for true 2x: {name}[{index}]")
-                sprite = sprite.resize((max(1, round(sprite.width * ratio)),
-                                        max(1, round(sprite.height * ratio))), Image.Resampling.LANCZOS)
-                frame = anchored_frame(frame, entry.get("pivot"), source_box, sprite.size)
+                deck = None
+                if "deck_region" in entry:
+                    sprite, frame, deck = sized_bridge_frame(frame, entry, sprite, dimensions)
+                else:
+                    w, h = round(frame["w"] * 2), round(frame["h"] * 2)
+                    ratio = min((w - 2) / sprite.width, (h - 2) / sprite.height)
+                    if ratio > 1:
+                        raise ValueError(f"source artwork too small for true 2x: {name}[{index}]")
+                    sprite = sprite.resize((max(1, round(sprite.width * ratio)),
+                                            max(1, round(sprite.height * ratio))), Image.Resampling.LANCZOS)
+                    frame = anchored_frame(frame, entry.get("pivot"), source_box, sprite.size)
                 sprite, padded, body_offset = shadows.compose(name, index, frame, sprite)
                 w, h = sprite.size
                 if cursor_x + w + 4 > atlas.width:
@@ -261,6 +291,7 @@ def build(assets, output, art):
                                    pivot=[padded["dx"], padded["dy"]],
                                    body_pivot=[frame["dx"], frame["dy"]],
                                    source_pivot=entry.get("pivot"),
+                                   deck_region=deck, travel_axis=entry.get("travel_axis"),
                                    body_offset=body_offset, shadow="baked-northwest-45",
                                    atlas_region=[cursor_x, cursor_y, w, h]))
                 cursor_x += w + 4
