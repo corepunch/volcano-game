@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mission art: rectangles are image pixels from the top-left; pivot is the ground point. -->
+<sprites>
+  <sprite name="twisted-tracks/broken-maintenance-panels" image="debris.png" rect="1351,520,407,296" pivot="0.5,0.65" scale="0.201474"/>
+  <sprite name="twisted-tracks/fallen-yellow-support" image="debris.png" rect="468,74,410,334" pivot="0.5,0.65" scale="0.2"/>
+  <sprite name="twisted-tracks/twisted-service-fence" image="debris.png" rect="897,99,429,302" pivot="0.5,0.65" scale="0.191142"/>
+  <sprite name="twisted-tracks/derailed-coaster-car" image="debris.png" rect="16,495,413,334" pivot="0.5,0.7" scale="0.213075"/>
+  <sprite name="twisted-tracks/tangled-ride-cables" image="debris.png" rect="1349,80,419,329" pivot="0.5,0.65" scale="0.171838"/>
+  <sprite name="twisted-tracks/buckled-red-track" image="debris.png" rect="23,88,419,321" pivot="0.5,0.65" scale="0.200477"/>
+  <sprite name="twisted-tracks/detached-wheel-assembly" image="debris.png" rect="904,501,426,326" pivot="0.5,0.65" scale="0.173709"/>
+  <sprite name="twisted-tracks/shattered-concrete-footing" image="debris.png" rect="451,490,423,346" pivot="0.5,0.65" scale="0.179669"/>
+</sprites>

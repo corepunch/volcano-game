@@ -22,14 +22,14 @@ def main():
                     raise ValueError(f"Unexpected fire frame dimensions: {name}")
                 slot = layer * 40 + frame
                 atlas.paste(image, ((slot % 8) * 85 + 2, (slot // 8) * 127 + 2))
-    atlas.save(ART / "log-fire.png")
+    atlas.save(ART / "texture/particles/log-fire.png")
     smoke = Image.new("RGBA", (132 * 4, 132))
     for slot, frame in enumerate((0, 4, 8, 12)):
         image = Image.open(ART / f"source/whitePuff{frame:02d}.png").convert("RGBA")
         image.thumbnail((128, 128), Image.Resampling.LANCZOS)
         smoke.paste(image, (slot * 132 + (132 - image.width) // 2,
                             (132 - image.height) // 2))
-    smoke.save(ART / "log-smoke.png")
+    smoke.save(ART / "texture/particles/log-smoke.png")
     print("Packed 80 fire frames and four smoke textures in assets/particles")
 
 

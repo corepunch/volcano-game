@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Game content: rulesets and archetypes.
+
+  An archetype is one kind of placeable object. Missions place archetypes by
+  id and may define their own with extends="...", inheriting everything and
+  overriding only what they name. Sprite names refer to the sprite catalog
+  (any mounted asset pack); templates expand {d} direction, {v} variant and
+  {action} the target's work action.
+
+  Prices and intervals are this restoration's balance, not recovered retail
+  constants. See docs/content.md for every attribute.
+-->
+<content>
+  <!-- The restored missions use every system; the retail prototype scenes
+       (campaign 7-50 and level000) use none of them. -->
+  <ruleset id="rescue" economy="true" auto-evacuation="true" vehicles="true" gates="true" wildlife="true" goals="true"/>
+  <ruleset id="prototype"/>
+
+  <!-- People -->
+  <archetype id="hq" class="base" title="Headquarters" sprite="base0"/>
+  <archetype id="worker" class="worker" title="Trapped worker" speed="175"
+             idle="worker_wait0" move="worker_run{d}" carry="worker_bag{d}" work="worker_{action}{d}" shadow="worker_shadow"/>
+  <archetype id="boat-worker" class="worker" title="Boat" boat-only="true" speed="150" directions="24"
+             idle="boat0" move="boat{d}" carry="boat{d}" work="boat{d}"/>
+  <archetype id="civilian" class="civilian" title="Survivor" action="call" speed="175"
+             idle="man_idle0" move="man_run{d}" run="man_run{d}" shadow="man_shadow"/>
+  <archetype id="cat" class="animal" title="Rescue a cat" action="pet" speed="28" variants="3"
+             idle="cat{v}_idle0" move="cat{v}_walk{d}" run="cat{v}_run{d}">
+    <cost food="10"/>
+  </archetype>
+  <archetype id="dog" extends="cat" title="Rescue a dog" idle="dog{v}_idle0" move="dog{v}_walk{d}" run="dog{v}_run{d}"/>
+
+  <!-- Obstacles: workers stand at the edge of the footprint while clearing. -->
+  <archetype id="tree" class="obstacle" title="Fallen tree" sprite="bar_tree00" action="wood" burnable="true">
+    <cost food="20"/>
+    <reward wood="20"/>
+  </archetype>
+  <archetype id="log" extends="tree" burnable="false"/>
+  <archetype id="stone" class="obstacle" title="Stone" sprite="bar_stone00" action="pick">
+    <cost food="20"/>
+  </archetype>
+  <archetype id="boulder" extends="stone" sprite="bar_stone_big00">
+    <cost food="40" money="100"/>
+  </archetype>
+  <archetype id="blast-rock" extends="stone" needs-dynamite="true"/>
+  <archetype id="bridge" class="obstacle" title="Broken bridge" sprite="bridge_wood00" action="srepair" cleared-frame="3">
+    <cost wood="20"/>
+  </archetype>
+  <archetype id="auto-bridge" extends="bridge" sprite="bridge_auto00">
+    <cost food="20" wood="40"/>
+  </archetype>
+  <archetype id="road" class="obstacle" title="Damaged road" sprite="broken_road0" action="srepair">
+    <cost wood="20"/>
+  </archetype>
+  <archetype id="debris" class="obstacle" title="Obstruction" action="srepair"/>
+  <archetype id="fog" class="obstacle" title="Toxic fog" effect="fog"/>
+  <archetype id="fire-hazard" class="obstacle" title="Fire" effect="fire"/>
+
+  <!-- Supplies: collected on arrival and credited once carried home. -->
+  <archetype id="food-small" class="pickup" title="Food" sprite="food" resource="food" amount="10" action="gather"/>
+  <archetype id="food-large" extends="food-small" sprite="food_big" amount="20"/>
+  <archetype id="wood-small" class="pickup" title="Wood" sprite="wood" resource="wood" amount="10" action="gather"/>
+  <archetype id="wood-large" extends="wood-small" sprite="wood_big" amount="20"/>
+  <archetype id="money-small" class="pickup" title="Money" sprite="money" resource="money" amount="10" action="gather"/>
+  <archetype id="money-large" extends="money-small" sprite="money_big" amount="20"/>
+  <archetype id="fuel-small" class="pickup" title="Fuel" sprite="gas" resource="fuel" amount="10" action="gather"/>
+  <archetype id="fuel-large" extends="fuel-small" sprite="gas_big" amount="20"/>
+  <archetype id="floating-wood" extends="wood-small" sprite="boat_wood" boat-only="true"/>
+  <archetype id="fishing-spot" extends="food-small" title="Fishing spot" sprite="boat_fish_idle"/>
+  <archetype id="fishing-spot-large" extends="fishing-spot" amount="20"/>
+
+  <!-- Producers: pay income while working and offer a bonus at their linked output. -->
+  <archetype id="sawmill" class="producer" title="Sawmill" sprite="sawmill0" damaged="sawmill0_br" action="repair"
+             produces="wood" income="5" income-interval="5" bonus="wood-small" bonus-interval="10" menu="0">
+    <build wood="40"/>
+    <repair wood="20"/>
+  </archetype>
+  <archetype id="cafe" class="producer" title="Burger Cafe" sprite="burger0" damaged="burger0_br" action="repair"
+             produces="food" income="5" income-interval="5" bonus="food-small" bonus-interval="10" menu="1"
+             menu-lock="Burger Cafes cannot be built on this level. Repair the piers and fish for food.">
+    <build wood="40"/>
+    <repair wood="20"/>
+  </archetype>
+  <archetype id="house" class="producer" title="House" sprite="house0" damaged="house0_br" action="repair"
+             produces="money" income="5" income-interval="5" bonus="money-small" bonus-interval="10" menu="2">
+    <build wood="60"/>
+    <repair wood="30"/>
+  </archetype>
+  <archetype id="gas-station" class="producer" title="Gas Station" sprite="gas0" damaged="gas0_br" action="repair"
+             produces="fuel" income="5" income-interval="5" bonus="fuel-small" bonus-interval="10" menu="3">
+    <build wood="80"/>
+    <repair wood="40"/>
+  </archetype>
+  <archetype id="lot" class="lot" title="Building slot" sprite="build_place" action="srepair"/>
+
+  <!-- Services, valves and vehicles. -->
+  <archetype id="pier" class="service" title="Pier" sprite="seaport" damaged="seaport_br" action="repair">
+    <repair wood="40"/>
+  </archetype>
+  <archetype id="garage" class="service" title="Garage" sprite="garage0" damaged="garage0" action="repair">
+    <repair wood="40"/>
+  </archetype>
+  <archetype id="valve" class="valve" title="Valve" sprite="tap" action="tap">
+    <cost money="20"/>
+  </archetype>
+  <archetype id="atv" class="vehicle" title="ATV" speed="220" directions="16" idle="offroad0" move="offroad{d}"/>
+  <archetype id="fishing-boat" class="vehicle" title="Fishing boat" speed="150" directions="24"
+             idle="boat0" move="boat{d}" act="boat_fish_action0"/>
+
+  <!-- Scenery. Retail scenes set the sprite per placement. -->
+  <archetype id="decor" class="decor"/>
+  <archetype id="water" class="water" sprite="water0"/>
+  <archetype id="polluted-water" class="water" sprite="water0" effect="pollution"/>
+  <archetype id="bird" class="decor" ambient="bird"/>
+  <archetype id="cloud" class="decor" ambient="cloud" opacity="0.65"/>
+</content>

@@ -1,0 +1,58 @@
+Twisted Tracks: playable interior roads
+
+Approved concept: concepts/twisted-tracks-interior-roads.png.
+Production plate: twisted-tracks-interior.png (two built-in ImageGen edits;
+exact prompts alongside). The original twisted-tracks.png remains archived.
+Eight custom debris variants were authored together in one transparent ImageGen
+atlas, twisted-tracks-debris.png; regions/pivots are in its atlas JSON. No visual
+states were synthesized. Cleared objects disappear entirely.
+
+Road layout
+The southwest arrival forks toward the central maintenance junction and a lower
+supply road. The central junction branches to an upper interior pocket, visitors
+inside the broken loop and a train-side pocket. A western branch reaches a cat.
+The southern service loop has three producer pads and a second approach toward
+the train spur; the expensive car gate is on the shared spur so the loop cannot
+bypass it. An extra eastern supply spur is optional.
+
+Jobs and economy
+Ten local blockers use eight visual families: timber maintenance panels, snapped
+yellow supports, enclosure fencing, a blue car, cables, red track, wheels and
+reinforced concrete. Ordinary underlying barrier rules retain their established
+costs and work animations. The timber panels cost 20 food and yield 20 wood;
+other small jobs cost 20 food. The car costs 40 food plus 100 money.
+The concrete job is a small broken footing, so it uses a small clearing cost.
+Mission archetypes extending tree/stone/boulder, with art from sprites.xml, give
+each job its actual debris appearance and title while preserving obstacle
+collision, queueing, cost and removal rules.
+
+Two starting workers have 40 food and no wood or money. Clearing the inward
+panels and service-road fence can spend all food; the panels' 20 timber plus
+three 20-timber caches make food recovery possible. The cafe costs 20 wood to
+repair, the sawmill 20 and park office 30. All three supply renewable resources.
+Nine civilians plus a stranded technician count toward ten people; the cat and
+dog have a separate two-animal goal. Every rescue starts gated.
+
+Checks
+The existing coaster playthrough deliberately retains stable objective/producer
+IDs and exercises the revised source, road graph, jobs and atlas in the real
+runtime. It covers a zero-food opening, queued-job recovery, three repair orders,
+all ten people and two animals, nonnegative inventory, pause and restart.
+Inspect start and repaired screenshots in build/ after running
+VOLCANO_TEST_SHOTS=1 make test-missions (mode --coaster in tests/missions_main.c).
+make app APP_MISSION=twisted-tracks builds build/Twisted Tracks.app.
+The dedicated tests/coaster_main.c runner also exercises all eight clickable
+atlas regions, clears every job before the final rescue, checks full sprite and
+click-target removal, and verifies the final car reserves 40 food/100 money once.
+
+Building placement
+Each building stands on the centre of its painted pad, measured from
+background.png: the dirt pads were segmented by colour, road necks removed, and
+each centre taken from the pad's widest contiguous rows (then checked by eye
+against the edges). Positions (bottom-left world units): HQ (147,139), cafe
+(499,100), sawmill (914,85), park office (1127,101.5). A position is the base
+centre: the engine centres every building state and its selection ring there,
+so no coordinate compensates for a sprite's pivot. Starting crew and the final
+approach node of each spur sit at their buildings; the HQ spur keeps an
+intermediate node so its last link stays short. Outputs stay outside the
+building footprints.

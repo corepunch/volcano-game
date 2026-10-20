@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Twisted Tracks: interior service roads thread between reorganized red/yellow coaster wreck islands. Ten custom clearable debris jobs use eight authored sprites linked to ordinary obstacle rules. Nine visitors, one stranded technician, two animals; renewable supplies and two starting workers. Coordinates bottom-left world pixels. -->
+<mission format="volcano-mission-1" title="Twisted Tracks" background="background.png">
+  <settings rules="rescue" food="40" people="10"/>
+  <sprites path="sprites.xml"/>
+  <archetype id="broken-maintenance-panels" extends="tree" title="Broken maintenance panels" sprite="twisted-tracks/broken-maintenance-panels"/>
+  <archetype id="fallen-yellow-support" extends="stone" title="Fallen yellow support" sprite="twisted-tracks/fallen-yellow-support"/>
+  <archetype id="twisted-service-fence" extends="stone" title="Twisted service fence" sprite="twisted-tracks/twisted-service-fence"/>
+  <archetype id="derailed-coaster-car" extends="boulder" title="Derailed coaster car" sprite="twisted-tracks/derailed-coaster-car"/>
+  <archetype id="tangled-ride-cables" extends="stone" title="Tangled ride cables" sprite="twisted-tracks/tangled-ride-cables"/>
+  <archetype id="buckled-red-track" extends="stone" title="Buckled red track" sprite="twisted-tracks/buckled-red-track"/>
+  <archetype id="detached-wheel-assembly" extends="stone" title="Detached wheel assembly" sprite="twisted-tracks/detached-wheel-assembly"/>
+  <archetype id="shattered-concrete-footing" extends="stone" title="Shattered concrete footing" sprite="twisted-tracks/shattered-concrete-footing"/>
+  <archetype id="fallen-track-ties" extends="stone" title="Fallen track ties" sprite="twisted-tracks/buckled-red-track"/>
+  <archetype id="crushed-park-gate" extends="stone" title="Crushed park gate" sprite="twisted-tracks/twisted-service-fence"/>
+  <traffic>150.5,160 147,139 157.75,184 180,195 200,204 220,213 240,222 260,231 280,239.5 300,248 315,265.5 330,283 345,296.33 360,309.67 375,323 396.67,333 418.33,343 440,353 463.33,361.33 486.67,369.67 510,378 532.5,383 555,388 577.5,393 600,398 622.5,398 645,398 667.5,398 690,398 667.5,399.25 645,400.5 622.5,401.75 600,403 573.33,406.33 546.67,409.67 520,413 500,420.5 480,428 460,435.5 440,443 416.67,456.33 393.33,469.67 370,483 348.33,494.67 326.67,506.33 305,518 288.33,531.33 271.67,544.67 255,558 237.5,575.5 220,593 205,613 685,418 680,438 690,458 700,478 716.67,489.67 733.33,501.33 750,513 770,528 790,543 792.5,558 795,573 782.5,588 770,603 752.5,615.5 735,628 715,638 737.5,638 760,638 712.5,403 735,408 757.5,413 780,418 802.5,423 825,428 847.5,433 870,438 886.67,448 903.33,458 920,468 942.5,468 965,468 987.5,468 1010,468 1033.33,471.33 1056.67,474.67 1080,478 1095,493 1110,508 1120,528 1130,548 1145,558 1160,568 1175,568 1190,568 710,390.5 730,383 750,375.5 770,368 792.5,360.5 815,353 837.5,345.5 860,338 886.67,329.67 913.33,321.33 940,313 965,300.5 990,288 998.33,266.33 1006.67,244.67 1015,223 1010,283 1030,278 1050,275.5 1070,273 1090,273 1110,273 316.67,238 333.33,228 350,218 375,208 400,198 423.33,188.67 446.67,179.33 470,170 496.67,162.67 523.33,155.33 550,148 577.5,145.5 605,143 632.5,140.5 660,138 685,135.5 710,133 735,130.5 760,128 782.5,129.25 805,130.5 827.5,131.75 850,133 872.5,136.75 895,140.5 917.5,144.25 940,148 960,161.33 980,174.67 1000,188 1007.5,205.5 1038.75,215.5 1062.5,208 1086.25,200.5 1110,193 1136.67,184.67 1163.33,176.33 1190,168 1215,155.5 1240,143 472.5,154 475,138 474,119.75 499,100 900,141 902.75,127 905.5,113 905.5,94 914,85 1114,175.5 1118,158 1118,135 1118,112 1127,101.5</traffic>
+  <object id="2" type="hq" x="147" y="139"/>
+  <object id="3" type="worker" x="147" y="139"/>
+  <object id="4" type="worker" x="167" y="139"/>
+  <object id="20" type="broken-maintenance-panels" x="470" y="366"/>
+  <object id="21" type="fallen-yellow-support" x="750" y="513"/>
+  <object id="22" type="twisted-service-fence" x="390" y="202"/>
+  <object id="23" type="derailed-coaster-car" x="1030" y="278"/>
+  <object id="24" type="tangled-ride-cables" x="1110" y="508"/>
+  <object id="25" type="buckled-red-track" x="865" y="437"/>
+  <object id="26" type="detached-wheel-assembly" x="1000" y="205"/>
+  <object id="27" type="shattered-concrete-footing" x="850" y="133"/>
+  <object id="28" type="fallen-track-ties" x="290" y="530"/>
+  <object id="29" type="crushed-park-gate" x="1190" y="168"/>
+  <object id="30" type="cafe" x="499" y="100"/>
+  <object id="31" type="food-small" x="555" y="155" producer="30"/>
+  <object id="32" type="sawmill" x="914" y="85"/>
+  <object id="33" type="wood-small" x="940" y="164" producer="32"/>
+  <object id="34" type="house" x="1127" y="101.5"/>
+  <object id="35" type="money-small" x="1055" y="201" producer="34"/>
+  <object id="40" type="wood-large" x="430" y="184"/>
+  <object id="41" type="wood-large" x="610" y="143"/>
+  <object id="43" type="wood-large" x="740" y="131"/>
+  <object id="42" type="money-large" x="1240" y="143"/>
+  <object id="50" type="civilian" x="715" y="638"/>
+  <object id="51" type="civilian" x="740" y="631"/>
+  <object id="52" type="civilian" x="765" y="638"/>
+  <object id="54" type="civilian" x="1145" y="568"/>
+  <object id="55" type="civilian" x="1170" y="561"/>
+  <object id="56" type="civilian" x="1193" y="568"/>
+  <object id="57" type="civilian" x="1070" y="274"/>
+  <object id="58" type="civilian" x="1095" y="266"/>
+  <object id="59" type="civilian" x="1120" y="276"/>
+  <object id="53" type="worker" x="705" y="613"/>
+  <object id="60" type="cat" x="210" y="613"/>
+  <object id="61" type="dog" x="1150" y="538" variant="1"/>
+  <effect kind="sparkles" x="150" y="413" width="65" height="25" rate="4" opacity=".6"/>
+  <effect kind="sparkles" x="190" y="378" width="55" height="25" rate="4" opacity=".6"/>
+  <effect kind="foam" x="100" y="480" width="18" rate="14"/>
+  <effect kind="insects" x="260" y="318" width="50" height="25" speed=".7" count="2"/>
+  <effect kind="insects" x="780" y="168" width="45" height="30" speed=".8" count="2"/>
+  <effect kind="motes" x="800" y="458" width="65" height="40" speed=".5" opacity=".25" count="4"/>
+</mission>

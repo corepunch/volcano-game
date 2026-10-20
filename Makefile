@@ -1,151 +1,186 @@
-CC ?= cc
-PACKAGES = sdl2
-ASSETS ?= reference/rescue-team
-CPPFLAGS += $(shell pkg-config --cflags $(PACKAGES)) -Ivendor -Isrc -D_POSIX_C_SOURCE=200809L
-CFLAGS += -std=c11 -O2 -Wall -Wextra -Wpedantic
-LDLIBS += $(shell pkg-config --libs $(PACKAGES)) -lm
-GAME_SOURCES = src/game.c src/game_util.c src/game_rules.c src/game_spawn.c src/game_navigation.c src/game_jobs.c src/game_sim.c src/game_render.c src/game_input.c
-CORE_SOURCES = src/resources.c src/level.c src/campaign.c src/scene.c $(GAME_SOURCES)
-TEST_SOURCES = tests/game_selftest.c tests/game_architecture.c
-CORE_HEADERS = src/volcano.h src/game_internal.h
-HEADERS = $(CORE_HEADERS) tests/game_test.h
-AUDIT_BINARY ?= build/audit_levels
-SOURCES = src/main.c $(CORE_SOURCES) $(TEST_SOURCES)
-HD_ASSETS = build/hd-assets
-CHARACTER_ASSETS = build/kenney-assets
-PYTHON ?= python3
-ASSET_PYTHON = build/python-venv/bin/python3
+# Volcano build.
+#
+# Layers: core -> assets -> content -> sim build into libvolcano_core.a WITHOUT
+# SDL headers on the include path, so simulation and content code cannot come
+# to depend on the renderer. render/ and game/ add SDL; app/ is the executable.
+#
+#   make                       game executable
+#   make test                  retail-free suites (placeholder art) and tool tests
+#   make test-retail           retail suites (needs ASSETS)
+#   make run-library-rescue     (also: make library-rescue, run-NAME-hd, NAME-app, test-NAME)
+#   make run MISSION=library-rescue
+#   make missions               list mission names
+#   make run-campaign CAMPAIGN=3
 
-.PHONY: all app run run-emerald-falls run-forest-mayday test test-levels level-example emerald-falls forest-mayday forest-mayday-app analyze-levels sanitize clean
-.PHONY: hd-assets hd-levels hd-app run-emerald-falls-hd run-forest-mayday-hd test-hd character-assets
-.PHONY: hd-pivot-previews
-.PHONY: ancient-echoes ancient-echoes-app test-ancient-echoes
-.PHONY: twisted-tracks twisted-tracks-app test-twisted-tracks
-.PHONY: run-ancient-echoes run-twisted-tracks library-rescue library-rescue-app run-library-rescue test-library-rescue
-all: build/volcano
-build/volcano: $(SOURCES) $(HEADERS) vendor/stb_image.h
-	@mkdir -p build
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(SOURCES) -o $@ $(LDFLAGS) $(LDLIBS)
-app: build/volcano
-	@mkdir -p build/Volcano.app/Contents/MacOS
-	cp build/volcano build/Volcano.app/Contents/MacOS/volcano
-	cp packaging/Info.plist build/Volcano.app/Contents/Info.plist
-	@mkdir -p build/Volcano.app/Contents/Resources
-	rsync -a --exclude='.DS_Store' --exclude='Info.plist' "$(ASSETS)/" build/Volcano.app/Contents/Resources/
-	@mkdir -p build/Volcano.app/Contents/Resources/texture/particles
-	cp assets/particles/log-*.png assets/particles/README.md assets/particles/source/Kenney-license.txt build/Volcano.app/Contents/Resources/texture/particles/
-run: all
-	./build/volcano
-run-emerald-falls: emerald-falls
-run-forest-mayday: forest-mayday
-run-ancient-echoes: ancient-echoes
-run-twisted-tracks: twisted-tracks
-run-library-rescue: library-rescue
-test: all test-levels
-	SDL_VIDEODRIVER=dummy ./build/volcano --software --hidden --self-test
-build/check_custom_level: tests/check_custom_level.c $(CORE_SOURCES) $(TEST_SOURCES) $(HEADERS)
-	@mkdir -p build
-	$(CC) $(CPPFLAGS) $(CFLAGS) tests/check_custom_level.c $(CORE_SOURCES) $(TEST_SOURCES) -o $@ $(LDFLAGS) $(LDLIBS)
-$(AUDIT_BINARY): tools/audit_levels.c $(CORE_SOURCES) $(CORE_HEADERS) vendor/stb_image.h
-	@mkdir -p "$(@D)"
-	$(CC) $(CPPFLAGS) $(CFLAGS) tools/audit_levels.c $(CORE_SOURCES) -o "$@" $(LDFLAGS) $(LDLIBS)
-build/levels/first-rescue.lvl: levels/first-rescue.level.json tools/level_source.py
-	python3 tools/level_source.py compile $< $@
-build/levels/first-rescue.lvl.rules: build/levels/first-rescue.lvl
-	@test -f "$@" || python3 tools/level_source.py compile levels/first-rescue.level.json build/levels/first-rescue.lvl
-level-example: all build/levels/first-rescue.lvl.rules
-	./build/volcano --assets "$(ASSETS)" --level-file build/levels/first-rescue.lvl
-SCENE_IMAGES = levels/emerald-falls.png
-build/levels/emerald-falls.lvl: levels/emerald-falls.level.json $(SCENE_IMAGES) tools/level_source.py
-	python3 tools/level_source.py compile $< $@
-build/levels/emerald-falls.lvl.rules build/levels/emerald-falls.png: build/levels/emerald-falls.lvl
-	@test -f "$@" || python3 tools/level_source.py compile levels/emerald-falls.level.json build/levels/emerald-falls.lvl
-emerald-falls: all build/levels/emerald-falls.lvl.rules build/levels/emerald-falls.png
-	./build/volcano --assets "$(ASSETS)" --level-file build/levels/emerald-falls.lvl
-build/levels/forest-mayday.lvl: levels/forest-mayday.level.json levels/forest-mayday.png tools/level_source.py
-	python3 tools/level_source.py compile $< $@
-build/levels/forest-mayday.lvl.rules build/levels/forest-mayday.png: build/levels/forest-mayday.lvl
-	@test -f "$@" || python3 tools/level_source.py compile levels/forest-mayday.level.json build/levels/forest-mayday.lvl
-forest-mayday: all build/levels/forest-mayday.lvl.rules build/levels/forest-mayday.png
-	./build/volcano --assets "$(ASSETS)" --level-file build/levels/forest-mayday.lvl
-forest-mayday-app: all build/levels/forest-mayday.lvl.rules build/levels/forest-mayday.png
-	python3 tools/package_custom_level.py "Forest Mayday" build/levels/forest-mayday.lvl "$(ASSETS)"
-build/levels/ancient-echoes.lvl: levels/ancient-echoes.level.json levels/ancient-echoes.png tools/level_source.py
-	python3 tools/level_source.py compile $< $@
-build/levels/ancient-echoes.lvl.rules build/levels/ancient-echoes.png: build/levels/ancient-echoes.lvl
-	@test -f "$@" || python3 tools/level_source.py compile levels/ancient-echoes.level.json build/levels/ancient-echoes.lvl
-ancient-echoes: all build/levels/ancient-echoes.lvl.rules build/levels/ancient-echoes.png
-	./build/volcano --assets "$(ASSETS)" --level-file build/levels/ancient-echoes.lvl
-ancient-echoes-app: all build/levels/ancient-echoes.lvl.rules build/levels/ancient-echoes.png
-	python3 tools/package_custom_level.py "Ancient Echoes" build/levels/ancient-echoes.lvl "$(ASSETS)"
-test-ancient-echoes: build/check_custom_level build/levels/ancient-echoes.lvl.rules build/levels/ancient-echoes.png
-	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(ASSETS)" build/levels/ancient-echoes.lvl --ancient
-COASTER_IMAGES = levels/twisted-tracks-interior.png levels/twisted-tracks-debris.png
-build/levels/twisted-tracks.lvl: levels/twisted-tracks.level.json $(COASTER_IMAGES) tools/level_source.py
-	python3 tools/level_source.py compile $< $@
-build/levels/twisted-tracks.lvl.rules build/levels/twisted-tracks-interior.png build/levels/twisted-tracks-debris.png: build/levels/twisted-tracks.lvl
-	@test -f "$@" || python3 tools/level_source.py compile levels/twisted-tracks.level.json build/levels/twisted-tracks.lvl
-twisted-tracks: all build/levels/twisted-tracks.lvl.rules build/levels/twisted-tracks-interior.png build/levels/twisted-tracks-debris.png
-	./build/volcano --assets "$(ASSETS)" --level-file build/levels/twisted-tracks.lvl
-twisted-tracks-app: all build/levels/twisted-tracks.lvl.rules build/levels/twisted-tracks-interior.png build/levels/twisted-tracks-debris.png
-	python3 tools/package_custom_level.py "Twisted Tracks" build/levels/twisted-tracks.lvl "$(ASSETS)"
-build/check_coaster_debris: tests/check_coaster_debris.c $(CORE_SOURCES) $(TEST_SOURCES) $(HEADERS)
-	@mkdir -p build
-	$(CC) $(CPPFLAGS) $(CFLAGS) tests/check_coaster_debris.c $(CORE_SOURCES) $(TEST_SOURCES) -o $@ $(LDFLAGS) $(LDLIBS)
-test-twisted-tracks: build/check_custom_level build/check_coaster_debris build/levels/twisted-tracks.lvl.rules build/levels/twisted-tracks-interior.png build/levels/twisted-tracks-debris.png
-	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(ASSETS)" build/levels/twisted-tracks.lvl --coaster
-	SDL_VIDEODRIVER=dummy ./build/check_coaster_debris "$(ASSETS)" build/levels/twisted-tracks.lvl
-build/levels/library-rescue.lvl: levels/library-rescue.level.json levels/library-rescue.png levels/library-rescue-props.png tools/level_source.py
-	python3 tools/level_source.py compile $< $@
-build/levels/library-rescue.lvl.rules build/levels/library-rescue.png build/levels/library-rescue-props.png: build/levels/library-rescue.lvl
-	@test -f "$@" || python3 tools/level_source.py compile levels/library-rescue.level.json build/levels/library-rescue.lvl
-library-rescue: character-assets all build/levels/library-rescue.lvl.rules build/levels/library-rescue.png build/levels/library-rescue-props.png
-	./build/volcano --assets "$(CHARACTER_ASSETS)" --level-file build/levels/library-rescue.lvl
-library-rescue-app: character-assets all build/levels/library-rescue.lvl.rules build/levels/library-rescue.png build/levels/library-rescue-props.png
-	python3 tools/package_custom_level.py "Library Rescue" build/levels/library-rescue.lvl "$(CHARACTER_ASSETS)"
-test-library-rescue: character-assets build/check_custom_level build/levels/library-rescue.lvl.rules build/levels/library-rescue.png build/levels/library-rescue-props.png
-	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(CHARACTER_ASSETS)" build/levels/library-rescue.lvl --library-rescue
-build/python-venv/.dependencies: requirements-assets.txt
-	$(PYTHON) -m venv build/python-venv
+PYTHON ?= python3
+ASSET_PYTHON ?= $(OUT)/python-venv/bin/python3
+
+CC ?= cc
+AR ?= ar
+CFLAGS ?= -O2
+CFLAGS += -std=c11 -Wall -Wextra -Wpedantic -MMD -MP
+CPPFLAGS += -D_POSIX_C_SOURCE=200809L -Isrc -Ivendor
+ifeq ($(shell uname -s),Darwin)
+CPPFLAGS += -D_DARWIN_C_SOURCE
+endif
+SDL_CFLAGS := $(shell pkg-config --cflags sdl2)
+SDL_LIBS := $(shell pkg-config --libs sdl2)
+LDLIBS += -lm
+
+ASSETS ?= reference/rescue-team
+MISSION ?= first-rescue
+APP_MISSION ?=
+CAMPAIGN ?= 1
+OUT ?= build
+TEST_PACK := $(OUT)/packs/test
+HD_PACK := $(OUT)/packs/hd
+MISSION_ASSETS ?= $(TEST_PACK)
+RUN := SDL_VIDEODRIVER=dummy
+
+CORE_SOURCES := $(wildcard src/core/*.c src/assets/*.c src/content/*.c src/sim/*.c)
+ENGINE_SOURCES := $(wildcard src/render/*.c src/game/*.c)
+CORE_OBJECTS := $(CORE_SOURCES:%.c=$(OUT)/obj/%.o)
+ENGINE_OBJECTS := $(ENGINE_SOURCES:%.c=$(OUT)/obj/%.o)
+CORE_LIB := $(OUT)/libvolcano_core.a
+ENGINE_LIB := $(OUT)/libvolcano_engine.a
+TEST_SUPPORT := $(OUT)/obj/tests/test_support.o $(OUT)/obj/tests/architecture.o
+MISSIONS := $(patsubst missions/%/mission.xml,%,$(wildcard missions/*/mission.xml))
+
+.PHONY: all test test-core test-missions test-tools test-retail test-all run run-campaign run-hd hd-pack test-hd hd-pivot-previews app sanitize analyze-levels clean
+.DELETE_ON_ERROR:
+
+all: $(OUT)/volcano
+
+# SDL-free layers.
+$(CORE_OBJECTS) $(OUT)/obj/tests/core_main.o: $(OUT)/obj/%.o: %.c
+	@mkdir -p $(@D)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+
+# Everything else may use SDL.
+$(OUT)/obj/%.o: %.c
+	@mkdir -p $(@D)
+	$(CC) $(CPPFLAGS) $(SDL_CFLAGS) $(CFLAGS) -c $< -o $@
+
+$(CORE_LIB): $(CORE_OBJECTS)
+	$(AR) rcs $@ $^
+$(ENGINE_LIB): $(ENGINE_OBJECTS)
+	$(AR) rcs $@ $^
+
+$(OUT)/volcano: $(OUT)/obj/src/app/main.o $(ENGINE_LIB) $(CORE_LIB)
+	$(CC) $(LDFLAGS) $^ -o $@ $(SDL_LIBS) $(LDLIBS)
+
+# ---- Tests
+
+$(TEST_PACK): tools/make_test_pack.py $(OUT)/python-venv/.dependencies
+	$(ASSET_PYTHON) tools/make_test_pack.py --output $@
+	@touch $@
+
+$(OUT)/test_core: $(OUT)/obj/tests/core_main.o $(CORE_LIB)
+	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
+$(OUT)/test_missions: $(OUT)/obj/tests/missions_main.o $(TEST_SUPPORT) $(ENGINE_LIB) $(CORE_LIB)
+	$(CC) $(LDFLAGS) $^ -o $@ $(SDL_LIBS) $(LDLIBS)
+$(OUT)/test_coaster: $(OUT)/obj/tests/coaster_main.o $(TEST_SUPPORT) $(ENGINE_LIB) $(CORE_LIB)
+	$(CC) $(LDFLAGS) $^ -o $@ $(SDL_LIBS) $(LDLIBS)
+$(OUT)/test_retail: $(OUT)/obj/tests/retail_main.o $(OUT)/obj/tests/game_selftest.o $(TEST_SUPPORT) $(ENGINE_LIB) $(CORE_LIB)
+	$(CC) $(LDFLAGS) $^ -o $@ $(SDL_LIBS) $(LDLIBS)
+
+test: test-core test-missions test-tools
+
+test-core: $(OUT)/test_core $(TEST_PACK)
+	./$(OUT)/test_core $(TEST_PACK)
+
+# The project's own missions, played through the real UI and scheduler.
+# Each mission folder gets test-NAME; MISSION_TEST_NAME picks its scenario.
+MISSION_TEST_emerald-falls := --emerald
+MISSION_TEST_forest-mayday := --mayday
+MISSION_TEST_ancient-echoes := --ancient
+MISSION_TEST_twisted-tracks := --coaster
+MISSION_TEST_library-rescue := --library-rescue
+MISSION_TESTS := $(addprefix test-,$(MISSIONS))
+
+test-missions: $(MISSION_TESTS)
+
+$(MISSION_TESTS): test-%: $(OUT)/test_missions $(OUT)/test_coaster $(TEST_PACK)
+	$(RUN) ./$(OUT)/test_missions $(MISSION_ASSETS) missions/$*/mission.xml $(MISSION_TEST_$*)
+	$(if $(filter twisted-tracks,$*),$(RUN) ./$(OUT)/test_coaster $(MISSION_ASSETS) missions/$*/mission.xml)
+
+test-tools: $(OUT)/python-venv/.dependencies
+	$(ASSET_PYTHON) -m unittest discover -s tests -p 'test_tools.py'
+
+# Original campaign, prototype scenes and retail art (not redistributable).
+test-retail: $(OUT)/test_retail
+	$(RUN) ./$(OUT)/test_retail "$(ASSETS)"
+	$(MAKE) test-missions MISSION_ASSETS="$(ASSETS)"
+	RESCUE_TEAM_ASSETS="$(ASSETS)" $(ASSET_PYTHON) -m unittest discover -s tests -p 'test_tools.py'
+
+test-all: test test-retail
+
+sanitize:
+	$(MAKE) OUT=build/asan CFLAGS="-O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer" LDFLAGS="-fsanitize=address,undefined" test
+
+# ---- Running
+
+run: $(OUT)/volcano
+	./$(OUT)/volcano --assets "$(ASSETS)" --mission missions/$(MISSION)/mission.xml
+
+# Every folder in missions/ also gets NAME, run-NAME, run-NAME-hd and NAME-app,
+# e.g. `make run-twisted-tracks` or `make library-rescue-app`.
+RUN_MISSIONS := $(addprefix run-,$(MISSIONS))
+RUN_MISSIONS_HD := $(addsuffix -hd,$(RUN_MISSIONS))
+MISSION_APPS := $(addsuffix -app,$(MISSIONS))
+.PHONY: missions $(MISSIONS) $(RUN_MISSIONS) $(RUN_MISSIONS_HD) $(MISSION_APPS) $(MISSION_TESTS)
+
+missions:
+	@printf '%s\n' $(MISSIONS)
+
+$(MISSIONS): %: run-%
+
+$(RUN_MISSIONS): run-%: $(OUT)/volcano
+	./$(OUT)/volcano --assets "$(ASSETS)" --mission missions/$*/mission.xml
+
+$(RUN_MISSIONS_HD): run-%-hd: $(OUT)/volcano hd-pack
+	./$(OUT)/volcano --assets "$(ASSETS)" --pack "$(HD_PACK)" --hd --mission missions/$*/mission.xml
+
+$(MISSION_APPS): %-app: $(OUT)/volcano
+	python3 tools/package_app.py --binary $(OUT)/volcano --assets "$(ASSETS)" --mission "$*" --output $(OUT)
+
+run-campaign: $(OUT)/volcano
+	./$(OUT)/volcano --assets "$(ASSETS)" --campaign $(CAMPAIGN)
+
+# HD statics are an overlay pack built from retail sprites plus authored art.
+$(OUT)/python-venv/.dependencies: requirements-assets.txt
+	$(PYTHON) -m venv $(OUT)/python-venv
 	$(ASSET_PYTHON) -m pip install -r requirements-assets.txt
 	@touch $@
-hd-assets: build/python-venv/.dependencies
-	$(ASSET_PYTHON) tools/build_hd_assets.py --assets "$(ASSETS)" --output "$(HD_ASSETS)"
-	$(ASSET_PYTHON) tools/pack_rescue_characters.py --assets "$(HD_ASSETS)" --output "$(HD_ASSETS)"
-hd-pivot-previews: hd-assets
-	$(ASSET_PYTHON) tools/preview_hd_pivots.py --assets "$(HD_ASSETS)"
-character-assets: build/python-venv/.dependencies
-	$(ASSET_PYTHON) tools/pack_rescue_characters.py --assets "$(ASSETS)" --output "$(CHARACTER_ASSETS)"
-hd-levels:
-	python3 tools/build_hd_levels.py
-hd-app: all hd-assets hd-levels
-	python3 tools/package_hd_build.py "$(HD_ASSETS)"
-run-emerald-falls-hd: all hd-assets hd-levels
-	./build/volcano --assets "$(HD_ASSETS)" --level-file build/hd-levels/emerald-falls.lvl
-run-forest-mayday-hd: all hd-assets hd-levels
-	./build/volcano --assets "$(HD_ASSETS)" --level-file build/hd-levels/forest-mayday.lvl
-test-hd: all hd-assets hd-levels build/check_custom_level
-	$(MAKE) test-levels ASSETS="$(HD_ASSETS)"
-	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(HD_ASSETS)" build/hd-levels/emerald-falls.lvl --emerald
-	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(HD_ASSETS)" build/hd-levels/forest-mayday.lvl --mayday
-	SDL_VIDEODRIVER=dummy ./build/volcano --assets "$(HD_ASSETS)" --software --hidden --self-test
+
+hd-pack: $(OUT)/python-venv/.dependencies
+	$(ASSET_PYTHON) tools/build_hd_assets.py --assets "$(ASSETS)" --output "$(HD_PACK)"
+
+# Every original building and attachment frame must use the HD texture.
+test-hd: hd-pack
+	$(ASSET_PYTHON) tools/check_hd_building_parity.py --assets "$(ASSETS)" --output "$(HD_PACK)"
+
+hd-pivot-previews: hd-pack
+	$(ASSET_PYTHON) tools/preview_hd_pivots.py --assets "$(HD_PACK)" --retail "$(ASSETS)"
+
+run-hd: $(OUT)/volcano hd-pack
+	./$(OUT)/volcano --assets "$(ASSETS)" --pack "$(HD_PACK)" --hd --mission missions/$(MISSION)/mission.xml
+
+# Self-contained macOS bundle: retail assets, content, missions and packs are
+# copied in; the launcher only refers to paths inside the bundle.
+# APP_MISSION=library-rescue opens that mission instead of the campaign.
+app: $(OUT)/volcano
+	python3 tools/package_app.py --binary $(OUT)/volcano --assets "$(ASSETS)" --mission "$(APP_MISSION)" --output $(OUT)
+
+# ---- Retail analysis
+
+$(OUT)/audit_levels: $(OUT)/obj/tools/audit_levels.o $(ENGINE_LIB) $(CORE_LIB)
+	$(CC) $(LDFLAGS) $^ -o $@ $(SDL_LIBS) $(LDLIBS)
+
 analyze-levels:
-	python3 tools/level_source.py analyze "$(ASSETS)/level" build/level-analysis.json
-test-levels: all test-ancient-echoes test-twisted-tracks test-library-rescue build/check_custom_level build/levels/first-rescue.lvl.rules build/levels/emerald-falls.lvl.rules build/levels/emerald-falls.png build/levels/forest-mayday.lvl.rules build/levels/forest-mayday.png
-	RESCUE_TEAM_ASSETS="$(ASSETS)" python3 -m unittest discover -s tests -p 'test_level_source.py'
-	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(ASSETS)" build/levels/first-rescue.lvl
-	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(ASSETS)" build/levels/emerald-falls.lvl --emerald
-	SDL_VIDEODRIVER=dummy ./build/check_custom_level "$(ASSETS)" build/levels/forest-mayday.lvl --mayday
-build/volcano-sanitize: $(SOURCES) $(HEADERS) vendor/stb_image.h
-	@mkdir -p build
-	$(CC) $(CPPFLAGS) $(CFLAGS) -O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer $(SOURCES) -o $@ $(LDFLAGS) $(LDLIBS)
-build/check_custom_level-sanitize: tests/check_custom_level.c $(CORE_SOURCES) $(TEST_SOURCES) $(HEADERS)
-	@mkdir -p build
-	$(CC) $(CPPFLAGS) $(CFLAGS) -O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer tests/check_custom_level.c $(CORE_SOURCES) $(TEST_SOURCES) -o $@ $(LDFLAGS) $(LDLIBS)
-sanitize: build/volcano-sanitize build/check_custom_level-sanitize build/levels/first-rescue.lvl.rules build/levels/emerald-falls.lvl.rules build/levels/emerald-falls.png build/levels/forest-mayday.lvl.rules build/levels/forest-mayday.png
-	SDL_VIDEODRIVER=dummy ./build/volcano-sanitize --software --hidden --self-test
-	SDL_VIDEODRIVER=dummy ./build/check_custom_level-sanitize "$(ASSETS)" build/levels/first-rescue.lvl
-	SDL_VIDEODRIVER=dummy ./build/check_custom_level-sanitize "$(ASSETS)" build/levels/emerald-falls.lvl --emerald
-	SDL_VIDEODRIVER=dummy ./build/check_custom_level-sanitize "$(ASSETS)" build/levels/forest-mayday.lvl --mayday
+	python3 tools/retail_levels.py analyze "$(ASSETS)/level" $(OUT)/level-analysis.json
+
 clean:
 	rm -rf build
+
+-include $(shell find $(OUT)/obj -name '*.d' 2>/dev/null)

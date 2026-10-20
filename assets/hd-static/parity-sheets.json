@@ -1,0 +1,153 @@
+{
+  "format": "volcano-authored-building-sheets-1",
+  "generator": "Built-in ImageGen; all states of each family authored together",
+  "sheets": [
+    {
+      "sheet": "buildings-cafes.generated.png",
+      "prompt": "buildings-cafes.prompt.txt",
+      "columns": 3,
+      "rows": 2,
+      "states": [
+        "burger1_br:0",
+        "burger1_br:1",
+        "burger1:0",
+        "burger2_br:0",
+        "burger2_br:1",
+        "burger2:0"
+      ]
+    },
+    {
+      "sheet": "buildings-sawmills.generated.png",
+      "prompt": "buildings-sawmills.prompt.txt",
+      "columns": 3,
+      "rows": 2,
+      "states": [
+        "sawmill1_br:0",
+        "sawmill1_br:1",
+        "sawmill1:0",
+        "sawmill2_br:0",
+        "sawmill2_br:1",
+        "sawmill2:0"
+      ]
+    },
+    {
+      "sheet": "buildings-houses.generated.png",
+      "prompt": "buildings-houses.prompt.txt",
+      "columns": 3,
+      "rows": 2,
+      "states": [
+        "house1_br:0",
+        "house1_br:1",
+        "house1:0",
+        "house2_br:0",
+        "house2_br:1",
+        "house2:0"
+      ]
+    },
+    {
+      "sheet": "buildings-fuel.generated.png",
+      "prompt": "buildings-fuel.prompt.txt",
+      "columns": 3,
+      "rows": 2,
+      "states": [
+        "gas1_br:0",
+        "gas1_br:1",
+        "gas1:0",
+        "gas2_br:0",
+        "gas2_br:1",
+        "gas2:0"
+      ]
+    },
+    {
+      "sheet": "buildings-services.generated.png",
+      "prompt": "buildings-services.prompt.txt",
+      "columns": 4,
+      "rows": 4,
+      "states": [
+        "police_br:0",
+        "police_br:1",
+        "police_br:2",
+        "police:0",
+        "firestation_br:0",
+        "firestation_br:1",
+        "firestation_br:2",
+        "firestation:0",
+        "hospital_br:0",
+        "hospital_br:1",
+        "hospital_br:2",
+        "hospital:0",
+        "heliport_br:0",
+        "heliport_br:1",
+        "heliport_br:2",
+        "heliport:0"
+      ]
+    },
+    {
+      "sheet": "buildings-transport.generated.png",
+      "prompt": "buildings-transport.prompt.txt",
+      "columns": 4,
+      "rows": 3,
+      "states": [
+        "seaport_br:0",
+        "seaport_br:1",
+        "seaport_br:2",
+        "seaport:0",
+        "railstation0_br:0",
+        "railstation0_br:1",
+        "railstation0_br:2",
+        "railstation0:0",
+        "garage0_br:0",
+        "garage0_br:1",
+        "garage0_br:2",
+        "garage0:0"
+      ]
+    },
+    {
+      "sheet": "buildings-bases.generated.png",
+      "prompt": "buildings-bases.prompt.txt",
+      "columns": 3,
+      "rows": 2,
+      "states": [
+        "base1:0",
+        "base2:0",
+        "base3:0",
+        "finish_base0:0",
+        "delivery_place0:0"
+      ]
+    },
+    {
+      "sheet": "buildings-overlays.generated.png",
+      "prompt": "buildings-overlays.prompt.txt",
+      "columns": 6,
+      "rows": 5,
+      "states": [
+        "base_flag:0",
+        "base_flag:1",
+        "base_flag:2",
+        "base_flag:3",
+        "tap:0",
+        "tap:1",
+        "tap:2",
+        "tap:3",
+        "tap:4",
+        "tap:5",
+        "tap:6",
+        "tap:7",
+        "tap:8",
+        "tap:9",
+        "tap:10",
+        "tap:11",
+        "tap:12",
+        "tap:13",
+        "tap:14",
+        "tap:15",
+        "tap:16",
+        "tap:17",
+        "delivery_place_hl:0",
+        "delivery_place_hl:1",
+        "delivery_place_hl:2",
+        "delivery_place_hl:3"
+      ]
+    }
+  ]
+}

@@ -16,7 +16,7 @@ equipment and corresponding game resource names.
 - Python 3 and Pillow for packing and preview generation. Check with
   `python3 -c 'from PIL import Image; print(Image.__version__)'`.
 - The game dependencies and retail resources described in the
-  [project README](../README.md#build-and-run) for installation and game checks.
+  [project README](../README.md#quick-start) for installation and game checks.
 
 Use a separate Blender process for this work. In the Codex filesystem sandbox,
 Blender's GPU initialization and the localhost socket client have required
@@ -37,8 +37,9 @@ Keep terminal A open. In terminal B, render, pack, test and package:
 
 ```sh
 python3 tools/blender_mcp.py tools/render_rescue_characters.py
-python3 tools/pack_rescue_characters.py --pack
-make test-hd hd-app
+python3 tools/pack_rescue_characters.py --pack --declare
+make test
+make run MISSION=library-rescue
 ```
 
 The render command operates on the scene already loaded in the MCP process. It
@@ -50,11 +51,15 @@ If you saved edits from another Blender window, restart this background process
 with the updated file before rendering. Saving a file elsewhere does not reload
 it into the MCP process. The renderer does not save changes back to the `.blend`.
 
-`make hd-app` installs the packed characters into `build/hd-assets` and creates
-`build/Volcano HD.app` and its level launchers. To install without packaging,
-use `make hd-assets`; for the characters over the retail environment, use
-`make character-assets`. These targets use the saved sprite catalog and do not
-invoke Blender or re-render animations.
+`--pack` writes the atlases and `sprites/catalog.json`; `--declare` writes
+`assets/kenney-characters/sprites/kenney.sprites.xml`, which serves the retail
+worker and civilian sprite names (`worker_*`, `man_*`, `wman_*`) from those
+atlases. The folder `assets/kenney-characters` is itself an asset pack: nothing
+is copied or installed. Library Rescue mounts it with
+`<pack path="../../assets/kenney-characters"/>`; any other mission or campaign
+level can use it with `./build/volcano --pack assets/kenney-characters ...`.
+`--declare` alone regenerates the declarations from the saved catalog without
+invoking Blender or re-rendering animations.
 
 Stop only your dedicated background process when finished. You can identify the
 listener with `lsof -nP -iTCP:9877 -sTCP:LISTEN`, verify its PID belongs to your
@@ -85,7 +90,7 @@ fresh empty scene and leaves the newly built model loaded in that MCP process.
 | `tools/texture_rescue_uniform.py` | Paint/bake the shared uniform atlas using Kenney's original body mesh and UV layout; make the simple helmet |
 | `tools/animate_rescue_run.py` | Bounce, torso recoil, arm drive, reduced head swing and carrying pose |
 | `tools/render_rescue_characters.py` | Render poses and directions; write the render manifest |
-| `tools/pack_rescue_characters.py` | Validate/crop frames, pack atlases, generate previews and install original game resource declarations |
+| `tools/pack_rescue_characters.py` | Validate/crop frames, pack atlases, generate previews (`--pack`) and write the pack's sprite declarations (`--declare`) |
 
 The FBX clips have different rest poses. Keep the builder's Targeting Pose
 retargeting; copying local quaternion tracks directly between these rigs gives
@@ -134,6 +139,7 @@ graph update can replace the pose with the action's existing keys.
 | `assets/kenney-characters/render-manifest.json` | Clip/frame sizes, cache paths and ground anchors for packing |
 | `assets/kenney-characters/sprites/*.png` | Packed transparent atlases committed to Git |
 | `assets/kenney-characters/sprites/catalog.json` | Frame rectangles, pivots, texture sizes and SHA-256 hashes |
+| `assets/kenney-characters/sprites/kenney.sprites.xml` | Sprite sheet mapping retail character names to the atlases, keeping retail frame counts and FPS |
 | `assets/kenney-characters/previews/worker-actions.jpg` | Four poses of each worker action |
 | `assets/kenney-characters/previews/worker-directions.jpg` | Eight-direction review of standing, running and hammering |
 | `assets/kenney-characters/previews/rescue-worker.gif` | Animated review including Run and Carry |
@@ -175,8 +181,8 @@ fingerprint = hashlib.sha256(
 (cache / 'fingerprint.txt').write_text(fingerprint)
 PY
 python3 tools/blender_mcp.py tools/render_rescue_characters.py
-python3 tools/pack_rescue_characters.py --pack
-make test-hd hd-app
+python3 tools/pack_rescue_characters.py --pack --declare
+make test
 ```
 
 This explicitly marks the other cached clips as valid. Do not use it for changes
@@ -229,8 +235,10 @@ Before considering an animation complete:
 - Run the packer: it rejects wrong frame sizes, empty alpha, edge clipping and
   unlit silhouettes. It crops alpha and preserves the world-origin ground pivot;
   do not center each trimmed frame independently.
-- Run `make test-hd hd-app`, then inspect the HD game using the rebuilt assets.
-  The retail run targets use the original character resources.
+- Run `make test`: the `--library-rescue` regression checks that the worker and
+  civilian sprites resolve to the Kenney atlases. Then inspect
+  `make run MISSION=library-rescue` with the retail assets. Missions that do not
+  mount the pack keep the original character resources.
 
 Keep `scene.render.use_persistent_data=False` and the atlas reload in the
 renderer. Reusing Cycles state previously produced near-black silhouettes with
@@ -246,8 +254,8 @@ unknown `blender_mcp` command, the required extension is not available in that
 Blender installation. Do not rebuild the model merely to recover a render.
 
 Commit the completed authoring step before rendering, then commit the updated
-sprite atlases, catalog, manifest if changed, and generated previews after the
-render checks pass. `build/` is ignored. Blender may create a `.blend1` backup;
+sprite atlases, catalog, `kenney.sprites.xml`, manifest if changed, and generated
+previews after the render checks pass. `build/` is ignored. Blender may create a `.blend1` backup;
 it is not an input to this pipeline, so retain it outside the change or remove
 the backup created by your own save before committing. Preserve unrelated edits
 from other work in this shared repository.

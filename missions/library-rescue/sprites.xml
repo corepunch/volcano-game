@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mission art: rectangles are image pixels from the top-left; pivot is the ground point. -->
+<sprites>
+  <sprite name="library-rescue/timber-shoring" image="props.png" rect="1095,510,345,200" pivot="0.5,0.7" scale="0.26"/>
+  <sprite name="library-rescue/concrete-slabs" image="props.png" rect="15,785,350,250" pivot="0.5,0.7" scale="0.25"/>
+  <sprite name="library-rescue/street-debris" image="props.png" rect="1095,800,340,225" pivot="0.5,0.7" scale="0.25"/>
+  <sprite name="library-rescue/heavy-steel-debris" image="props.png" rect="375,790,365,240" pivot="0.5,0.7" scale="0.3"/>
+  <sprite name="library-rescue/broken-paving" image="props.png" rect="745,830,345,200" pivot="0.5,0.5" scale="0.25"/>
+  <sprite name="library-rescue/field-kitchen-damaged" image="props.png" rect="380,110,345,280" pivot="0.5,0.7" scale="0.34"/>
+  <sprite name="library-rescue/field-kitchen" image="props.png" rect="745,110,345,280" pivot="0.5,0.68" scale="0.34"/>
+  <sprite name="library-rescue/salvage-supply-station-damaged" image="props.png" rect="1095,110,350,290" pivot="0.5,0.74" scale="0.36"/>
+  <sprite name="library-rescue/salvage-supply-station" image="props.png" rect="10,430,350,290" pivot="0.5,0.69" scale="0.36"/>
+  <sprite name="library-rescue/logistics-station-damaged" image="props.png" rect="375,425,350,285" pivot="0.5,0.72" scale="0.36"/>
+  <sprite name="library-rescue/logistics-station" image="props.png" rect="740,425,350,285" pivot="0.5,0.69" scale="0.36"/>
+</sprites>

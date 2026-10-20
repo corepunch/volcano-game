@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Emerald Falls: baked forest lighting and shadows, independent water sparkles, original Rescue Team butterflies and six precisely placed white foam patches. Three-branch resource puzzle and seven people/two animals. -->
+<mission format="volcano-mission-1" title="Emerald Falls" background="background.png">
+  <settings rules="rescue" food="40" people="7"/>
+  <traffic>200.16,408.89 230.24,408.89 260.32,408.89 290.4,408.89 320.48,408.89 350.56,408.89 380.64,408.89 410.72,408.89 440.8,408.89 470.88,408.89 500.96,408.89 531.04,408.89 561.68,408.89 592.32,408.89 622.95,408.89 653.59,408.89 683.93,408.89 714.28,408.89 744.62,408.89 774.97,408.89 805.31,408.89 835.66,408.89 866,408.89 894.6,408.89 923.19,408.89 951.78,408.89 980.38,408.89 1008.98,408.89 1037.57,408.89 1066.16,408.89 1094.76,408.89 1120.9,408.89 1147.05,408.89 1173.19,408.89 1199.34,408.89 1225.48,408.89 531.04,437.46 531.04,466.02 531.04,494.59 531.04,512.96 531.04,531.32 547.38,549.68 563.72,568.04 592.32,582.33 620.91,596.61 642.7,600.69 664.48,604.77 686.27,608.85 714.87,615.99 743.46,623.13 772.05,630.28 800.65,637.42 821.08,625.17 841.5,612.93 543.3,545.19 516.75,552.54 490.19,559.88 468.4,561.24 446.62,562.6 424.83,563.96 653.59,381.69 653.59,354.48 653.59,327.28 653.59,297.35 653.59,267.43 653.59,237.5 626.36,237.5 599.12,237.5 571.89,237.5 550.1,234.78 528.32,232.06 506.53,229.34 479.3,226.62 452.06,223.9 424.83,221.18 680.82,229.34 708.06,221.18 735.29,213.02 759.8,213.02 784.31,213.02 808.82,213.02 833.33,213.02 863.28,213.02 893.24,213.02 923.19,213.02 549.55,204.89 806.41,239.01</traffic>
+  <object id="10" type="hq" x="200.16" y="408.89"/>
+  <object id="11" type="worker" x="200.16" y="408.89"/>
+  <object id="12" type="worker" x="208.33" y="408.89"/>
+  <object id="20" type="tree" x="531.04" y="494.59"/>
+  <object id="21" type="tree" x="686.27" y="608.85"/>
+  <object id="22" type="stone" x="653.59" y="327.28"/>
+  <object id="23" type="boulder" x="866" y="408.89"/>
+  <object id="24" type="bridge" x="1094.76" y="408.89"/>
+  <object id="30" type="cafe" x="468" y="586"/>
+  <object id="31" type="food-small" x="520" y="575" producer="30"/>
+  <object id="32" type="sawmill" x="543.5" y="175"/>
+  <object id="33" type="wood-small" x="600" y="195" producer="32"/>
+  <object id="34" type="house" x="806" y="265"/>
+  <object id="35" type="money-small" x="816.99" y="215.46" producer="34"/>
+  <object id="40" type="wood-large" x="567.81" y="249.74"/>
+  <object id="41" type="wood-large" x="608.65" y="217.1"/>
+  <object id="42" type="money-large" x="776.14" y="225.26"/>
+  <object id="43" type="money-large" x="841.5" y="200.77"/>
+  <object id="44" type="money-large" x="890.51" y="225.26"/>
+  <object id="50" type="civilian" x="800.65" y="637.42"/>
+  <object id="51" type="civilian" x="841.5" y="612.93"/>
+  <object id="52" type="worker" x="767.97" y="612.93"/>
+  <object id="53" type="civilian" x="923.19" y="213.02"/>
+  <object id="54" type="civilian" x="890.51" y="245.66"/>
+  <object id="55" type="civilian" x="1225.48" y="408.89"/>
+  <object id="56" type="civilian" x="1213.22" y="376.25"/>
+  <object id="60" type="dog" x="735.29" y="594.98"/>
+  <object id="61" type="cat" x="890.51" y="188.53" variant="1"/>
+  <effect kind="foam" x="1113.5" y="635.1" width="30" rate="22"/>
+  <effect kind="foam" x="1080.1" y="590.1" width="20" rate="18"/>
+  <effect kind="foam" x="1113.5" y="563.75" width="34" rate="24"/>
+  <effect kind="foam" x="1105.1" y="328.6" width="22" rate="20"/>
+  <effect kind="foam" x="1099" y="296.35" width="32" rate="24"/>
+  <effect kind="foam" x="1181.5" y="96.1" width="40" rate="26"/>
+  <effect kind="sparkles" x="1099" y="722" width="38" height="55" rate="5" speed=".8" opacity=".7"/>
+  <effect kind="sparkles" x="1116" y="646" width="35" height="30" rate="5" speed=".8" opacity=".7"/>
+  <effect kind="sparkles" x="1117" y="565" width="34" height="38" rate="5" speed=".8" opacity=".7"/>
+  <effect kind="sparkles" x="1110" y="499" width="27" height="70" rate="5" speed=".8" opacity=".7"/>
+  <effect kind="sparkles" x="1110" y="415" width="26" height="24" rate="5" speed=".8" opacity=".7"/>
+  <effect kind="sparkles" x="1111" y="337" width="26" height="46" rate="5" speed=".8" opacity=".7"/>
+  <effect kind="sparkles" x="1105" y="278" width="38" height="42" rate="5" speed=".8" opacity=".7"/>
+  <effect kind="sparkles" x="1143" y="202" width="34" height="55" rate="5" speed=".8" opacity=".7"/>
+  <effect kind="sparkles" x="1187" y="124" width="42" height="45" rate="5" speed=".8" opacity=".7"/>
+  <effect kind="sparkles" x="1216" y="44" width="64" height="34" rate="5" speed=".8" opacity=".7"/>
+  <effect kind="insects" x="130" y="560" width="54" height="32" speed="1" opacity=".9" count="2"/>
+  <effect kind="insects" x="340" y="480" width="54" height="32" speed="1" opacity=".9" count="2"/>
+  <effect kind="insects" x="680" y="510" width="54" height="32" speed="1" opacity=".9" count="2"/>
+  <effect kind="insects" x="920" y="485" width="54" height="32" speed="1" opacity=".9" count="2"/>
+  <effect kind="insects" x="320" y="280" width="54" height="32" speed="1" opacity=".9" count="2"/>
+  <effect kind="insects" x="150" y="170" width="54" height="32" speed="1" opacity=".9" count="2"/>
+  <effect kind="insects" x="680" y="115" width="54" height="32" speed="1" opacity=".9" count="2"/>
+  <effect kind="insects" x="990" y="570" width="54" height="32" speed="1" opacity=".9" count="2"/>
+  <effect kind="insects" x="1310" y="250" width="54" height="32" speed="1" opacity=".9" count="2"/>
+  <effect kind="motes" x="280" y="590" width="110" height="65" speed=".7" opacity=".45" count="8"/>
+  <effect kind="motes" x="750" y="495" width="110" height="65" speed=".7" opacity=".45" count="8"/>
+  <effect kind="motes" x="220" y="270" width="110" height="65" speed=".7" opacity=".45" count="8"/>
+  <effect kind="motes" x="820" y="80" width="110" height="65" speed=".7" opacity=".45" count="8"/>
+</mission>

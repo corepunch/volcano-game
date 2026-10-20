@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Settings for the original campaign positions (1-50). Unlisted positions use
+  the root ruleset. Starting stock and rescue goals for 1-3 match the original
+  screenshots and walkthrough; the rest is restoration balance.
+  Attributes are the same as a mission's <settings> element.
+-->
+<campaign rules="prototype">
+  <mission number="1" rules="rescue" food="20" people="3" crew-at-hq="true" offroad="false"/>
+  <mission number="2" rules="rescue" food="50" wood="30" money="20" people="3" offroad="false"/>
+  <mission number="3" rules="rescue" food="10" wood="100" money="30" people="5" offroad="false"/>
+  <mission number="4" rules="rescue" food="60" wood="80" money="70" fuel="70" people="13"/>
+  <mission number="5" rules="rescue" food="70" wood="80" money="40" people="6"/>
+  <mission number="6" rules="rescue" food="60" wood="90" money="40" fuel="220" people="2" basins="2"
+           buildable="sawmill house gas-station"/>
+</campaign>
