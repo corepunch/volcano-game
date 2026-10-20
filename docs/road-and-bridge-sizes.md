@@ -25,7 +25,7 @@ as the normal road width. Measure perpendicular to a straight stretch.
 
 ## Measurements from the existing forest paintings
 
-Manual edge measurements in the 1672 × 941 source PNGs, top-left coordinates:
+Manual edge measurements in the previous 1672 × 941 source PNGs, top-left coordinates:
 
 | Level | Cross-section endpoints | Painted width | Logical width |
 | --- | --- | --- | --- |
@@ -89,3 +89,14 @@ A 2× sprite atlas uses 48 texture pixels for a 24-pixel deck. Backgrounds of
 1672 × 941 use about 29 source pixels, and their 3344 × 1882 Retina copies
 use about 59. These differ because backgrounds map to the 1366 × 768 canvas.
 Never double logical widths when adding Retina artwork.
+
+## Current artwork audit
+
+Every custom-painted mission now has a revised `missions/NAME/background.png`
+and a 2x `background@2x.png`. Exact edit prompts and prior/output hashes are in
+`art-source/road-width/`; manual post-edit calipers and image hashes are in
+`art-source/road-width-measurements.json`. Run
+`python3 tools/check_road_dimensions.py` to validate the recorded samples against
+the shared width and to reject stale measurements after image changes. This
+is sampled visual QA, not automatic detection of the entire painted road area.
+The First Rescue example reuses the retail `103` plate and needs no repainting.

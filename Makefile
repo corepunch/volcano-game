@@ -106,6 +106,7 @@ $(MISSION_TESTS): test-%: $(OUT)/test_missions $(OUT)/test_coaster $(TEST_PACK)
 
 test-tools: $(OUT)/python-venv/.dependencies
 	$(ASSET_PYTHON) -m unittest discover -s tests -p 'test_tools.py'
+	$(PYTHON) tools/check_road_dimensions.py
 
 # Original campaign, prototype scenes and retail art (not redistributable).
 test-retail: $(OUT)/test_retail

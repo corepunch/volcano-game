@@ -1,0 +1,48 @@
+{
+  "format": "volcano-road-width-art-1",
+  "date": "2026-10-20",
+  "method": "built-in ImageGen edits; Runway 2x Retina upscaling",
+  "previous_revision": "f2964d2",
+  "logical_canvas": [
+    1366,
+    768
+  ],
+  "road_clear_width": 24,
+  "images": [
+    {
+      "level": "emerald-falls",
+      "source": "missions/emerald-falls/background.png",
+      "previous_sha256": "b2e68ed9cefe8f4dc775a4adc5071a2439c6524eef1f27f2993223e546ce20b7",
+      "source_sha256": "c4acef4a7efb6b66b23bd1e2aa240804de9636aab649fb16d33fcbd0311e62aa",
+      "prompts": "art-source/road-width/emerald-falls.prompts.json"
+    },
+    {
+      "level": "forest-mayday",
+      "source": "missions/forest-mayday/background.png",
+      "previous_sha256": "810b0a2fe534f4741d891381d7b02d77116d1984f1e1382ba88c8cd811c2d3ac",
+      "source_sha256": "34cb8c073423d9d8340b406e8ec1e546cb8b1025916f627c71ea4cc3f3512926",
+      "prompts": "art-source/road-width/forest-mayday.prompts.json"
+    },
+    {
+      "level": "ancient-echoes",
+      "source": "missions/ancient-echoes/background.png",
+      "previous_sha256": "dc9a419a122be52f27b76423aebf0c54c661b443af3823ec9df20c146da1e6d1",
+      "source_sha256": "850cae06cb17fda0e2ce9c3a226ce51fb055741a7cf3191d30fa6ab5f26b383b",
+      "prompts": "art-source/road-width/ancient-echoes.prompts.json"
+    },
+    {
+      "level": "twisted-tracks",
+      "source": "missions/twisted-tracks/background.png",
+      "previous_sha256": "d25bd5a0ba919f635345730920aae2a47b0d162d58dc9df6d4f7998f11795bb7",
+      "source_sha256": "be98b4e90147b621fe0c23fa54a8abfe9cb759a4c577e168e57b133ed54e0f56",
+      "prompts": "art-source/road-width/twisted-tracks.prompts.json"
+    },
+    {
+      "level": "library-rescue",
+      "source": "missions/library-rescue/background.png",
+      "previous_sha256": "15546ab73ed51c433967f0feb16bdac2dd25a0dedb0ca1c7f7cb2f4a6ac43abf",
+      "source_sha256": "ae0645d79d29bd166e4a80daa74f80b5796c2afa8ef85f0fdc3dd21d2978baa2",
+      "prompts": "art-source/road-width/library-rescue.prompts.json"
+    }
+  ]
+}
