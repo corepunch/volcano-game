@@ -788,6 +788,210 @@
         "inset": 0.21,
         "drop": 1
       }
+    },
+    {
+      "animation": "bridge_wood01",
+      "frame": 0,
+      "region": [
+        912,
+        606,
+        1078,
+        720
+      ],
+      "footprint": {
+        "width": 1.06,
+        "height": 0.9,
+        "offset_x": 0.025,
+        "inset": 0.45,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "bridge_wood01",
+      "frame": 1,
+      "region": [
+        1092,
+        603,
+        1259,
+        719
+      ],
+      "footprint": {
+        "width": 1.06,
+        "height": 0.9,
+        "offset_x": 0.025,
+        "inset": 0.45,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "bridge_wood01",
+      "frame": 2,
+      "region": [
+        1274,
+        605,
+        1435,
+        720
+      ],
+      "footprint": {
+        "width": 1.06,
+        "height": 0.9,
+        "offset_x": 0.025,
+        "inset": 0.45,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "bridge_wood01",
+      "frame": 3,
+      "region": [
+        17,
+        772,
+        181,
+        886
+      ],
+      "footprint": {
+        "width": 1.06,
+        "height": 0.9,
+        "offset_x": 0.025,
+        "inset": 0.45,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "bridge_auto00",
+      "frame": 0,
+      "region": [
+        912,
+        606,
+        1078,
+        720
+      ],
+      "footprint": {
+        "width": 1.06,
+        "height": 0.47,
+        "offset_x": 0.025,
+        "inset": 0.2,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "bridge_auto00",
+      "frame": 1,
+      "region": [
+        1092,
+        603,
+        1259,
+        719
+      ],
+      "footprint": {
+        "width": 1.06,
+        "height": 0.47,
+        "offset_x": 0.025,
+        "inset": 0.2,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "bridge_auto00",
+      "frame": 2,
+      "region": [
+        1274,
+        605,
+        1435,
+        720
+      ],
+      "footprint": {
+        "width": 1.06,
+        "height": 0.47,
+        "offset_x": 0.025,
+        "inset": 0.2,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "bridge_auto00",
+      "frame": 3,
+      "region": [
+        17,
+        772,
+        181,
+        886
+      ],
+      "footprint": {
+        "width": 1.06,
+        "height": 0.47,
+        "offset_x": 0.025,
+        "inset": 0.2,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "bridge_auto01",
+      "frame": 0,
+      "region": [
+        912,
+        606,
+        1078,
+        720
+      ],
+      "footprint": {
+        "width": 1.06,
+        "height": 0.9,
+        "offset_x": 0.025,
+        "inset": 0.45,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "bridge_auto01",
+      "frame": 1,
+      "region": [
+        1092,
+        603,
+        1259,
+        719
+      ],
+      "footprint": {
+        "width": 1.06,
+        "height": 0.9,
+        "offset_x": 0.025,
+        "inset": 0.45,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "bridge_auto01",
+      "frame": 2,
+      "region": [
+        1274,
+        605,
+        1435,
+        720
+      ],
+      "footprint": {
+        "width": 1.06,
+        "height": 0.9,
+        "offset_x": 0.025,
+        "inset": 0.45,
+        "drop": 1
+      }
+    },
+    {
+      "animation": "bridge_auto01",
+      "frame": 3,
+      "region": [
+        17,
+        772,
+        181,
+        886
+      ],
+      "footprint": {
+        "width": 1.06,
+        "height": 0.9,
+        "offset_x": 0.025,
+        "inset": 0.45,
+        "drop": 1
+      }
     }
   ]
 }

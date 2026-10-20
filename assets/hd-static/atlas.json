@@ -7,7 +7,10 @@
       "animation": "base0",
       "frame": 0,
       "sheet": "buildings-hq-rounded.generated.png",
-      "pivot": [148, 242],
+      "pivot": [
+        148,
+        242
+      ],
       "extraction": "rect",
       "region": [
         0,
@@ -325,50 +328,6 @@
       ]
     },
     {
-      "animation": "bridge_wood00",
-      "frame": 0,
-      "sheet": "props.generated.png",
-      "region": [
-        9,
-        823,
-        255,
-        1033
-      ]
-    },
-    {
-      "animation": "bridge_wood00",
-      "frame": 1,
-      "sheet": "props.generated.png",
-      "region": [
-        261,
-        824,
-        491,
-        1033
-      ]
-    },
-    {
-      "animation": "bridge_wood00",
-      "frame": 2,
-      "sheet": "props.generated.png",
-      "region": [
-        497,
-        824,
-        725,
-        1033
-      ]
-    },
-    {
-      "animation": "bridge_wood00",
-      "frame": 3,
-      "sheet": "props.generated.png",
-      "region": [
-        731,
-        823,
-        947,
-        1035
-      ]
-    },
-    {
       "animation": "broken_road0",
       "frame": 0,
       "sheet": "props.generated.png",
@@ -509,6 +468,198 @@
         1153,
         574,
         1373
+      ]
+    },
+    {
+      "animation": "bridge_wood00",
+      "frame": 0,
+      "sheet": "bridges.generated.png",
+      "extraction": "rect",
+      "region": [
+        0,
+        4,
+        325,
+        250
+      ]
+    },
+    {
+      "animation": "bridge_wood00",
+      "frame": 1,
+      "sheet": "bridges.generated.png",
+      "extraction": "rect",
+      "region": [
+        325,
+        25,
+        630,
+        241
+      ]
+    },
+    {
+      "animation": "bridge_wood00",
+      "frame": 2,
+      "sheet": "bridges.generated.png",
+      "extraction": "rect",
+      "region": [
+        630,
+        25,
+        934,
+        248
+      ]
+    },
+    {
+      "animation": "bridge_wood00",
+      "frame": 3,
+      "sheet": "bridges.generated.png",
+      "extraction": "rect",
+      "region": [
+        941,
+        15,
+        1240,
+        249
+      ]
+    },
+    {
+      "animation": "bridge_wood01",
+      "frame": 0,
+      "sheet": "bridges.generated.png",
+      "extraction": "rect",
+      "region": [
+        0,
+        250,
+        325,
+        620
+      ]
+    },
+    {
+      "animation": "bridge_wood01",
+      "frame": 1,
+      "sheet": "bridges.generated.png",
+      "extraction": "rect",
+      "region": [
+        325,
+        257,
+        630,
+        619
+      ]
+    },
+    {
+      "animation": "bridge_wood01",
+      "frame": 2,
+      "sheet": "bridges.generated.png",
+      "extraction": "rect",
+      "region": [
+        630,
+        272,
+        940,
+        620
+      ]
+    },
+    {
+      "animation": "bridge_wood01",
+      "frame": 3,
+      "sheet": "bridges.generated.png",
+      "extraction": "rect",
+      "region": [
+        940,
+        250,
+        1238,
+        619
+      ]
+    },
+    {
+      "animation": "bridge_auto00",
+      "frame": 0,
+      "sheet": "bridges.generated.png",
+      "extraction": "rect",
+      "region": [
+        14,
+        620,
+        325,
+        840
+      ]
+    },
+    {
+      "animation": "bridge_auto00",
+      "frame": 1,
+      "sheet": "bridges.generated.png",
+      "extraction": "rect",
+      "region": [
+        325,
+        620,
+        630,
+        830
+      ]
+    },
+    {
+      "animation": "bridge_auto00",
+      "frame": 2,
+      "sheet": "bridges.generated.png",
+      "extraction": "rect",
+      "region": [
+        630,
+        620,
+        940,
+        840
+      ]
+    },
+    {
+      "animation": "bridge_auto00",
+      "frame": 3,
+      "sheet": "bridges.generated.png",
+      "extraction": "rect",
+      "region": [
+        940,
+        620,
+        1241,
+        840
+      ]
+    },
+    {
+      "animation": "bridge_auto01",
+      "frame": 0,
+      "sheet": "bridges.generated.png",
+      "extraction": "rect",
+      "region": [
+        0,
+        840,
+        325,
+        1254
+      ]
+    },
+    {
+      "animation": "bridge_auto01",
+      "frame": 1,
+      "sheet": "bridges.generated.png",
+      "extraction": "rect",
+      "region": [
+        325,
+        849,
+        630,
+        1254
+      ]
+    },
+    {
+      "animation": "bridge_auto01",
+      "frame": 2,
+      "sheet": "bridges.generated.png",
+      "extraction": "rect",
+      "region": [
+        630,
+        845,
+        933,
+        1254
+      ]
+    },
+    {
+      "animation": "bridge_auto01",
+      "frame": 3,
+      "sheet": "bridges.generated.png",
+      "extraction": "rect",
+      "region": [
+        943,
+        840,
+        1224,
+        1230
       ]
     }
   ]

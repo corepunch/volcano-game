@@ -105,7 +105,9 @@ Keep those small launchers beside `Volcano HD.app`. The main bundle includes bot
 missions and their backgrounds. The original run targets continue to use retail
 sprites. HD artwork covers every interactive building, debris and resource sprite
 used by the two custom missions, plus the fuel station and construction lot:
-23 sprites and 46 authored damage/repair states. HD workers and civilians use
+26 sprites and 58 authored damage/repair states. Wooden and road bridges use
+strictly horizontal or vertical artwork across all four repair stages; the complete
+bridge set is authored together in `assets/hd-static/bridges.generated.png`. HD workers and civilians use
 our [Kenney character adaptation](assets/kenney-characters/README.md), rendered
 from an editable Blender rig in eight directions. See the [character rendering
 guide](docs/rendering-characters.md) to render saved models, rebuild animations,
