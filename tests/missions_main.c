@@ -41,7 +41,7 @@ static bool play(const char *path)
         game_update(.1);
     }
     if (!check(game.won && game.rescued==2 && game.stock.wood==0 && game.stock.food==0,"mission completes through normal play")) return false;
-    game_pointer(683,GAME_HEIGHT-350,false);
+    game_pointer(683,render_height()-350,false);
     if (!check(game_hud_button(game_current())==-1,"custom victory has one replay button")) return false;
     if (!test_frame("custom-level-complete")) return false;
     game_key(SDLK_RETURN);
@@ -59,11 +59,11 @@ static bool foam_pixels(uint32_t *hash,int *lit)
 {
     SDL_SetRenderDrawColor(renderer,0,0,0,255);SDL_RenderClear(renderer);
     for (int i=0;i<game.spec.visual_count;i++) if (game.spec.visuals[i].kind==MAP_FOAM) map_visual_draw(&game.spec.visuals[i],game.time);
-    SDL_Surface *surface=SDL_CreateRGBSurfaceWithFormat(0,GAME_WIDTH,GAME_HEIGHT,32,SDL_PIXELFORMAT_RGBA32);
+    SDL_Surface *surface=SDL_CreateRGBSurfaceWithFormat(0,render_width(),render_height(),32,SDL_PIXELFORMAT_RGBA32);
     if (!surface) return false;
-    bool ok=SDL_RenderReadPixels(renderer,NULL,SDL_PIXELFORMAT_RGBA32,surface->pixels,surface->pitch)==0;
+    bool ok=SDL_RenderReadPixels(renderer,&(SDL_Rect){0,0,render_width(),render_height()},SDL_PIXELFORMAT_RGBA32,surface->pixels,surface->pitch)==0;
     *hash=2166136261u;*lit=0;int brightest=0;
-    if (ok) for (int y=0;y<GAME_HEIGHT;y++) for (int x=0;x<GAME_WIDTH;x++) {
+    if (ok) for (int y=0;y<render_height();y++) for (int x=0;x<render_width();x++) {
         const Uint8 *p=(const Uint8 *)surface->pixels+y*surface->pitch+x*4;
         if (p[0] || p[1] || p[2]) {
             (*lit)++;if (p[0]>brightest) brightest=p[0];
@@ -71,7 +71,7 @@ static bool foam_pixels(uint32_t *hash,int *lit)
             bool in_pool=false;
             for (int i=0;i<game.spec.visual_count;i++) {
                 const MapVisual *v=&game.spec.visuals[i];if (v->kind!=MAP_FOAM) continue;
-                float world_y=GAME_HEIGHT-y;
+                float world_y=render_height()-y;
                 if (fabsf(x-v->p.x)<v->extent.x*.6f+20 && world_y<=v->p.y+14 && world_y>=v->p.y-14) in_pool=true;
             }
             if (!in_pool) ok=game_fail("Waterfall particles escaped the bottom foam pool");
@@ -102,11 +102,11 @@ static bool visual_hash(MapVisualKind kind,uint32_t *hash,int *lit)
     SDL_SetRenderDrawColor(renderer,0,0,0,255);SDL_RenderClear(renderer);
     for (int i=0;i<game.spec.visual_count;i++) if (game.spec.visuals[i].kind==kind)
         map_visual_draw(&game.spec.visuals[i],game.time);
-    SDL_Surface *surface=SDL_CreateRGBSurfaceWithFormat(0,GAME_WIDTH,GAME_HEIGHT,32,SDL_PIXELFORMAT_RGBA32);
+    SDL_Surface *surface=SDL_CreateRGBSurfaceWithFormat(0,render_width(),render_height(),32,SDL_PIXELFORMAT_RGBA32);
     if (!surface) return false;
-    bool ok=SDL_RenderReadPixels(renderer,NULL,SDL_PIXELFORMAT_RGBA32,surface->pixels,surface->pitch)==0;
+    bool ok=SDL_RenderReadPixels(renderer,&(SDL_Rect){0,0,render_width(),render_height()},SDL_PIXELFORMAT_RGBA32,surface->pixels,surface->pitch)==0;
     *hash=2166136261u;*lit=0;
-    if (ok) for (int y=0;y<GAME_HEIGHT;y++) for (int x=0;x<GAME_WIDTH;x++) {
+    if (ok) for (int y=0;y<render_height();y++) for (int x=0;x<render_width();x++) {
         const Uint8 *p=(const Uint8 *)surface->pixels+y*surface->pitch+x*4;
         if (p[0] || p[1] || p[2]) (*lit)++;
         for (int c=0;c<3;c++) *hash=(*hash^p[c])*16777619u;
@@ -144,7 +144,7 @@ static bool mayday_food_recovery(const char *path)
     const uint32_t hover_ids[]={30,40,42};
     const char *hover_shots[]={"forest-mayday-repair-income","forest-mayday-wood-income","forest-mayday-money-income"};
     for (int i=0;i<3;i++) {
-        Entity *e=&game.objects[test_entity(hover_ids[i])];game_pointer(e->p.x,GAME_HEIGHT-e->p.y,false);
+        Entity *e=&game.objects[test_entity(hover_ids[i])];game_pointer(e->p.x,render_height()-e->p.y,false);
         if (!test_frame(hover_shots[i])) return false;
     }
     test_click_entity(north);test_click_entity(south);
@@ -155,14 +155,14 @@ static bool mayday_food_recovery(const char *path)
     for (int tick=0;tick<1000;tick++) game_update(.1);
     if (!check(game.stock.wood==60 && game.stock.food==0 && game.rescued==2,
                "reproduced screenshot state: zero food, sixty timber, two people rescued")) return false;
-    game_pointer(game.objects[tree].p.x,GAME_HEIGHT-game.objects[tree].p.y,false);
+    game_pointer(game.objects[tree].p.x,render_height()-game.objects[tree].p.y,false);
     if (!test_frame("forest-mayday-tree-cost")) return false;
     test_click_entity(rock);test_click_entity(tree);
     if (!check(game.objects[tree].queued && !game.objects[tree].assigned &&
                !strcmp(game.message,"Required: 20 food"),
                "resource-blocked queue shows the full cost without strategy hints")) return false;
     if (!test_frame("forest-mayday-waiting-for-food")) return false;
-    game_pointer(game.objects[rock].p.x,GAME_HEIGHT-game.objects[rock].p.y,false);
+    game_pointer(game.objects[rock].p.x,render_height()-game.objects[rock].p.y,false);
     if (!test_frame("forest-mayday-rock-cost")) return false;
     test_click_entity(cafe);
     if (!check(game.objects[cafe].assigned && game.stock.wood==40,
@@ -172,12 +172,12 @@ static bool mayday_food_recovery(const char *path)
         game_update(.1);
         Entity *producer=&game.objects[cafe],*food=&game.objects[test_entity(31)];
         if (producer->operational && !production_shot) {
-            game_pointer(producer->p.x,GAME_HEIGHT-producer->p.y,false);
+            game_pointer(producer->p.x,render_height()-producer->p.y,false);
             if (!test_frame("forest-mayday-production-income")) return false;
             production_shot=true;
         }
         if (!food->hidden && !food_shot) {
-            game_pointer(food->p.x,GAME_HEIGHT-food->p.y,false);
+            game_pointer(food->p.x,render_height()-food->p.y,false);
             if (!test_frame("forest-mayday-food-income")) return false;
             food_shot=true;
         }
@@ -249,7 +249,7 @@ static bool library_station_frames(const char *state)
     const char *names[]={"kitchen","salvage","logistics"};
     for (int j=0;j<3;j++) {
         Entity *station=&game.objects[test_entity(ids[j])];
-        game_pointer(station->p.x,GAME_HEIGHT-station->p.y,false);
+        game_pointer(station->p.x,render_height()-station->p.y,false);
         if (!check(game_hovered_object(game_current())==test_entity(ids[j]),
                    "station ground footprint remains a natural click target")) return false;
         char shot[96];snprintf(shot,sizeof shot,"library-rescue-%s-%s",names[j],state);
@@ -322,7 +322,7 @@ static bool play_disaster_mission(const char *path,int variant)
                        "urban artwork preserves original job costs")) return false;
             /* This natural visible point is outside the original timber-station bounds. */
             Entity *station=&game.objects[test_entity(32)];
-            game_pointer(station->p.x-59,GAME_HEIGHT-station->p.y-35,false);
+            game_pointer(station->p.x-59,render_height()-station->p.y-35,false);
             if (!check(game_hovered_object(game_current())==test_entity(32),
                        "authored field-station footprint is clickable")) return false;
             if (!order && !library_station_frames("damaged")) return false;

@@ -5,7 +5,7 @@
 void game_set_pointer(Game *g,float x,float y,bool down)
 {
     if (!g) return;
-    g->pointer_x=x;g->pointer_y=GAME_HEIGHT-y;g->pointer_down=down;
+    g->pointer_x=x;g->pointer_y=(g->spec.height?g->spec.height:GAME_HEIGHT)-y;g->pointer_down=down;
 }
 
 static void choose_from_menu(Game *g,int option)
@@ -35,7 +35,7 @@ GameCommand game_handle_click(Game *g,float x,float y)
     if (g->won) return button==1?GAME_COMMAND_NEXT:button==2?GAME_COMMAND_RESTART:GAME_COMMAND_NONE;
     if (button==0 || button==1) { g->paused=!g->paused;g->build_menu=-1;return GAME_COMMAND_NONE; }
     if (button==2) return GAME_COMMAND_RESTART;
-    if (g->paused || game_inside(g,0,668,446,100) || game_inside(g,1010,671,356,97)) return GAME_COMMAND_NONE;
+    if (g->paused || game_over_hud(g)) return GAME_COMMAND_NONE;
     if (g->build_menu>=0) {
         int option=game_build_button_at(g);
         if (option>=0) choose_from_menu(g,option);

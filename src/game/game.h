@@ -28,4 +28,6 @@ void game_click(float x,float y);
 void game_pointer(float x,float y,bool down);
 void game_key(SDL_Keycode key);
 int game_level_index(void);
+int game_canvas_width(void);
+int game_canvas_height(void);
 #endif

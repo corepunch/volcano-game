@@ -91,6 +91,7 @@ int main(int argc,char **argv)
 
     if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER)) { error_set("%s",SDL_GetError());goto done; }
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY,"1");
+    SDL_SetHint(SDL_HINT_RENDER_LOGICAL_SIZE_MODE,"letterbox");
     window=SDL_CreateWindow("Volcano",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,GAME_WIDTH,GAME_HEIGHT,
         SDL_WINDOW_RESIZABLE|SDL_WINDOW_ALLOW_HIGHDPI|(hidden?SDL_WINDOW_HIDDEN:0));
     if (!window) { error_set("%s",SDL_GetError());goto done; }
@@ -101,8 +102,12 @@ int main(int argc,char **argv)
     if (!game_startup(&config)) goto done;
     if (!(mission?game_init_file(mission):level>=0?game_init(level):game_init_campaign(campaign))) goto done;
 
+    SDL_RenderSetLogicalSize(renderer,game_canvas_width(),game_canvas_height());
+    if (mission) SDL_SetWindowSize(window,1024,(int)lround(1024.0*game_canvas_height()/game_canvas_width()));
+
     Uint64 previous=SDL_GetPerformanceCounter();bool running=true;int frame=0;
     while (running) {
+        SDL_RenderSetLogicalSize(renderer,game_canvas_width(),game_canvas_height());
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
             if (event.type==SDL_QUIT) running=false;

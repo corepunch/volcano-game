@@ -174,6 +174,8 @@ static void mission_tests(void)
         "<mission format='volcano-mission-1' retail-background='103'><settings rules='rescue'/><object id='1' type='food-small' producer='9'/></mission>",
         "<mission format='volcano-mission-1' retail-background='103'><settings rules='rescue' wood='-1'/></mission>",
         "<mission format='volcano-mission-1' retail-background='103'><settings rules='rescue'/><object id='1' type='hq' colour='red'/></mission>",
+        "<mission format='volcano-mission-1' width='0' retail-background='103'><settings rules='rescue'/></mission>",
+        "<mission format='volcano-mission-1' height='99999' retail-background='103'><settings rules='rescue'/></mission>",
         "<mission format='volcano-mission-2' retail-background='103'><settings rules='rescue'/></mission>",
     };
     for (size_t i=0;i<sizeof broken/sizeof *broken;i++) {

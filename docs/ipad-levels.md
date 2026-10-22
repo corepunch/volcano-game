@@ -62,3 +62,14 @@ The [GameHouse RT5 guide](https://www.gamehouse.com/blog/2015/10/rescue-team-5-w
 describes Normal, Multi-click and untimed Relaxed modes. Our scheduler is queued
 and untimed: comparisons are closest to Relaxed mode. Neither binary counts nor
 automated completion establish equal human difficulty or timed-star parity.
+
+## Engine verification
+
+The canvas regression exercises 1368×1026 rendering, world clicks, top-edge
+pause controls, centered Continue, and loading a different canvas. Invalid
+dimensions are rejected by the native XML loader. Previous-level texture caches
+are released after a successful world transition; a failed load preserves the
+active world. All six custom mission suites pass. The retail campaign-6 test
+stalls identically on the baseline commit and the modified engine (one of two
+people, zero of six animals, two purified basins); this pre-existing issue is
+not evidence of successful retail parity.
