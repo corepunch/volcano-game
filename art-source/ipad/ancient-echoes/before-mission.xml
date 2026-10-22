@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Ancient Echoes: enlarged collapsed temple fills the center and east. Formal visitor approach becomes narrow makeshift rescue tracks through shattered colonnades and mosaic courts. Nine people including one stranded worker, two animals. Routes measured against revised painting; renewable food, timber and money. Coordinates are bottom-left world pixels. -->
+<mission format="volcano-mission-1" title="Ancient Echoes" background="background.png">
+  <settings rules="rescue" food="40" people="9"/>
+  <traffic>155,298 177.5,305.5 200,313 225,314.25 250,315.5 275,316.75 300,318 325,318 350,318 375,318 400,318 425,318 450,318 475,318 500,318 525,318 550,318 575,318 600,318 625,318 650,318 675,318 700,318 725,318 750,318 775,318 800,318 825,325.5 850,333 875,340.5 900,348 925,354.25 950,360.5 975,366.75 1000,373 1025,376.75 1050,380.5 1075,384.25 1100,388 1123.33,393 1146.67,398 1170,403 1193.33,408 1216.67,413 1240,418 450,343 450,368 450,393 450,418 450,441.33 450,464.67 450,488 460,504.67 470,521.33 480,538 496.67,551.33 513.33,564.67 530,578 540,593 550,608 300,343 300,368 304,387.25 310,418 650,294.67 650,271.33 650,248 650,228 650,208 650,188 630,178 610,168 585.17,159.33 560.33,150.67 530,158 672.5,178 695,168 717.5,158 740,148 763.25,145.75 786.5,143.5 809.75,141.25 835,158 1015,355.5 1030,338 1053.33,334.67 1076.67,331.33 1100,328 1123.33,325.5 1146.67,323 1170,320.5 1193.33,318 1216.67,315.5 1240,313</traffic>
+  <object id="2" type="hq" x="155" y="298"/>
+  <object id="3" type="worker" x="155" y="298"/>
+  <object id="4" type="worker" x="173" y="288"/>
+  <object id="20" type="tree" x="450" y="388"/>
+  <object id="21" type="stone" x="450" y="488"/>
+  <object id="22" type="stone" x="650" y="258"/>
+  <object id="23" type="boulder" x="800" y="318"/>
+  <object id="24" type="tree" x="1140" y="323.7"/>
+  <object id="25" type="road" x="1140" y="396.6"/>
+  <object id="30" type="cafe" x="310" y="418"/>
+  <object id="31" type="food-small" x="300" y="363" producer="30"/>
+  <object id="32" type="sawmill" x="530" y="158"/>
+  <object id="33" type="wood-small" x="610" y="143" producer="32"/>
+  <object id="34" type="house" x="835" y="158"/>
+  <object id="35" type="money-small" x="740" y="118" producer="34"/>
+  <object id="40" type="wood-large" x="650" y="183"/>
+  <object id="41" type="wood-large" x="700" y="153"/>
+  <object id="42" type="money-large" x="730" y="183"/>
+  <object id="43" type="wood-large" x="610" y="198"/>
+  <object id="50" type="civilian" x="515" y="613"/>
+  <object id="51" type="civilian" x="540" y="598"/>
+  <object id="52" type="civilian" x="565" y="623"/>
+  <object id="54" type="civilian" x="1200" y="423"/>
+  <object id="55" type="civilian" x="1230" y="403"/>
+  <object id="56" type="civilian" x="1260" y="418"/>
+  <object id="57" type="civilian" x="1180" y="323"/>
+  <object id="58" type="civilian" x="1220" y="308"/>
+  <object id="53" type="worker" x="500" y="578"/>
+  <object id="60" type="cat" x="575" y="593"/>
+  <object id="61" type="dog" x="1240" y="328" variant="1"/>
+  <effect kind="sparkles" x="165" y="568" width="42" height="20" rate="4" opacity=".6"/>
+  <effect kind="sparkles" x="160" y="533" width="40" height="20" rate="3" opacity=".6"/>
+  <effect kind="insects" x="365" y="513" width="50" height="35" speed=".7" count="2"/>
+  <effect kind="insects" x="215" y="168" width="45" height="25" speed=".8" count="2"/>
+  <effect kind="motes" x="790" y="478" width="110" height="60" speed=".5" opacity=".25" count="5"/>
+</mission>

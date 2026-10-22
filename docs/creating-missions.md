@@ -63,7 +63,7 @@ It accepts several files, e.g. `python3 tools/mission.py check missions/*/missio
 | File | Purpose |
 | --- | --- |
 | `mission.xml` | Required: settings, objects, roads, effects |
-| `background.png` | Painted playfield, stretched over 1366×768; use a 16:9 image |
+| `background.png` | Painted playfield, mapped over 1368×1026; use a 4:3 image |
 | `background@2x.png` | Optional double-resolution background, used only with `--hd` |
 | `*.png` + `sprites.xml` | Optional mission artwork and its sprite sheet |
 | `background.prompt.txt`, `*.prompt.txt` | Exact image-generation prompts (provenance) |
@@ -257,7 +257,7 @@ allowed anywhere; the project's missions keep a one-line summary at the top.
 | `<effect>` | 0–1024 | Decorative animated map effect |
 
 `background` is an image path relative to the mission file. The game stretches
-it over the 1366×768 playfield using the image's own opacity. Use a 16:9
+it over the mission’s logical playfield (1368×1026 for iPad) using the image's own opacity. Use a matching 4:3
 composition and keep important gameplay out of the HUD corners. With `--hd`, a
 `NAME@2x.EXT` file beside it is used instead when present.
 `retail-background="103"` instead loads `texture/back/103_0.jpg` and its alpha
@@ -265,7 +265,7 @@ from the retail assets.
 
 All paths (`background`, `pack`, `sprites`) are relative to the mission file
 and must not be absolute. Coordinates are world units with a **bottom-left**
-origin on the 1366×768 playfield. A mission may hold up to 4096 objects and
+origin on the mission canvas (1368×1026 for iPad). A mission may hold up to 4096 objects and
 4096 traffic points.
 
 ## Mission settings

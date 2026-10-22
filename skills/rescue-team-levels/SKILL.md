@@ -43,7 +43,7 @@ them with live code if the engine changes.
    before each mandatory job; check reasonable alternative spending orders.
 
 2. **Plan playable geography.** Sketch HQ, paths, gates, building pads, pickups
-   and rescue clearings on a 1366×768 canvas. Art briefs use top-left screen
+   and rescue clearings on a 1368×1026 canvas. Art briefs use top-left screen
    coordinates; mission XML uses bottom-left world coordinates. Keep important
    content clear of the HUD. Keep unrelated routes at least 50 world units apart.
    For wreck/disaster maps, read [interior roads and themed obstacles](references/level-design.md).

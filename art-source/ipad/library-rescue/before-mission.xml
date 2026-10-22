@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Library Rescue: original fictional collapsed two-storey civic library with teal roofing, ochre walls and tiled interior passages. New orthographic background uses only real collapse photos for structural observations, not composition. Original base0 HQ is retained. Nine civilians, one recruit and two animals; measured routes and original economy. -->
+<mission format="volcano-mission-1" title="Library Rescue" background="background.png">
+  <settings rules="rescue" food="40" people="10"/>
+  <pack path="../../assets/kenney-characters"/>
+  <sprites path="sprites.xml"/>
+  <archetype id="timber-shoring" extends="tree" title="Timber shoring" sprite="library-rescue/timber-shoring"/>
+  <archetype id="concrete-slabs" extends="stone" title="Concrete slabs" sprite="library-rescue/concrete-slabs"/>
+  <archetype id="street-debris" extends="stone" title="Street debris" sprite="library-rescue/street-debris"/>
+  <archetype id="heavy-steel-debris" extends="boulder" title="Heavy steel debris" sprite="library-rescue/heavy-steel-debris"/>
+  <archetype id="broken-paving" extends="road" title="Broken paving" sprite="library-rescue/broken-paving"/>
+  <archetype id="field-kitchen" extends="cafe" title="Field kitchen" sprite="library-rescue/field-kitchen" damaged="library-rescue/field-kitchen-damaged"/>
+  <archetype id="salvage-supply-station" extends="sawmill" title="Salvage supply station" sprite="library-rescue/salvage-supply-station" damaged="library-rescue/salvage-supply-station-damaged"/>
+  <archetype id="logistics-station" extends="house" title="Logistics station" sprite="library-rescue/logistics-station" damaged="library-rescue/logistics-station-damaged"/>
+  <traffic>210,248 237.5,245.5 265,243 292.5,240.5 320,238 347.5,235.5 375,233 402.5,230.5 430,228 457.14,222.71 484.29,217.43 511.43,212.14 538.57,206.86 565.71,201.57 592.86,196.29 620,191 646,189.7 672,188.4 698,187.1 724,185.8 750,184.5 776,183.2 802,181.9 828,180.6 854,179.3 880,178 907.22,179.11 934.44,180.22 961.67,181.33 988.89,182.44 1016.11,183.56 1043.33,184.67 1070.56,185.78 1097.78,186.89 1125,188 207.5,223 205,198 200,174.67 195,151.33 190,128 285,241 285,264.5 285,288 292.5,305.5 300,323 290,338 280,353 262.5,365.5 245,378 431.67,251.33 433.33,274.67 435,298 439,323 443,348 449,368 439.33,384.67 429.67,401.33 420,418 406.67,431.33 393.33,444.67 380,458 365,478 350,498 357.5,518 365,538 357.5,558 350,578 340,593 330,608 735,185 735,212.67 735,240.33 735,268 735,288 735,308 735,328 735,355.5 735,383 730,403 725,423 722.5,440.5 720,458 715,475.5 710,493 710,518 710,528 710,538 1125,213 1125,238 1125,253 1125,268 1123.33,288 1121.67,308 1120,328 1110,346.33 1100,364.67 1090,383 1077.5,408 1065,433 1057.5,450.5 1050,468 1067.5,480.5 1085,493 1102.5,513 1120,533 1140,548 1160,563 1180,578 1185,598 1190,618 1140,328 1160,328 1180,328 1201.67,336.33 1223.33,344.67 1245,353 600,195 600,171.5 600,148 600,128 600,108 600,88 970,182 970,160 970,138 970,113 970,88</traffic>
+  <object id="2" type="hq" x="190" y="128"/>
+  <object id="3" type="worker" x="190" y="128"/>
+  <object id="4" type="worker" x="210" y="128"/>
+  <object id="20" type="timber-shoring" x="435" y="298"/>
+  <object id="21" type="concrete-slabs" x="359" y="521"/>
+  <object id="22" type="street-debris" x="530" y="208.53"/>
+  <object id="23" type="heavy-steel-debris" x="1125" y="238"/>
+  <object id="24" type="broken-paving" x="1180" y="328"/>
+  <object id="25" type="concrete-slabs" x="720" y="458"/>
+  <object id="30" type="field-kitchen" x="245" y="378"/>
+  <object id="31" type="food-small" x="320" y="323" producer="30"/>
+  <object id="32" type="salvage-supply-station" x="600" y="88"/>
+  <object id="33" type="wood-small" x="680" y="188" producer="32"/>
+  <object id="34" type="logistics-station" x="970" y="88"/>
+  <object id="35" type="money-small" x="1030" y="184" producer="34"/>
+  <object id="40" type="wood-large" x="600" y="195"/>
+  <object id="41" type="wood-large" x="800" y="182"/>
+  <object id="42" type="money-large" x="875" y="178"/>
+  <object id="43" type="wood-large" x="960" y="181"/>
+  <object id="50" type="civilian" x="300" y="608"/>
+  <object id="51" type="civilian" x="335" y="598"/>
+  <object id="52" type="civilian" x="370" y="613"/>
+  <object id="54" type="civilian" x="675" y="533"/>
+  <object id="55" type="civilian" x="710" y="538"/>
+  <object id="56" type="civilian" x="745" y="528"/>
+  <object id="57" type="civilian" x="1180" y="618"/>
+  <object id="58" type="civilian" x="1220" y="363"/>
+  <object id="59" type="civilian" x="1260" y="343"/>
+  <object id="53" type="worker" x="335" y="568"/>
+  <object id="60" type="cat" x="365" y="568"/>
+  <object id="61" type="dog" x="720" y="508" variant="1"/>
+  <effect kind="motes" x="690" y="438" width="130" height="70" speed=".25" opacity=".16" count="5"/>
+  <effect kind="motes" x="1085" y="488" width="100" height="60" speed=".3" opacity=".14" count="4"/>
+</mission>

@@ -10,6 +10,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
@@ -27,6 +28,27 @@ class MissionCheck(unittest.TestCase):
         for path in paths:
             errors, warnings = mission.check(path, self.classes)
             self.assertEqual((errors, warnings), ([], []), path)
+
+    def test_ipad_backgrounds_and_playfield_bounds(self):
+        from PIL import Image
+        paths = sorted(ROOT.glob("missions/*/mission.xml"))
+        self.assertEqual(len(paths), 6)
+        for path in paths:
+            root = ET.parse(path).getroot()
+            width, height = int(root.get("width")), int(root.get("height"))
+            self.assertEqual((width, height), (1368, 1026), path)
+            self.assertEqual(width * 3, height * 4)
+            for filename, factor in [("background.png", 1), ("background@2x.png", 2)]:
+                with Image.open(path.parent / filename) as image:
+                    self.assertEqual(image.size, (width * factor, height * factor), path)
+            for obj in root.findall("object"):
+                x, y = float(obj.get("x", 0)), float(obj.get("y", 0))
+                self.assertTrue(24 <= x <= width - 24 and 48 <= y <= height - 128,
+                                (path, obj.attrib))
+            for road in root.findall("traffic"):
+                for pair in road.text.split():
+                    x, y = map(float, pair.split(","))
+                    self.assertTrue(0 <= x <= width and 0 <= y <= height, path)
 
     def test_mission_archetypes_inherit_classes(self):
         self.assertEqual(self.classes["dog"], "animal")

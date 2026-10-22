@@ -1,0 +1,141 @@
+[
+  {
+    "level": "emerald-falls",
+    "method": "Built-in ImageGen vertical outpainting; sips resolution exports only",
+    "native": "art-source/ipad/emerald-falls/generated.png",
+    "native_dimensions": [
+      1448,
+      1086
+    ],
+    "logical": [
+      1368,
+      1026
+    ],
+    "retina": [
+      2736,
+      2052
+    ],
+    "translation": [
+      1,
+      129
+    ],
+    "sha256": "f20023da539456274d80ec390eb96e3ef9f5d9e1473047d18a4845fd031a7fb7",
+    "prompt": "missions/emerald-falls/background.prompt.txt"
+  },
+  {
+    "level": "forest-mayday",
+    "method": "Built-in ImageGen vertical outpainting; sips resolution exports only",
+    "native": "art-source/ipad/forest-mayday/generated.png",
+    "native_dimensions": [
+      1448,
+      1086
+    ],
+    "logical": [
+      1368,
+      1026
+    ],
+    "retina": [
+      2736,
+      2052
+    ],
+    "translation": [
+      1,
+      129
+    ],
+    "sha256": "c6a86591fbd22c69803c3f0cf9bc8176926f4f0bb5222c46bf874e3c7650f32d",
+    "prompt": "missions/forest-mayday/background.prompt.txt"
+  },
+  {
+    "level": "ancient-echoes",
+    "method": "Built-in ImageGen vertical outpainting; sips resolution exports only",
+    "native": "art-source/ipad/ancient-echoes/generated.png",
+    "native_dimensions": [
+      1448,
+      1086
+    ],
+    "logical": [
+      1368,
+      1026
+    ],
+    "retina": [
+      2736,
+      2052
+    ],
+    "translation": [
+      1,
+      129
+    ],
+    "sha256": "db187166336ec6c4f10fdc913d3d38a6b6dedfb10134a20dc2cfc92c3a75481c",
+    "prompt": "missions/ancient-echoes/background.prompt.txt"
+  },
+  {
+    "level": "twisted-tracks",
+    "method": "Built-in ImageGen vertical outpainting; sips resolution exports only",
+    "native": "art-source/ipad/twisted-tracks/generated.png",
+    "native_dimensions": [
+      1448,
+      1086
+    ],
+    "logical": [
+      1368,
+      1026
+    ],
+    "retina": [
+      2736,
+      2052
+    ],
+    "translation": [
+      1,
+      129
+    ],
+    "sha256": "c15f4947a78c978fc96b68b6fb18ebd27dc2b63197e95a8ffef09fce55a96712",
+    "prompt": "missions/twisted-tracks/background.prompt.txt"
+  },
+  {
+    "level": "library-rescue",
+    "method": "Built-in ImageGen vertical outpainting; sips resolution exports only",
+    "native": "art-source/ipad/library-rescue/generated.png",
+    "native_dimensions": [
+      1448,
+      1086
+    ],
+    "logical": [
+      1368,
+      1026
+    ],
+    "retina": [
+      2736,
+      2052
+    ],
+    "translation": [
+      1,
+      129
+    ],
+    "sha256": "f6b5e266909c4c53548396b5dbba98c53bb86536d884370a9f798d1a8cc0d516",
+    "prompt": "missions/library-rescue/background.prompt.txt"
+  },
+  {
+    "level": "first-rescue",
+    "method": "Built-in ImageGen vertical outpainting; sips resolution exports only",
+    "native": "art-source/ipad/first-rescue/generated.png",
+    "native_dimensions": [
+      1448,
+      1086
+    ],
+    "logical": [
+      1368,
+      1026
+    ],
+    "retina": [
+      2736,
+      2052
+    ],
+    "translation": [
+      1,
+      165
+    ],
+    "sha256": "952643f1b71dbd6efb6db58baca3e6be9291782cca8181c206d5b5582106ceaf",
+    "prompt": "missions/first-rescue/background.prompt.txt",
+    "world_y_scale": 1.1
+  }
+]

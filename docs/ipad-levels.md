@@ -73,3 +73,19 @@ active world. All six custom mission suites pass. The retail campaign-6 test
 stalls identically on the baseline commit and the modified engine (one of two
 people, zero of six animals, two purified basins); this pre-existing issue is
 not evidence of successful retail parity.
+
+## Background delivery
+
+All six missions now use 1368×1026 world coordinates and 4:3 PNG backgrounds.
+The six edits and source history are recorded in `art-source/ipad/manifest.json`.
+Native ImageGen output is 1448×1086. Exports at 1368×1026 and 2736×2052 use sips
+resampling; the larger export does not imply additional generated detail.
+Five maps translate routes, placements and effects together by (1,129), retaining
+all routing distances. First Rescue uses x+1, y*1.10+165 to match measured canyon
+landmarks. Full playthroughs and start/repaired renders were checked on retail art.
+The HUD is above all gameplay, and the bottom scenery provides home-indicator room.
+
+The road-caliper audit now uses each mission's logical dimensions. It records
+reviewed narrowing in two painted corridor samples (20 and 16 units); these are
+visual paths rather than tap targets. Their original 24±2 calipers are archived,
+not reused against new art. First Rescue retains its legacy asphalt style.
