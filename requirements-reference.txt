@@ -1,0 +1,2 @@
+# Only needed to extract the optional, locally owned RT9 Unity reference.
+UnityPy==1.25.4
