@@ -1,0 +1,28 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Rescue Team 9 reference</title>
+<style>
+body{margin:0;background:#17232b;color:#edf4f7;font:14px system-ui}header{display:flex;gap:16px;align-items:center;padding:12px 20px;flex-wrap:wrap}select,button{font:inherit;padding:6px}h1{font-size:18px;margin:0}canvas{display:block;width:100%;height:auto;background:#101820}details{padding:12px 20px}pre{white-space:pre-wrap}#status{color:#b7cbd6}#atlas{display:none;max-width:100%;height:auto}a{color:#a6dcff}
+</style>
+<header><h1>Rescue Team 9 · reference</h1><label>Scene <select id="level"></select></label><label>Atlas <select id="texture"><option value="">Scene view</option></select></label><label><input id="animate" type="checkbox" checked>Animate</label><span id="status"></span></header>
+<canvas id="scene" width="1920" height="1080"></canvas><img id="atlas" alt="Original RT9 texture atlas">
+<details><summary>Display settings and extraction evidence</summary><p>Original artwork and scene placements. Composite base artwork is shown; secondary parts and keyframe transforms, scripted gameplay, runtime spawning, particles and UI composition are not simulated here. Click a scene object to inspect its authored animation data.</p><pre id="evidence"></pre><a href="manifest.json">Full extracted manifest</a></details>
+<details id="selection"><summary>Selected object</summary><pre id="object"></pre></details>
+<script>
+/*RT9_DATA*/
+const level=document.querySelector('#level'),texture=document.querySelector('#texture'),canvas=document.querySelector('canvas'),ctx=canvas.getContext('2d'),images={},sprites={},hits=[];
+for(const [atlas,doc] of Object.entries(DATA.atlases))for(const obj of doc.objects)sprites[obj.name]={...obj,atlas};
+for(const name of Object.keys(DATA.levels).sort()){const o=new Option(name,name);level.add(o)}
+for(const name of Object.keys(DATA.textures).sort())texture.add(new Option(name,name));
+document.querySelector('#evidence').textContent=JSON.stringify({unity:DATA.unity_versions,settings:DATA.settings,counts:DATA.object_counts,textures:Object.keys(DATA.textures).length,atlases:Object.keys(DATA.atlases).length,scenes:level.length},null,2);
+function image(name){if(!images[name]){const i=new Image;i.src=DATA.textures[name]?.file||'';images[name]=i}return images[name]}
+texture.onchange=()=>{const name=texture.value;canvas.style.display=name?'none':'block';const img=document.querySelector('#atlas');img.style.display=name?'block':'none';if(name){img.src=image(name).src;document.querySelector('#status').textContent=`${DATA.textures[name].width} × ${DATA.textures[name].height} source pixels`}};
+let previous=0;function draw(ms){requestAnimationFrame(draw);if(ms-previous<30||texture.value)return;previous=ms;ctx.clearRect(0,0,1920,1080);hits.length=0;
+const doc=DATA.levels[level.value];let drawn=0,missing=new Set;
+for(const layer of doc?.layers||[])for(const obj of layer.objects||[]){if(!obj.name||obj.alpha===0)continue;let sprite=sprites[obj.name],sequenceName=obj.sequenceName;for(let depth=0;sprite?.composite&&depth<8;depth++){const parentSequence=sprite.sequences.find(s=>s.name===sequenceName)||sprite.sequences.find(s=>s.name===sequenceName+'/0');const baseKey=parentSequence?.keyframes?.find(k=>k.partName===sprite.base);sequenceName=baseKey?.sequence||sequenceName;sprite=sprites[sprite.base]}if(!sprite){missing.add(obj.name);continue}const seq=sprite.sequences.find(s=>s.name===sequenceName)||sprite.sequences.find(s=>s.name===sequenceName+'/0')||sprite.sequences.find(s=>!['del','new'].includes(s.name))||sprite.sequences[0];if(!seq?.frames.length)continue;const time=document.querySelector('#animate').checked?ms/1000:0,f=seq.frames[Math.floor(time*(seq.fps||30))%seq.frames.length],img=image(sprite.atlas),meta=DATA.textures[sprite.atlas];if(!img.complete||!img.naturalWidth||!meta)continue;
+const sx=obj.scaleX??1,sy=obj.scaleY??1,x=960+100*(obj.x||0)-100*f.px*sx,y=540-100*(obj.y||0)-100*(f.h-f.py)*sy,w=100*f.w*sx,h=100*f.h*sy;
+ctx.save();ctx.globalAlpha=(obj.alpha??100)/100;ctx.translate(x+100*f.px*sx,y+100*(f.h-f.py)*sy);ctx.rotate(-(obj.angle||0)*Math.PI/180);ctx.translate(-100*f.px*sx,-100*(f.h-f.py)*sy);if(f.r){ctx.translate(0,h);ctx.rotate(-Math.PI/2)}ctx.drawImage(img,Math.round(f.u*meta.width),Math.round((1-f.v-f.cv)*meta.height),Math.round(f.cu*meta.width),Math.round(f.cv*meta.height),0,0,f.r?h:w,f.r?w:h);ctx.restore();hits.push({x,y,w,h,obj,sprite});drawn++}
+document.querySelector('#status').textContent=`1920 × 1080 · ${drawn} objects · ${missing.size} unresolved names`}
+canvas.onclick=e=>{const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)*1920/r.width,y=(e.clientY-r.top)*1080/r.height,h=[...hits].reverse().find(h=>x>=h.x&&x<=h.x+h.w&&y>=h.y&&y<=h.y+h.h);if(h){document.querySelector('#object').textContent=JSON.stringify(h,null,2);document.querySelector('#selection').open=true}};
+requestAnimationFrame(draw);
+</script>

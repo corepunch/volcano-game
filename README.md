@@ -1,3 +1,8 @@
+> New engine work uses **Rescue Team 9: Evil Genius Collector’s Edition** as
+> its reference. Run `make reference` (or `make run-rt9`) to extract and open
+> the local RT9 scene/atlas viewer. See [RT9 setup and findings](docs/rescue-team-9.md).
+> Existing playable missions below still use the RT5 compatibility importer.
+
 # Volcano
 
 A disaster-rescue strategy game in **C11 + SDL2**. Clear debris, repair

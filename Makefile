@@ -185,3 +185,9 @@ clean:
 	rm -rf build
 
 -include $(shell find $(OUT)/obj -name '*.d' 2>/dev/null)
+
+# RT9 is a Unity reference, separate from the legacy RT5 gameplay importer.
+.PHONY: reference run-rt9
+reference run-rt9: $(OUT)/python-venv/.dependencies
+	$(ASSET_PYTHON) -m pip install -r requirements-reference.txt
+	$(ASSET_PYTHON) tools/load_rt9.py --open
