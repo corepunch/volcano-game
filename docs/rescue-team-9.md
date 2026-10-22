@@ -1,7 +1,7 @@
 # Rescue Team 9 reference
 
-The active reference for new engine work is **Rescue Team: Evil Genius
-Collector's Edition (Rescue Team 9)**. Local retail files are kept in
+**Rescue Team: Evil Genius Collector's Edition (Rescue Team 9)** is
+retained for art inspection only. Local retail files are kept in
 `reference/rescue-team-9/`, which is ignored by Git.
 
 The Windows installer in Downloads is
@@ -55,3 +55,28 @@ RT9 requires a new gameplay importer rather than changing that asset path.
 For our renderer, retain resolution-independent placement and source pivots,
 use these higher-resolution sources without downsampling, and keep the existing
 SDL high-DPI drawable support. Do not copy the disabled Retina flag.
+
+## Art-only export
+
+RT9 is retained for visual reference only, not as a planned gameplay import.
+After the initial Unity extraction, run:
+
+```sh
+build/python-venv/bin/python tools/export_rt9_art.py
+```
+
+Open `reference/rescue-team-9/art/index.html` to browse original full-size PNGs
+and representative cropped sprites. `backgrounds/` contains level background
+textures; `atlases/` contains all other textures (including UI, characters and
+fonts). `sprites/` contains one representative frame per non-composite object,
+with packed rotations undone. This is a crop export, not a reconstruction of
+composite objects. `texture-sizes.csv` inventories textures and
+`sprite-frame-sizes.csv` inventories every frame in non-composite declarations.
+All generated retail art stays in the ignored reference directory.
+
+Measured comparison: all 50 RT5 background JPGs are 1366×768. Most RT9 background
+textures are 1924×1084 or 1928×1088 including padding, with 1920×1080 artwork;
+some levels have taller backgrounds. This is approximately 1.4× linear resolution,
+not 2×. RT5's first `worker_run0` frame is 32×52 source pixels; RT9's first
+`worker$base` `run0/0` frame is 44×74. These are different drawings and serve as
+examples, not a claim of exact animation parity.
