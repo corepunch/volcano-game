@@ -1,6 +1,6 @@
 # Road and bridge drawing dimensions
 
-All dimensions below are **logical game pixels on the 1366 × 768 playfield**,
+All dimensions below are **logical game pixels on the 1368 × 1026 custom playfield**,
 not desktop screenshot pixels or atlas-cell dimensions. Apply the same standard
 in every custom level. A clear deck width is the traversable surface between
 railings, measured perpendicular to travel; shadows, piers, curbs and rails do
@@ -8,11 +8,11 @@ not count. Damage must not change the intended deck width or attachment points.
 
 ## Shared dimensions
 
-| Element | Logical size | 1672 × 941 background | 3344 × 1882 background / HD texture |
+| Element | Logical size | 1368 × 1026 background | 2736 × 2052 background / HD texture |
 | --- | --- | --- | --- |
-| Ordinary single rescue road / trail, clear width | 24 (accept 22–26) | approximately 29 (27–32) | approximately 59 (54–64) |
-| Bridge usable deck, perpendicular to travel | exactly 24 | approximately 29 | exactly 48 texture pixels |
-| Short bridge deck span, along travel | 88 | approximately 108 | exactly 176 texture pixels |
+| Ordinary single rescue road / trail, clear width | 24 (accept 22–26) | 24 (22–26) | 48 (44–52) |
+| Bridge usable deck, perpendicular to travel | exactly 24 | 24 | exactly 48 texture pixels |
+| Short bridge deck span, along travel | 88 | 88 | exactly 176 texture pixels |
 | Bridge art envelope, excluding shadow | up to 104 × 56 horizontal; 56 × 104 vertical | — | up to 208 × 112; 112 × 208 |
 
 Use the ordinary-road standard for dirt, gravel and pedestrian rescue routes;
@@ -23,7 +23,7 @@ use its width to size a footbridge or silently substitute it for a normal trail.
 Never measure a junction, clearing, bend's diagonal bounding box or rubble pile
 as the normal road width. Measure perpendicular to a straight stretch.
 
-## Measurements from the existing forest paintings
+## Historical measurements from the previous forest paintings
 
 Manual edge measurements in the previous 1672 × 941 source PNGs, top-left coordinates:
 
@@ -37,8 +37,9 @@ Manual edge measurements in the previous 1672 × 941 source PNGs, top-left coord
 Edges in painterly art are approximate (about ±2 source pixels). These straight
 sections share a previous, wider road class and must be narrowed to the retail-sized standard. The
 Retina images preserve the same geometry at twice the source resolution.
-Convert a vertical image distance with `logical = source * 768 / image_height`;
-convert a horizontal one with `logical = source * 1366 / image_width`.
+These historical conversions used 1366 × 768. For current artwork, convert
+vertical distances with `logical = source * mission_height / image_height`, and
+horizontal distances with `logical = source * mission_width / image_width`.
 
 Emerald Falls' bridge center is (1094.76, 408.89) in bottom-left world
 coordinates, approximately (1340.0, 440.0) in the source painting. The river gap
@@ -50,7 +51,7 @@ on the road centerline, rather than centering the full shadowed sprite.
 
 Include these numeric requirements in every bridge atlas drawing prompt:
 
-> Shared 1366 × 768 logical game canvas. Ordinary road clear width is 24 logical
+> Shared 1368 × 1026 logical game canvas. Ordinary road clear width is 24 logical
 > pixels. Bridge clear deck width is 24 pixels, span is 88 pixels; HD texture
 > deck dimensions are 176 × 48 pixels horizontal or 48 × 176 vertical.
 > Rails/abutments may extend outside the deck, within a 104 × 56 logical-pixel
@@ -85,18 +86,20 @@ y=335–357; `311`: x=200, y=464–485. This is a sampled comparison, not a
 claim of pixel-exact equality across every retail map. The shared target is
 24 logical pixels. `assets/road-dimensions.json` is the machine-readable authority.
 
-A 2× sprite atlas uses 48 texture pixels for a 24-pixel deck. Backgrounds of
-1672 × 941 use about 29 source pixels, and their 3344 × 1882 Retina copies
-use about 59. These differ because backgrounds map to the 1366 × 768 canvas.
+A 2× sprite atlas uses 48 texture pixels for a 24-pixel deck. Current 1368 × 1026 backgrounds use 24 pixels; their 2736 × 2052
+exports use 48 pixels for the same logical width.
 Never double logical widths when adding Retina artwork.
 
 ## Current artwork audit
 
 Every custom-painted mission now has a revised `missions/NAME/background.png`
-and a 2x `background@2x.png`. Exact edit prompts and prior/output hashes are in
-`art-source/road-width/`; manual post-edit calipers and image hashes are in
+and a 2x `background@2x.png`. The current source history and prompts are in `art-source/ipad/`; the previous
+road edit is archived in `art-source/road-width/`. Current calipers and hashes are in
 `art-source/road-width-measurements.json`. Run
 `python3 tools/check_road_dimensions.py` to validate the recorded samples against
 the shared width and to reject stale measurements after image changes. This
 is sampled visual QA, not automatic detection of the entire painted road area.
-The First Rescue example reuses the retail `103` plate and needs no repainting.
+The iPad audit explicitly records two reviewed narrow samples: Ancient Echoes
+20 and Twisted Tracks 16 logical units. They are deviations from the target, not
+claims of 22–26 compliance. First Rescue uses a 4:3 edit of the retail `103` plate
+and retains the legacy asphalt style.

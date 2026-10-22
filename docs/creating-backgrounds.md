@@ -43,8 +43,8 @@ deliverables the game loads: `mission.xml`, `background.png` and its exact
 ## Plan composition and rescue access
 
 Use a **1368 × 1026 logical canvas**, with a high fixed camera and no horizon.
-The saved images for these missions are 1672 × 941 and are mapped across that
-logical canvas. Keep actionable objects clear of the upper-left HUD region
+All six production backgrounds are 1368 × 1026, with 2736 × 2052 density exports.
+Their native generated masters are 1448 × 1086; higher density does not add detail. Keep actionable objects clear of the upper-left HUD region
 around x=0–446, y=0–100 and upper-right x=1010–1366, y=0–100. Check the bottom
 message area in actual renders too.
 
@@ -300,10 +300,10 @@ itself. Retail assets are not redistributable; share such a bundle only where
 licensed. Native desktop launch is a separate check from software-renderer tests.
 
 With `--hd` (as `make run-hd` passes), the game uses `background@2x.png` beside
-a mission's `background.png` when it exists. Emerald Falls and Forest Mayday have
-upscaled copies, recorded in
-[`art-source/retina-backgrounds.json`](../art-source/retina-backgrounds.json);
-these two maps do not yet have Retina versions of their backgrounds.
+a mission's `background.png` when it exists. All six maps have matching 4:3
+exports, recorded in
+[`art-source/retina-backgrounds.json`](../art-source/retina-backgrounds.json).
+These exports use resampling, not additional authored Retina detail.
 
 There is no compile step. After changing `mission.xml`, `sprites.xml` or art,
 **press R: it reloads the mission and resets it.** A rebuilt executable requires

@@ -1,0 +1,94 @@
+{
+  "method": "Runway AI image upscaler",
+  "settings": {
+    "scaleFactor": 2,
+    "flavor": "sublime",
+    "sharpen": 10,
+    "smartGrain": 0,
+    "ultraDetail": 10
+  },
+  "prompt": null,
+  "notes": "Rebuilt after road-width edits; 2x pixel density preserves logical geometry. Each mission folder holds background.png and background@2x.png. No gameplay coordinate scaling.",
+  "images": [
+    {
+      "level": "emerald-falls",
+      "source": "missions/emerald-falls/background.png",
+      "output": "missions/emerald-falls/background@2x.png",
+      "source_dimensions": [
+        1672,
+        941
+      ],
+      "output_dimensions": [
+        3344,
+        1882
+      ],
+      "source_sha256": "c4acef4a7efb6b66b23bd1e2aa240804de9636aab649fb16d33fcbd0311e62aa",
+      "output_sha256": "ce8e61cc18986d358196c2ae74079bdb374cd04667398671bc724245e87d150c",
+      "task_id": "90d085d3-e47a-464c-b10b-01e4eebbef33"
+    },
+    {
+      "level": "forest-mayday",
+      "source": "missions/forest-mayday/background.png",
+      "output": "missions/forest-mayday/background@2x.png",
+      "source_dimensions": [
+        1672,
+        941
+      ],
+      "output_dimensions": [
+        3344,
+        1882
+      ],
+      "source_sha256": "34cb8c073423d9d8340b406e8ec1e546cb8b1025916f627c71ea4cc3f3512926",
+      "output_sha256": "f4fe43e626e801ae51f220d98e127f60e9833d8f96ef36d2e09838f186c939dc",
+      "task_id": "733fb2eb-3b8f-4349-8050-b427b2dabebc"
+    },
+    {
+      "level": "ancient-echoes",
+      "source": "missions/ancient-echoes/background.png",
+      "output": "missions/ancient-echoes/background@2x.png",
+      "source_dimensions": [
+        1672,
+        941
+      ],
+      "output_dimensions": [
+        3344,
+        1882
+      ],
+      "source_sha256": "850cae06cb17fda0e2ce9c3a226ce51fb055741a7cf3191d30fa6ab5f26b383b",
+      "output_sha256": "0b6f214be299146b87f3250c8715d6d7cc1e536cda3d8bc8f4a954dcbe8de134",
+      "task_id": "5ed16a91-cc8f-4dda-972b-9e74676d955d"
+    },
+    {
+      "level": "twisted-tracks",
+      "source": "missions/twisted-tracks/background.png",
+      "output": "missions/twisted-tracks/background@2x.png",
+      "source_dimensions": [
+        1672,
+        941
+      ],
+      "output_dimensions": [
+        3344,
+        1882
+      ],
+      "source_sha256": "be98b4e90147b621fe0c23fa54a8abfe9cb759a4c577e168e57b133ed54e0f56",
+      "output_sha256": "f06e7ac4b0e4d7221bcc8cfc752712303aedb250fe3eac5f6f16562781d48478",
+      "task_id": "c0e26132-7933-4adb-a125-992485478114"
+    },
+    {
+      "level": "library-rescue",
+      "source": "missions/library-rescue/background.png",
+      "output": "missions/library-rescue/background@2x.png",
+      "source_dimensions": [
+        1672,
+        941
+      ],
+      "output_dimensions": [
+        3344,
+        1882
+      ],
+      "source_sha256": "ae0645d79d29bd166e4a80daa74f80b5796c2afa8ef85f0fdc3dd21d2978baa2",
+      "output_sha256": "e1e10002cc4dda9f0564227ac1635d5ad0c3e91ca7efa3bf3c2daf884d11702f",
+      "task_id": "ee38f356-7b86-4e4c-bf4b-e7729002507b"
+    }
+  ]
+}
