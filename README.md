@@ -200,8 +200,9 @@ project:
   and ring. This pack is built from the retail declarations, so it needs
   `ASSETS`.
 
-Mission backgrounds may have a `background@2x.png` (3344×1882) beside the
-1672×941 original. `--hd` uses it, and the logical playfield stays 1366×768.
+All six missions use a 1368×1026 (4:3) playfield and background. `--hd` selects
+the 2736×2052 `background@2x.png` export without changing world coordinates.
+The current 2× exports are interpolated; see the [iPad comparison and checks](docs/ipad-levels.md).
 See the [background guide](docs/creating-backgrounds.md) for generation and
 placement.
 
