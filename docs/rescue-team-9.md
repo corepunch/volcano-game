@@ -80,3 +80,15 @@ some levels have taller backgrounds. This is approximately 1.4× linear resoluti
 not 2×. RT5's first `worker_run0` frame is 32×52 source pixels; RT9's first
 `worker$base` `run0/0` frame is 44×74. These are different drawings and serve as
 examples, not a claim of exact animation parity.
+
+## Original-size RT5/RT9 comparison
+
+Run `build/python-venv/bin/python tools/compare_retail_art.py` to create
+`reference/rt5-rt9-comparison/index.html` and `comparison.png`. The comparison
+uses two worker poses and four corresponding building types. Crops are taken
+from the original atlas UV rectangles, with rotated RT9 frames restored to
+upright orientation. No sprite resizing is performed. The HTML sets each image
+to its exact source width/height in CSS pixels; use 100% browser zoom. Display
+pixel density is distinct from source pixel count. RT9 samples show base art
+only, and the poses/designs are not identical between games. `sizes.json`
+records the selected source names, sequences and dimensions.
