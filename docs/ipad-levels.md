@@ -122,3 +122,18 @@ This raises job density and resource planning toward early RT5 Relaxed levels.
 It does not reproduce all of RT5's distinct puzzles: boats, ATV transport and
 valve/fog networks are absent from this custom campaign. Equal human difficulty
 still needs timed sessions with players; obstacle counts alone cannot prove it.
+
+## Native SDL2 validation
+
+The project-local dependency is upstream SDL2 2.32.10, built statically by
+`make sdl2` with a pinned SHA-256 archive. Make rejects the detected Homebrew
+`sdl2-compat` provider. `otool -L build/volcano` confirms no SDL3 or SDL2-compat
+runtime dependency. The C11 warning and dependency flags also apply to sanitizer
+builds, preventing stale object layouts after content-header changes.
+
+On native SDL2, `make test`, all six mission suites with retail sprites, and
+AddressSanitizer/UndefinedBehaviorSanitizer pass. The viewport regression checks
+six window sizes (1024×768, 1376×1032, 1210×834, 1180×820, 1133×744 and 768×1024)
+for complete centered aspect-fit and matching input coordinates. These are
+desktop window tests, not physical iPad or iPadOS certification. The pre-existing
+retail campaign-6 failure described above remains reproducible on native SDL2.

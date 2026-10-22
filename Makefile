@@ -18,13 +18,22 @@ ASSET_PYTHON ?= $(OUT)/python-venv/bin/python3
 CC ?= cc
 AR ?= ar
 CFLAGS ?= -O2
-CFLAGS += -std=c11 -Wall -Wextra -Wpedantic -MMD -MP
+override CFLAGS += -std=c11 -Wall -Wextra -Wpedantic -MMD -MP
 CPPFLAGS += -D_POSIX_C_SOURCE=200809L -Isrc -Ivendor
 ifeq ($(shell uname -s),Darwin)
 CPPFLAGS += -D_DARWIN_C_SOURCE
 endif
+# Prefer the project-local, native SDL2 build over Homebrew's SDL3-backed
+# sdl2-compat. SDL2_CONFIG can also point at another native SDL2 installation.
+SDL2_CONFIG ?= $(wildcard $(CURDIR)/build/sdl2-native/bin/sdl2-config)
+ifneq ($(SDL2_CONFIG),)
+SDL_CFLAGS := $(shell "$(SDL2_CONFIG)" --cflags)
+SDL_LIBS := $(shell "$(SDL2_CONFIG)" --static-libs)
+else
 SDL_CFLAGS := $(shell pkg-config --cflags sdl2)
 SDL_LIBS := $(shell pkg-config --libs sdl2)
+SDL_PROVIDER := $(shell sed -n 's/^Name: *//p' "$$(pkg-config --variable=pcfiledir sdl2)/sdl2.pc" 2>/dev/null)
+endif
 LDLIBS += -lm
 
 ASSETS ?= reference/rescue-team
@@ -51,13 +60,20 @@ MISSIONS := $(patsubst missions/%/mission.xml,%,$(wildcard missions/*/mission.xm
 
 all: $(OUT)/volcano
 
+.PHONY: sdl2 check-sdl2
+sdl2:
+	sh tools/build_sdl2.sh
+
+check-sdl2:
+	@if [ "$(SDL_PROVIDER)" = "sdl2_compat" ]; then echo 'Native SDL2 required: run make sdl2, then make.' >&2; exit 1; fi
+
 # SDL-free layers.
 $(CORE_OBJECTS) $(OUT)/obj/tests/core_main.o: $(OUT)/obj/%.o: %.c
 	@mkdir -p $(@D)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
 # Everything else may use SDL.
-$(OUT)/obj/%.o: %.c
+$(OUT)/obj/%.o: %.c $(SDL2_CONFIG) | check-sdl2
 	@mkdir -p $(@D)
 	$(CC) $(CPPFLAGS) $(SDL_CFLAGS) $(CFLAGS) -c $< -o $@
 
