@@ -1,5 +1,5 @@
-> New engine work uses **Rescue Team 9: Evil Genius Collector’s Edition** as
-> its reference. Run `make reference` (or `make run-rt9`) to extract and open
+> **Rescue Team 9: Evil Genius Collector’s Edition** is available for art
+> reference only; no gameplay import is planned. Run `make reference` (or `make run-rt9`) to extract and open
 > the local RT9 scene/atlas viewer. See [RT9 setup and findings](docs/rescue-team-9.md).
 > Existing playable missions below still use the RT5 compatibility importer.
 
