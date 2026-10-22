@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Twisted Tracks: interior service roads thread between reorganized red/yellow coaster wreck islands. Ten custom clearable debris jobs use eight authored sprites linked to ordinary obstacle rules. Nine visitors, one stranded technician, two animals; renewable supplies and two starting workers. Coordinates bottom-left world pixels. -->
 <mission width="1368" height="1026" format="volcano-mission-1" title="Twisted Tracks" background="background.png">
-  <settings rules="rescue" food="40" people="10"/>
+  <settings clear-routes="true" rules="rescue" food="40" people="10"/>
   <sprites path="sprites.xml"/>
   <archetype id="broken-maintenance-panels" extends="tree" title="Broken maintenance panels" sprite="twisted-tracks/broken-maintenance-panels"/>
   <archetype id="fallen-yellow-support" extends="stone" title="Fallen yellow support" sprite="twisted-tracks/fallen-yellow-support"/>
@@ -55,4 +55,14 @@
   <effect kind="insects" x="261.00" y="447.00" width="50" height="25" speed=".7" count="2"/>
   <effect kind="insects" x="781.00" y="297.00" width="45" height="30" speed=".8" count="2"/>
   <effect kind="motes" x="801.00" y="587.00" width="65" height="40" speed=".5" opacity=".25" count="4"/>
+
+  <!-- Additional paid route jobs: preserve the zero-food recovery corridors. -->
+  <object id="100" type="fallen-track-ties" x="533.5" y="512"/>
+  <object id="101" type="broken-maintenance-panels" x="623.5" y="527"/>
+  <object id="102" type="fallen-yellow-support" x="394.33" y="598.67"/>
+  <object id="103" type="tangled-ride-cables" x="791" y="672"/>
+  <object id="104" type="shattered-concrete-footing" x="758.5" y="542"/>
+  <object id="105" type="broken-maintenance-panels" x="921" y="597"/>
+  <object id="106" type="detached-wheel-assembly" x="1011" y="597"/>
+  <object id="107" type="twisted-service-fence" x="887.67" y="458.67"/>
 </mission>

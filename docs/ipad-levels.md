@@ -89,3 +89,36 @@ The road-caliper audit now uses each mission's logical dimensions. It records
 reviewed narrowing in two painted corridor samples (20 and 16 units); these are
 visual paths rather than tap targets. Their original 24±2 calipers are archived,
 not reused against new art. First Rescue retains its legacy asphalt style.
+
+## Rebalanced campaign
+
+Current machine-readable inventory: `level-balance-after.json`.
+
+| Mission | Objects before → after | Paid jobs before → after | New decision/dependency |
+| --- | ---: | ---: | --- |
+| First Rescue | 7 → 18 | 2 → 6 | Eastern fork, third evacuee, finite food/wood caches |
+| Emerald Falls | 28 → 31 | 5 → 8 | Longer branches and resource reservation across three producers |
+| Forest Mayday | 31 → 37 | 5 → 10 | Construction lot: choose and fund a money-producing house |
+| Ancient Echoes | 30 → 35 | 6 → 11 | Staged approach to the expensive rescue gate |
+| Twisted Tracks | 35 → 43 | 10 → 18 | More competing clearing jobs on the existing service-road loop |
+| Library Rescue | 31 → 41 | 6 → 16 | Salvage money finances logistics repair before final excavation |
+
+All six explicitly require clearing evacuation routes as well as rescuing people
+and animals. The HUD exposes this goal; victory cannot leave unpaid route jobs
+behind. Existing debris atlas artwork is reused. Forest Mayday includes an
+extra reachable timber cache so choosing the house before repairing the cafe
+cannot exhaust the recovery budget. The lot can still be rebuilt if a different
+producer was selected.
+
+All six pass normal-click playthroughs with placeholder and retail art. Production
+missions pass three repair orders; the zero-food recovery and expensive-gate
+reservation checks remain active. Simulated completion times for the five larger
+maps are approximately 153–172, 180, 186, 276 and 221–230 seconds respectively.
+These are automated scheduler times, not estimates of human completion time.
+The dedicated coaster suite clears all eighteen jobs and verifies all eight
+atlas variants, complete removal and one-time charging.
+
+This raises job density and resource planning toward early RT5 Relaxed levels.
+It does not reproduce all of RT5's distinct puzzles: boats, ATV transport and
+valve/fog networks are absent from this custom campaign. Equal human difficulty
+still needs timed sessions with players; obstacle counts alone cannot prove it.

@@ -16,7 +16,7 @@ the train spur; the expensive car gate is on the shared spur so the loop cannot
 bypass it. An extra eastern supply spur is optional.
 
 Jobs and economy
-Ten local blockers use eight visual families: timber maintenance panels, snapped
+Eighteen local blockers use eight visual families: timber maintenance panels, snapped
 yellow supports, enclosure fencing, a blue car, cables, red track, wheels and
 reinforced concrete. Ordinary underlying barrier rules retain their established
 costs and work animations. The timber panels cost 20 food and yield 20 wood;

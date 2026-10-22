@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Forest Mayday: an A320-sized passenger airliner crash in the forest. Baked forest and aircraft preserve integrated shadows. Ten people (including a stranded rescue worker) and two animals. North: cafe and timber; south: forestry/ranger production; east: crash-site access and evacuation trail. Coordinates are bottom-left world pixels. -->
 <mission width="1368" height="1026" format="volcano-mission-1" title="Forest Mayday" background="background.png">
-  <settings rules="rescue" food="40" people="10"/>
+  <settings clear-routes="true" rules="rescue" food="40" people="10"/>
   <traffic>166.00,447.00 194.50,447.00 223.00,447.00 251.50,447.00 280.00,447.00 308.50,447.00 337.00,447.00 365.50,447.00 394.00,447.00 422.50,447.00 451.00,447.00 481.00,447.00 511.00,447.00 541.00,447.00 571.00,447.00 601.00,447.00 631.00,447.00 661.00,447.00 687.67,447.00 714.33,447.00 741.00,447.00 767.67,447.00 794.33,447.00 821.00,447.00 847.00,447.00 873.00,447.00 899.00,447.00 925.00,447.00 951.00,447.00 977.00,447.00 1003.00,447.00 1029.00,447.00 1055.00,447.00 1081.00,447.00 1111.00,447.00 1141.00,447.00 1171.00,447.00 1201.00,447.00 453.50,474.50 456.00,502.00 456.00,524.50 456.00,547.00 466.00,562.00 476.00,577.00 496.00,594.50 516.00,612.00 533.50,629.50 551.00,647.00 568.50,662.00 586.00,677.00 431.00,547.00 406.00,547.00 383.50,547.00 361.00,547.00 331.00,547.00 662.67,427.00 664.33,407.00 666.00,387.00 666.00,367.00 666.00,347.00 651.00,322.00 631.00,317.00 611.00,312.00 591.00,307.00 563.50,299.50 536.00,292.00 518.50,284.50 501.00,277.00 681.00,322.00 711.00,322.00 738.50,314.50 766.00,307.00 783.50,297.00 801.00,287.00 828.50,289.50 856.00,292.00 871.00,294.50 886.00,297.00 962.67,465.33 974.33,483.67 986.00,502.00 1007.67,513.67 1029.33,525.33 1051.00,537.00 1076.00,542.00 1101.00,547.00 1126.00,552.00 1151.00,557.00 1176.00,569.50 1201.00,582.00</traffic>
   <object id="10" type="hq" x="166.00" y="447.00"/>
   <object id="11" type="worker" x="166.00" y="447.00"/>
@@ -15,7 +15,7 @@
   <object id="31" type="food-small" x="386.00" y="542.00" producer="30"/>
   <object id="32" type="sawmill" x="507.75" y="286.75"/>
   <object id="33" type="wood-small" x="556.00" y="292.00" producer="32"/>
-  <object id="34" type="house" x="823.00" y="283.75"/>
+  <object id="34" type="lot" x="823.00" y="283.75"/>
   <object id="35" type="money-small" x="896.00" y="307.00" producer="34"/>
   <object id="40" type="wood-large" x="596.00" y="317.00"/>
   <object id="41" type="wood-large" x="636.00" y="297.00"/>
@@ -53,4 +53,12 @@
   <effect kind="motes" x="301.00" y="657.00" width="90" height="50" speed=".6" opacity=".35" count="6"/>
   <effect kind="motes" x="901.00" y="517.00" width="90" height="50" speed=".6" opacity=".35" count="6"/>
   <effect kind="motes" x="971.00" y="247.00" width="90" height="50" speed=".6" opacity=".35" count="6"/>
+
+  <!-- Additional paid route jobs: preserve the zero-food recovery corridors. -->
+  <object id="100" type="stone" x="714.33" y="447"/>
+  <object id="101" type="tree" x="899" y="447"/>
+  <object id="102" type="stone" x="1003" y="447"/>
+  <object id="103" type="stone" x="548" y="646"/>
+  <object id="104" type="road" x="1029.33" y="525.33"/>
+  <object id="120" type="wood-large" x="556" y="340"/>
 </mission>

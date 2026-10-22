@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Library Rescue: original fictional collapsed two-storey civic library with teal roofing, ochre walls and tiled interior passages. New orthographic background uses only real collapse photos for structural observations, not composition. Original base0 HQ is retained. Nine civilians, one recruit and two animals; measured routes and original economy. -->
 <mission width="1368" height="1026" format="volcano-mission-1" title="Library Rescue" background="background.png">
-  <settings rules="rescue" food="40" people="10"/>
+  <settings clear-routes="true" rules="rescue" food="40" people="10"/>
   <pack path="../../assets/kenney-characters"/>
   <sprites path="sprites.xml"/>
   <archetype id="timber-shoring" extends="tree" title="Timber shoring" sprite="library-rescue/timber-shoring"/>
   <archetype id="concrete-slabs" extends="stone" title="Concrete slabs" sprite="library-rescue/concrete-slabs"/>
-  <archetype id="street-debris" extends="stone" title="Street debris" sprite="library-rescue/street-debris"/>
+  <archetype id="street-debris" extends="stone" title="Street debris" sprite="library-rescue/street-debris"><reward money="20"/></archetype>
   <archetype id="heavy-steel-debris" extends="boulder" title="Heavy steel debris" sprite="library-rescue/heavy-steel-debris"/>
   <archetype id="broken-paving" extends="road" title="Broken paving" sprite="library-rescue/broken-paving"/>
   <archetype id="field-kitchen" extends="cafe" title="Field kitchen" sprite="library-rescue/field-kitchen" damaged="library-rescue/field-kitchen-damaged"/>
   <archetype id="salvage-supply-station" extends="sawmill" title="Salvage supply station" sprite="library-rescue/salvage-supply-station" damaged="library-rescue/salvage-supply-station-damaged"/>
-  <archetype id="logistics-station" extends="house" title="Logistics station" sprite="library-rescue/logistics-station" damaged="library-rescue/logistics-station-damaged"/>
+  <archetype id="logistics-station" extends="house" title="Logistics station" sprite="library-rescue/logistics-station" damaged="library-rescue/logistics-station-damaged"><repair wood="30" money="40"/></archetype>
   <traffic>211.00,377.00 238.50,374.50 266.00,372.00 293.50,369.50 321.00,367.00 348.50,364.50 376.00,362.00 403.50,359.50 431.00,357.00 458.14,351.71 485.29,346.43 512.43,341.14 539.57,335.86 566.71,330.57 593.86,325.29 621.00,320.00 647.00,318.70 673.00,317.40 699.00,316.10 725.00,314.80 751.00,313.50 777.00,312.20 803.00,310.90 829.00,309.60 855.00,308.30 881.00,307.00 908.22,308.11 935.44,309.22 962.67,310.33 989.89,311.44 1017.11,312.56 1044.33,313.67 1071.56,314.78 1098.78,315.89 1126.00,317.00 208.50,352.00 206.00,327.00 201.00,303.67 196.00,280.33 191.00,257.00 286.00,370.00 286.00,393.50 286.00,417.00 293.50,434.50 301.00,452.00 291.00,467.00 281.00,482.00 263.50,494.50 246.00,507.00 432.67,380.33 434.33,403.67 436.00,427.00 440.00,452.00 444.00,477.00 450.00,497.00 440.33,513.67 430.67,530.33 421.00,547.00 407.67,560.33 394.33,573.67 381.00,587.00 366.00,607.00 351.00,627.00 358.50,647.00 366.00,667.00 358.50,687.00 351.00,707.00 341.00,722.00 331.00,737.00 736.00,314.00 736.00,341.67 736.00,369.33 736.00,397.00 736.00,417.00 736.00,437.00 736.00,457.00 736.00,484.50 736.00,512.00 731.00,532.00 726.00,552.00 723.50,569.50 721.00,587.00 716.00,604.50 711.00,622.00 711.00,647.00 711.00,657.00 711.00,667.00 1126.00,342.00 1126.00,367.00 1126.00,382.00 1126.00,397.00 1124.33,417.00 1122.67,437.00 1121.00,457.00 1111.00,475.33 1101.00,493.67 1091.00,512.00 1078.50,537.00 1066.00,562.00 1058.50,579.50 1051.00,597.00 1068.50,609.50 1086.00,622.00 1103.50,642.00 1121.00,662.00 1141.00,677.00 1161.00,692.00 1181.00,707.00 1186.00,727.00 1191.00,747.00 1141.00,457.00 1161.00,457.00 1181.00,457.00 1202.67,465.33 1224.33,473.67 1246.00,482.00 601.00,324.00 601.00,300.50 601.00,277.00 601.00,257.00 601.00,237.00 601.00,217.00 971.00,311.00 971.00,289.00 971.00,267.00 971.00,242.00 971.00,217.00</traffic>
   <object id="2" type="hq" x="191.00" y="257.00"/>
   <object id="3" type="worker" x="191.00" y="257.00"/>
@@ -46,4 +46,16 @@
   <object id="61" type="dog" x="721.00" y="637.00" variant="1"/>
   <effect kind="motes" x="691.00" y="567.00" width="130" height="70" speed=".25" opacity=".16" count="5"/>
   <effect kind="motes" x="1086.00" y="617.00" width="100" height="60" speed=".3" opacity=".14" count="4"/>
+
+  <!-- Additional paid route jobs: preserve the zero-food recovery corridors. -->
+  <object id="100" type="concrete-slabs" x="444" y="477"/>
+  <object id="101" type="timber-shoring" x="421" y="547"/>
+  <object id="102" type="broken-paving" x="736" y="369.33"/>
+  <object id="103" type="street-debris" x="736" y="457"/>
+  <object id="104" type="concrete-slabs" x="731" y="532"/>
+  <object id="105" type="timber-shoring" x="1124.33" y="417"/>
+  <object id="106" type="concrete-slabs" x="1101" y="493.67"/>
+  <object id="107" type="broken-paving" x="1066" y="562"/>
+  <object id="108" type="timber-shoring" x="1103.5" y="642"/>
+  <object id="109" type="street-debris" x="1098.78" y="315.89"/>
 </mission>

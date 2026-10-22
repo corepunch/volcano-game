@@ -77,7 +77,7 @@ static bool canvas_check(const char *mission)
     FILE *out=fdopen(fd,"w");
     if (!out) { close(fd);unlink(path);return false; }
     fputs("<mission format='volcano-mission-1' width='1368' height='1026' retail-background='103'>"
-          "<settings rules='rescue' food='20' people='1'/>"
+          "<settings rules='rescue' food='20' people='0' clear-routes='true'/>"
           "<traffic>200,250 230,250 260,250 290,250 320,250 350,250 380,250</traffic>"
           "<object id='1' type='hq' x='200' y='250'/>"
           "<object id='2' type='worker' x='200' y='250'/>"
@@ -88,8 +88,11 @@ static bool canvas_check(const char *mission)
     ok=render_width()==1368 && render_height()==1026;
     game_click(42,46);ok=ok && game_current()->paused;
     game_click(684,427);ok=ok && !game_current()->paused;
+    game_update(.1);ok=ok && !game_current()->won;
     test_click_entity(test_entity(3));ok=ok && game_current()->objects[test_entity(3)].assigned;
     ok=ok && test_frame("ipad-canvas");
+    for (int tick=0;tick<3000 && !game_current()->won;tick++) game_update(.1);
+    ok=ok && game_current()->won && game_current()->cleared==1;
     if (!game_init_file(mission)) return false;
     ok=ok && render_width()==(game_current()->spec.width?game_current()->spec.width:GAME_WIDTH);
     return ok?true:game_fail("Canvas dimensions, top HUD, centered pause or world picking failed");

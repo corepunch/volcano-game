@@ -200,3 +200,7 @@ and retail imports. The iPad missions use `width="1368" height="1026"`.
 Backgrounds must have the same aspect ratio as their canvas. The desktop window
 uses uniform aspect-fit scaling; HUD panels anchor to the top edges and pause
 controls remain centered. Input uses the same bottom-left world transform.
+
+Custom mission settings accept `clear-routes="true"` (default false). When set,
+all paid route obstacles must be cleared before victory; the HUD adds a remaining
+route-jobs objective. This is enabled for all six iPad missions.

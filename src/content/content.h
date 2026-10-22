@@ -71,6 +71,7 @@ typedef struct {
     int people_goal,basin_goal;
     const Archetype *buildable[MAX_BUILDABLE];
     int buildable_count;
+    bool clear_routes;      /* Complete all authored route obstacles as well as rescues. */
     bool crew_at_hq;        /* Start every on-foot worker at headquarters. */
     bool offroad;           /* ATV and garage records are active (retail missions 1-3 predate them). */
 } Mission;

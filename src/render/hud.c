@@ -86,10 +86,11 @@ void game_draw_hud(Game *g)
     bool goals=g->rules->goals;
     const int remaining[]={goals?g->goal-g->rescued:g->survivors-g->rescued,
         goals?g->animals-g->animals_rescued:g->barriers-g->cleared,
-        goals?g->basin_goal-g->purified:g->resources-g->collected};
-    const char *tasks[]={"Rescue people",goals?"Rescue animals":"Clear obstructions",goals?"Purify the basins":"Collect supplies"};
+        goals?g->basin_goal-g->purified:g->resources-g->collected, g->barriers-g->cleared};
+    const char *tasks[]={"Rescue people",goals?"Rescue animals":"Clear obstructions",goals?"Purify the basins":"Collect supplies","Clear evacuation routes"};
     int row=0;
-    for (int i=0;i<3;i++) {
+    for (int i=0;i<4;i++) {
+        if (i==3 && !g->mission.clear_routes) continue;
         if (goals && ((i==1 && !g->animals) || (i==2 && !g->basin_goal))) continue;
         float y=741+hud_top()-21*row;bool done=remaining[i]==0;
         if (done) game_gui(1036+hud_right(),y,21,22,.8535f,.7373f,.0205f,.0215f);

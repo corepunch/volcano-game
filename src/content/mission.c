@@ -200,7 +200,7 @@ bool mission_load(const char *path,LevelSpec *out)
     Loader l={out,&doc,""};path_directory(l.folder,sizeof l.folder,path);
     static const char *attributes[]={"format","title","background","retail-background","width","height",NULL};
     static const char *children[]={"settings","pack","sprites","archetype","traffic","object","effect",NULL};
-    static const char *settings_attributes[]={"rules","food","wood","money","fuel","people","basins","crew-at-hq","offroad","buildable",NULL};
+    static const char *settings_attributes[]={"rules","food","wood","money","fuel","people","basins","clear-routes","crew-at-hq","offroad","buildable",NULL};
     const XmlNode *root=doc.root;const char *format,*title,*text;
     bool ok=!strcmp(root->name,"mission")?xml_only(&doc,root,attributes,children):xml_fail(&doc,root,"expected <mission> root");
     if (ok) ok=xml_require(&doc,root,"format",&format);
