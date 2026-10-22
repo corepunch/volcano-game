@@ -200,7 +200,8 @@ void game_tick(Game *g,double dt)
     if (g->rules->vehicles) update_vehicles(g,dt);
     if (g->rules->auto_evacuation) update_rescues(g,dt);
     if (g->rules->wildlife) update_animals(g,dt);
-    if (g->rules->goals && g->rescued>=g->goal && g->animals_rescued>=g->animals && g->purified>=g->basin_goal) {
+    if (g->rules->goals && g->rescued>=g->goal && g->animals_rescued>=g->animals && g->purified>=g->basin_goal &&
+        (!g->mission.clear_routes || g->cleared>=g->barriers)) {
         g->won=true;g->build_menu=-1;game_announce(g,"Mission complete!");
     }
 }

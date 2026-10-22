@@ -243,6 +243,7 @@ bool mission_settings(const XmlDoc *doc,const XmlNode *node,const Mission *defau
         if (!xml_int(doc,node,resource_names[r],out->start.amount[r],0,1000000,&out->start.amount[r])) return false;
     if (!xml_int(doc,node,"people",out->people_goal,0,1000000,&out->people_goal) ||
         !xml_int(doc,node,"basins",out->basin_goal,0,1000000,&out->basin_goal) ||
+        !xml_bool(doc,node,"clear-routes",out->clear_routes,&out->clear_routes) ||
         !xml_bool(doc,node,"crew-at-hq",out->crew_at_hq,&out->crew_at_hq) ||
         !xml_bool(doc,node,"offroad",out->offroad,&out->offroad)) return false;
     const char *buildable=xml_attr(node,"buildable");

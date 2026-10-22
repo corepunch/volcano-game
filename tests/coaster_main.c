@@ -27,7 +27,7 @@ static bool play(const char *path)
         if (!require(game_hovered_object(game_current())==i,"natural obstacle center is clickable")) return false;
         jobs++;
     }
-    if (!require(jobs==10 && unique==8,"ten jobs use all eight distinct authored variants")) return false;
+    if (!require(jobs==18 && unique==8,"eighteen jobs use all eight distinct authored variants")) return false;
     int car=test_entity(23);
     /* Leave the common train gate until last, so ordinary play can verify all
      * optional branches before automatic civilian evacuation triggers victory. */
@@ -45,7 +45,7 @@ static bool play(const char *path)
         }
         if (!require(!game.won && game.stock.food>=0 && game.stock.wood>=0 && game.stock.money>=0,"last rescue remains gated; budget stays valid")) return false;
     }
-    if (!require(all_other,"all nine other blockers clear through ordinary scheduling")) return false;
+    if (!require(all_other,"all seventeen other blockers clear through ordinary scheduling")) return false;
     game_pointer(-100,-100,false);
     if (!test_frame("twisted-tracks-cleared-interior")) return false;
     for (int i=0;i<game.object_count;i++) {
@@ -87,8 +87,8 @@ static bool play(const char *path)
     if (!(cleared_shot && game.objects[car].hidden && game.won && game.rescued==10 && game.animals_rescued==2))
         fprintf(stderr,"final: shot=%d hidden=%d won=%d people=%d animals=%d food=%d money=%d\n",cleared_shot,game.objects[car].hidden,game.won,game.rescued,game.animals_rescued,game.stock.food,game.stock.money);
     if (!require(cleared_shot && game.objects[car].hidden && game.won && game.rescued==10 && game.animals_rescued==2,
-        "all ten debris sprites disappear and every rescue completes")) return false;
-    puts("PASS: all eight atlas variants are clickable; ten paid jobs clear through normal play; no stale art, double charge or blocked return.");
+        "all eighteen debris sprites disappear and every rescue completes")) return false;
+    puts("PASS: all eight atlas variants are clickable; eighteen paid jobs clear through normal play; no stale art, double charge or blocked return.");
     return true;
 }
 

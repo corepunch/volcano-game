@@ -158,13 +158,13 @@ reorganized wreck, branching to visitors in an upper interior pocket, inside the
 broken loop and beside the blue train. Nine visitors and a stranded technician
 count toward ten people; a cat and dog have their own rescue objective.
 
-Ten removable jobs are mission archetypes that extend ordinary obstacles and use
+Eighteen removable jobs are mission archetypes that extend ordinary obstacles and use
 eight authored debris sprites: red track, yellow supports, bent fencing, cables,
 a detached car, concrete footings, wheels and timber maintenance panels. The
 sprites are cut from `debris.png` by `missions/twisted-tracks/sprites.xml`. The
 panels extend `tree` and yield 20 timber; the derailed car extends `boulder`;
-the other eight extend `stone`. Two of those reuse a sprite under a different
-title. These are ordinary clearing tasks, not new traversal mechanics. Three
+the remaining variants extend `stone`. The eighteen placements reuse these
+ten archetypes. These are ordinary clearing tasks, not new traversal mechanics. Three
 repair caches and renewable cafe, sawmill and park-office production support
 recovery after spending all 40 starting food. The expensive car needs 40 food
 and 100 money and lies on the common train-pocket spur, so the service-road
@@ -173,7 +173,7 @@ painted scenery; cleared jobs reveal clean road underneath.
 
 The `--coaster` regression checks every initial rescue gate, zero-food recovery,
 three producer repair orders, all ten people and both animals, and
-pause/restart. `tests/coaster_main.c` checks that all ten blockers are mission
+pause/restart. `tests/coaster_main.c` checks that all eighteen blockers are mission
 archetypes with their own titles and eight distinct atlas sprites, that each is
 clickable at its centre, that every job clears completely, and that the car
 reserves 40 food and 100 money exactly once. Set `VOLCANO_TEST_SHOTS=1` to keep

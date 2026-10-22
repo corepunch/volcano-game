@@ -14,7 +14,8 @@ static bool check(bool condition,const char *message)
 static bool play(const char *path)
 {
     if (!game_init_file(path)) return false;
-    if (!check(game.rules->economy && game.spec.campaign==0 && game.goal==2 && game.stock.food==20 && game.stock.wood==0,
+    if (!test_frame("first-rescue-start")) return false;
+    if (!check(game.rules->economy && game.spec.campaign==0 && game.goal==3 && game.stock.food==20 && game.stock.wood==0,
                "compiled mission settings")) return false;
     int tree=test_entity(4),bridge=test_entity(5);
     float length;Vec2 route_points[TEST_PATH];int count;
@@ -38,9 +39,15 @@ static bool play(const char *path)
     if (!check(game.objects[tree].done && game.stock.wood==20,"tree yields bridge budget")) return false;
     for (int tick=0;tick<3000 && !game.won;tick++) {
         if (tick%10==0 && !game.objects[bridge].assigned && !game.objects[bridge].done) test_click_entity(bridge);
+        if (game.objects[bridge].done && tick%10==0) for (int i=0;i<game.object_count;i++) {
+            Entity *e=&game.objects[i];
+            if ((e->kind==BARRIER || e->kind==RESOURCE) && !e->done && !e->hidden && !e->assigned && !e->queued)
+                test_click_entity(i);
+        }
         game_update(.1);
+        if (!check(!game.won || game.cleared==game.barriers,"evacuation road objective prevents premature victory")) return false;
     }
-    if (!check(game.won && game.rescued==2 && game.stock.wood==0 && game.stock.food==0,"mission completes through normal play")) return false;
+    if (!check(game.won && game.rescued==3 && game.cleared==6 && game.stock.wood>=0 && game.stock.food>=0,"mission completes through normal play")) return false;
     game_pointer(683,render_height()-350,false);
     if (!check(game_hud_button(game_current())==-1,"custom victory has one replay button")) return false;
     if (!test_frame("custom-level-complete")) return false;
@@ -213,7 +220,10 @@ static bool play_production_mission(const char *path,bool mayday)
                 }
                 for (int j=0;j<3;j++) {
                     int i=test_entity(orders[order][j]);Entity *e=&game.objects[i];
-                    if (!e->operational && !e->assigned && !e->queued) test_click_entity(i);
+                    if (e->kind==BUILD_LOT && !e->assigned) {
+                        test_choose_building(i,2);
+                        if (game.build_menu>=0) game_key(SDLK_ESCAPE);
+                    } else if (!e->operational && !e->assigned && !e->queued) test_click_entity(i);
                 }
                 for (int i=0;i<game.object_count;i++) {
                     Entity *e=&game.objects[i];
@@ -232,7 +242,7 @@ static bool play_production_mission(const char *path,bool mayday)
             if (game.objects[test_entity(23)].assigned) paid_east=true;
             if (!check(game.stock.food>=0 && game.stock.wood>=0 && game.stock.money>=0,"mission budget never negative")) return false;
         }
-        if (!check(game.won && game.rescued==goal && game.animals_rescued==2 && game.worker_count==3 && paid_east,
+        if (!check(game.won && game.cleared==game.barriers && game.rescued==goal && game.animals_rescued==2 && game.worker_count==3 && paid_east,
                    "production rescue puzzle completes without injected resources")) {
             fprintf(stderr,"order=%d rescued=%d animals=%d food=%d wood=%d money=%d time=%.1f\n",order,game.rescued,game.animals_rescued,game.stock.food,game.stock.wood,game.stock.money,game.time);
             return false;
@@ -275,14 +285,15 @@ static bool play_disaster_mission(const char *path,int variant)
     for (int j=0;j<3;j++) test_click_entity(test_entity(caches[j]));
     for (int tick=0;tick<1200;tick++) game_update(.1);
     if (!check(game.stock.wood==80 && game.stock.food==0,"delivered timber finances food recovery")) return false;
-    test_click_entity(test_entity(21));test_click_entity(test_entity(23));
-    if (!check(game.objects[test_entity(21)].queued && !game.objects[test_entity(21)].assigned,
+    uint32_t recovery_id=(coaster || site)?100:21;
+    test_click_entity(test_entity(recovery_id));test_click_entity(test_entity(23));
+    if (!check(game.objects[test_entity(recovery_id)].queued && !game.objects[test_entity(recovery_id)].assigned,
                "food-starved clearing job waits in queue")) return false;
     test_click_entity(test_entity(30));
     if (!check(game.objects[test_entity(30)].assigned && game.stock.wood==60,
                "affordable cafe repair dispatches past blocked jobs")) return false;
-    for (int tick=0;tick<1600 && !game.objects[test_entity(21)].done;tick++) game_update(.1);
-    if (!check(game.objects[test_entity(30)].operational && game.objects[test_entity(21)].done,
+    for (int tick=0;tick<1600 && !game.objects[test_entity(recovery_id)].done;tick++) game_update(.1);
+    if (!check(game.objects[test_entity(30)].operational && game.objects[test_entity(recovery_id)].done,
                "renewable food resumes queued tourist rescue without another click")) return false;
     const uint32_t orders[3][3]={{30,32,34},{34,30,32},{32,34,30}};
     for (int order=0;order<3;order++) {
@@ -344,7 +355,10 @@ static bool play_disaster_mission(const char *path,int variant)
                 }
                 for (int j=0;j<3;j++) {
                     int i=test_entity(orders[order][j]);Entity *e=&game.objects[i];
-                    if (!e->operational && !e->assigned && !e->queued) test_click_entity(i);
+                    if (e->kind==BUILD_LOT && !e->assigned) {
+                        test_choose_building(i,2);
+                        if (game.build_menu>=0) game_key(SDLK_ESCAPE);
+                    } else if (!e->operational && !e->assigned && !e->queued) test_click_entity(i);
                 }
                 for (int i=0;i<game.object_count;i++) {
                     Entity *e=&game.objects[i];
@@ -363,7 +377,7 @@ static bool play_disaster_mission(const char *path,int variant)
                 repaired=true;
             }
         }
-        if (!check(game.won && game.rescued==goal && game.animals_rescued==2 && game.worker_count==3 && paid,
+        if (!check(game.won && game.cleared==game.barriers && game.rescued==goal && game.animals_rescued==2 && game.worker_count==3 && paid,
                    "disaster mission completes every objective through ordinary clicks")) {
             fprintf(stderr,"order=%d rescued=%d animals=%d food=%d wood=%d money=%d time=%.1f\n",
                     order,game.rescued,game.animals_rescued,game.stock.food,game.stock.wood,game.stock.money,game.time);
