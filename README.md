@@ -20,6 +20,15 @@ engine's data model.
 Requires a C11 compiler, `make`, `pkg-config`, SDL2 and Python 3 with Pillow
 (Pillow is only needed for tools and tests).
 
+Use native SDL2, not SDL3 or `sdl2-compat`. On macOS, Homebrew's `sdl2`
+may resolve to the SDL3-backed compatibility layer. Run `make sdl2` once to
+build checksum-pinned upstream SDL2 2.32.10 into `build/sdl2-native`; subsequent
+builds use that static library automatically, including sanitizer builds and
+app bundles. This needs `curl`, a compiler and network access on first download.
+An existing native static installation can be selected with
+`make SDL2_CONFIG=/path/to/bin/sdl2-config`. System native SDL2 via `pkg-config`
+remains supported. `make clean` also removes the local SDL2 build.
+
 ```sh
 make                                   # build/volcano
 make test                              # retail-free test suites

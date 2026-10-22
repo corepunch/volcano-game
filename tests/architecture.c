@@ -2,6 +2,7 @@
  * worlds are isolated values, art never changes rules, and a failed load
  * leaves the running world (and its art) untouched. */
 #include "game_test.h"
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -98,10 +99,37 @@ static bool canvas_check(const char *mission)
     return ok?true:game_fail("Canvas dimensions, top HUD, centered pause or world picking failed");
 }
 
+/* SDL2 owns both letterboxing and pointer conversion. Exercise window sizes
+ * representative of 4:3, wider iPads and a portrait/resized window. */
+static bool viewport_check(void)
+{
+    const int sizes[][2]={{1024,768},{1376,1032},{1210,834},{1180,820},{1133,744},{768,1024}};
+    SDL_SetHint(SDL_HINT_RENDER_LOGICAL_SIZE_MODE,"letterbox");
+    SDL_Window *window=SDL_CreateWindow("viewport test",0,0,1024,768,SDL_WINDOW_HIDDEN|SDL_WINDOW_RESIZABLE);
+    SDL_Renderer *view=window?SDL_CreateRenderer(window,-1,SDL_RENDERER_SOFTWARE):NULL;
+    bool ok=view!=NULL;
+    for (unsigned i=0;ok && i<sizeof sizes/sizeof *sizes;i++) {
+        int w=sizes[i][0],h=sizes[i][1];SDL_SetWindowSize(window,w,h);
+        ok=SDL_RenderSetLogicalSize(view,1368,1026)==0;
+        int x0,y0,x1,y1;float lx,ly;
+        SDL_RenderLogicalToWindow(view,0,0,&x0,&y0);
+        SDL_RenderLogicalToWindow(view,1368,1026,&x1,&y1);
+        float scale=fminf(w/1368.f,h/1026.f);
+        ok=ok && x0>=0 && y0>=0 && x1<=w+1 && y1<=h+1 &&
+            fabsf((x1-x0)-1368*scale)<=2 && fabsf((y1-y0)-1026*scale)<=2 &&
+            abs(x0-(w-x1))<=2 && abs(y0-(h-y1))<=2;
+        SDL_RenderWindowToLogical(view,w/2,h/2,&lx,&ly);
+        ok=ok && fabsf(lx-684)<=2 && fabsf(ly-513)<=2;
+    }
+    if (view) SDL_DestroyRenderer(view);
+    if (window) SDL_DestroyWindow(window);
+    return ok?true:game_fail("SDL2 aspect-fit or input mapping failed across iPad window sizes");
+}
+
 bool game_architecture_selftest(const char *mission)
 {
     if (!game_init_file(mission) || !isolated_world_check(mission,true) || !isolated_world_check(mission,false) ||
-        !failed_load_check() || !canvas_check(mission)) return false;
+        !failed_load_check() || !canvas_check(mission) || !viewport_check()) return false;
     puts("PASS: isolated worlds, callback work/returns, artwork-independent costs/cargo, and rollback after a failed load.");
     return true;
 }
