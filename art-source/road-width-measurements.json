@@ -1,25 +1,25 @@
 {
   "format": "volcano-road-calipers-1",
-  "method": "Manual visual calipers, top-left source coordinates, perpendicular to road. Approximate painterly edges (about 2 source pixels); excludes curbs, shoulders, junctions and clearings. These are sampled measurements, not segmentation of every road pixel.",
+  "method": "Manual source-pixel terrain-edge review after ImageGen outpainting, cross-checked against rendered routes. Samples only, not whole-road segmentation. First Rescue retains its separate legacy asphalt design.",
   "images": [
     {
       "level": "emerald-falls",
       "dimensions": [
-        1672,
-        941
+        1368,
+        1026
       ],
-      "sha256": "c4acef4a7efb6b66b23bd1e2aa240804de9636aab649fb16d33fcbd0311e62aa",
+      "sha256": "f20023da539456274d80ec390eb96e3ef9f5d9e1473047d18a4845fd031a7fb7",
       "calipers": [
         {
           "name": "main road",
           "endpoints": [
             [
-              550,
-              426
+              450,
+              482
             ],
             [
-              550,
-              454
+              450,
+              505
             ]
           ]
         },
@@ -27,12 +27,12 @@
           "name": "south branch",
           "endpoints": [
             [
-              780,
-              550
+              641,
+              577
             ],
             [
-              811,
-              550
+              665,
+              577
             ]
           ]
         }
@@ -41,21 +41,21 @@
     {
       "level": "forest-mayday",
       "dimensions": [
-        1672,
-        941
+        1368,
+        1026
       ],
-      "sha256": "34cb8c073423d9d8340b406e8ec1e546cb8b1025916f627c71ea4cc3f3512926",
+      "sha256": "c6a86591fbd22c69803c3f0cf9bc8176926f4f0bb5222c46bf874e3c7650f32d",
       "calipers": [
         {
           "name": "main road",
           "endpoints": [
             [
-              450,
-              536
+              368,
+              560
             ],
             [
-              450,
-              566
+              368,
+              583
             ]
           ]
         },
@@ -63,12 +63,12 @@
           "name": "south branch",
           "endpoints": [
             [
-              804,
-              620
+              657,
+              635
             ],
             [
-              834,
-              620
+              682,
+              635
             ]
           ]
         }
@@ -77,21 +77,21 @@
     {
       "level": "ancient-echoes",
       "dimensions": [
-        1672,
-        941
+        1368,
+        1026
       ],
-      "sha256": "850cae06cb17fda0e2ce9c3a226ce51fb055741a7cf3191d30fa6ab5f26b383b",
+      "sha256": "db187166336ec6c4f10fdc913d3d38a6b6dedfb10134a20dc2cfc92c3a75481c",
       "calipers": [
         {
           "name": "west approach",
           "endpoints": [
             [
-              350,
-              540
+              300,
+              586
             ],
             [
-              350,
-              569
+              300,
+              609
             ]
           ]
         },
@@ -99,35 +99,36 @@
           "name": "temple approach",
           "endpoints": [
             [
-              950,
-              548
+              800,
+              597
             ],
             [
-              950,
-              577
+              800,
+              617
             ]
           ]
         }
-      ]
+      ],
+      "reviewed_deviation": "Outpaint narrowed this sampled terrain corridor; gameplay graph and sprite widths are unchanged. Road artwork is not a touch target. See docs/ipad-levels.md."
     },
     {
       "level": "twisted-tracks",
       "dimensions": [
-        1672,
-        941
+        1368,
+        1026
       ],
-      "sha256": "be98b4e90147b621fe0c23fa54a8abfe9cb759a4c577e168e57b133ed54e0f56",
+      "sha256": "c15f4947a78c978fc96b68b6fb18ebd27dc2b63197e95a8ffef09fce55a96712",
       "calipers": [
         {
           "name": "northwest approach",
           "endpoints": [
             [
-              350,
-              230
+              285,
+              320
             ],
             [
-              336,
-              254
+              272,
+              340
             ]
           ]
         },
@@ -135,35 +136,36 @@
           "name": "southern loop",
           "endpoints": [
             [
-              900,
-              756
+              736,
+              768
             ],
             [
-              900,
-              787
+              736,
+              784
             ]
           ]
         }
-      ]
+      ],
+      "reviewed_deviation": "Outpaint narrowed this sampled terrain corridor; gameplay graph and sprite widths are unchanged. Road artwork is not a touch target. See docs/ipad-levels.md."
     },
     {
       "level": "library-rescue",
       "dimensions": [
-        1672,
-        941
+        1368,
+        1026
       ],
-      "sha256": "ae0645d79d29bd166e4a80daa74f80b5796c2afa8ef85f0fdc3dd21d2978baa2",
+      "sha256": "f6b5e266909c4c53548396b5dbba98c53bb86536d884370a9f798d1a8cc0d516",
       "calipers": [
         {
           "name": "asphalt street",
           "endpoints": [
             [
-              1000,
-              704
+              817,
+              717
             ],
             [
-              1000,
-              734
+              817,
+              741
             ]
           ]
         },
@@ -171,12 +173,12 @@
           "name": "middle brick approach",
           "endpoints": [
             [
-              877,
-              590
+              714,
+              625
             ],
             [
-              908,
-              590
+              738,
+              625
             ]
           ]
         }

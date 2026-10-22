@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Twisted Tracks: interior service roads thread between reorganized red/yellow coaster wreck islands. Ten custom clearable debris jobs use eight authored sprites linked to ordinary obstacle rules. Nine visitors, one stranded technician, two animals; renewable supplies and two starting workers. Coordinates bottom-left world pixels. -->
-<mission format="volcano-mission-1" title="Twisted Tracks" background="background.png">
+<mission width="1368" height="1026" format="volcano-mission-1" title="Twisted Tracks" background="background.png">
   <settings rules="rescue" food="40" people="10"/>
   <sprites path="sprites.xml"/>
   <archetype id="broken-maintenance-panels" extends="tree" title="Broken maintenance panels" sprite="twisted-tracks/broken-maintenance-panels"/>
@@ -13,46 +13,46 @@
   <archetype id="shattered-concrete-footing" extends="stone" title="Shattered concrete footing" sprite="twisted-tracks/shattered-concrete-footing"/>
   <archetype id="fallen-track-ties" extends="stone" title="Fallen track ties" sprite="twisted-tracks/buckled-red-track"/>
   <archetype id="crushed-park-gate" extends="stone" title="Crushed park gate" sprite="twisted-tracks/twisted-service-fence"/>
-  <traffic>150.5,160 147,139 157.75,184 180,195 200,204 220,213 240,222 260,231 280,239.5 300,248 315,265.5 330,283 345,296.33 360,309.67 375,323 396.67,333 418.33,343 440,353 463.33,361.33 486.67,369.67 510,378 532.5,383 555,388 577.5,393 600,398 622.5,398 645,398 667.5,398 690,398 667.5,399.25 645,400.5 622.5,401.75 600,403 573.33,406.33 546.67,409.67 520,413 500,420.5 480,428 460,435.5 440,443 416.67,456.33 393.33,469.67 370,483 348.33,494.67 326.67,506.33 305,518 288.33,531.33 271.67,544.67 255,558 237.5,575.5 220,593 205,613 685,418 680,438 690,458 700,478 716.67,489.67 733.33,501.33 750,513 770,528 790,543 792.5,558 795,573 782.5,588 770,603 752.5,615.5 735,628 715,638 737.5,638 760,638 712.5,403 735,408 757.5,413 780,418 802.5,423 825,428 847.5,433 870,438 886.67,448 903.33,458 920,468 942.5,468 965,468 987.5,468 1010,468 1033.33,471.33 1056.67,474.67 1080,478 1095,493 1110,508 1120,528 1130,548 1145,558 1160,568 1175,568 1190,568 710,390.5 730,383 750,375.5 770,368 792.5,360.5 815,353 837.5,345.5 860,338 886.67,329.67 913.33,321.33 940,313 965,300.5 990,288 998.33,266.33 1006.67,244.67 1015,223 1010,283 1030,278 1050,275.5 1070,273 1090,273 1110,273 316.67,238 333.33,228 350,218 375,208 400,198 423.33,188.67 446.67,179.33 470,170 496.67,162.67 523.33,155.33 550,148 577.5,145.5 605,143 632.5,140.5 660,138 685,135.5 710,133 735,130.5 760,128 782.5,129.25 805,130.5 827.5,131.75 850,133 872.5,136.75 895,140.5 917.5,144.25 940,148 960,161.33 980,174.67 1000,188 1007.5,205.5 1038.75,215.5 1062.5,208 1086.25,200.5 1110,193 1136.67,184.67 1163.33,176.33 1190,168 1215,155.5 1240,143 472.5,154 475,138 474,119.75 499,100 900,141 902.75,127 905.5,113 905.5,94 914,85 1114,175.5 1118,158 1118,135 1118,112 1127,101.5</traffic>
-  <object id="2" type="hq" x="147" y="139"/>
-  <object id="3" type="worker" x="147" y="139"/>
-  <object id="4" type="worker" x="167" y="139"/>
-  <object id="20" type="broken-maintenance-panels" x="470" y="366"/>
-  <object id="21" type="fallen-yellow-support" x="750" y="513"/>
-  <object id="22" type="twisted-service-fence" x="390" y="202"/>
-  <object id="23" type="derailed-coaster-car" x="1030" y="278"/>
-  <object id="24" type="tangled-ride-cables" x="1110" y="508"/>
-  <object id="25" type="buckled-red-track" x="865" y="437"/>
-  <object id="26" type="detached-wheel-assembly" x="1000" y="205"/>
-  <object id="27" type="shattered-concrete-footing" x="850" y="133"/>
-  <object id="28" type="fallen-track-ties" x="290" y="530"/>
-  <object id="29" type="crushed-park-gate" x="1190" y="168"/>
-  <object id="30" type="cafe" x="499" y="100"/>
-  <object id="31" type="food-small" x="555" y="155" producer="30"/>
-  <object id="32" type="sawmill" x="914" y="85"/>
-  <object id="33" type="wood-small" x="940" y="164" producer="32"/>
-  <object id="34" type="house" x="1127" y="101.5"/>
-  <object id="35" type="money-small" x="1055" y="201" producer="34"/>
-  <object id="40" type="wood-large" x="430" y="184"/>
-  <object id="41" type="wood-large" x="610" y="143"/>
-  <object id="43" type="wood-large" x="740" y="131"/>
-  <object id="42" type="money-large" x="1240" y="143"/>
-  <object id="50" type="civilian" x="715" y="638"/>
-  <object id="51" type="civilian" x="740" y="631"/>
-  <object id="52" type="civilian" x="765" y="638"/>
-  <object id="54" type="civilian" x="1145" y="568"/>
-  <object id="55" type="civilian" x="1170" y="561"/>
-  <object id="56" type="civilian" x="1193" y="568"/>
-  <object id="57" type="civilian" x="1070" y="274"/>
-  <object id="58" type="civilian" x="1095" y="266"/>
-  <object id="59" type="civilian" x="1120" y="276"/>
-  <object id="53" type="worker" x="705" y="613"/>
-  <object id="60" type="cat" x="210" y="613"/>
-  <object id="61" type="dog" x="1150" y="538" variant="1"/>
-  <effect kind="sparkles" x="150" y="413" width="65" height="25" rate="4" opacity=".6"/>
-  <effect kind="sparkles" x="190" y="378" width="55" height="25" rate="4" opacity=".6"/>
-  <effect kind="foam" x="100" y="480" width="18" rate="14"/>
-  <effect kind="insects" x="260" y="318" width="50" height="25" speed=".7" count="2"/>
-  <effect kind="insects" x="780" y="168" width="45" height="30" speed=".8" count="2"/>
-  <effect kind="motes" x="800" y="458" width="65" height="40" speed=".5" opacity=".25" count="4"/>
+  <traffic>151.50,289.00 148.00,268.00 158.75,313.00 181.00,324.00 201.00,333.00 221.00,342.00 241.00,351.00 261.00,360.00 281.00,368.50 301.00,377.00 316.00,394.50 331.00,412.00 346.00,425.33 361.00,438.67 376.00,452.00 397.67,462.00 419.33,472.00 441.00,482.00 464.33,490.33 487.67,498.67 511.00,507.00 533.50,512.00 556.00,517.00 578.50,522.00 601.00,527.00 623.50,527.00 646.00,527.00 668.50,527.00 691.00,527.00 668.50,528.25 646.00,529.50 623.50,530.75 601.00,532.00 574.33,535.33 547.67,538.67 521.00,542.00 501.00,549.50 481.00,557.00 461.00,564.50 441.00,572.00 417.67,585.33 394.33,598.67 371.00,612.00 349.33,623.67 327.67,635.33 306.00,647.00 289.33,660.33 272.67,673.67 256.00,687.00 238.50,704.50 221.00,722.00 206.00,742.00 686.00,547.00 681.00,567.00 691.00,587.00 701.00,607.00 717.67,618.67 734.33,630.33 751.00,642.00 771.00,657.00 791.00,672.00 793.50,687.00 796.00,702.00 783.50,717.00 771.00,732.00 753.50,744.50 736.00,757.00 716.00,767.00 738.50,767.00 761.00,767.00 713.50,532.00 736.00,537.00 758.50,542.00 781.00,547.00 803.50,552.00 826.00,557.00 848.50,562.00 871.00,567.00 887.67,577.00 904.33,587.00 921.00,597.00 943.50,597.00 966.00,597.00 988.50,597.00 1011.00,597.00 1034.33,600.33 1057.67,603.67 1081.00,607.00 1096.00,622.00 1111.00,637.00 1121.00,657.00 1131.00,677.00 1146.00,687.00 1161.00,697.00 1176.00,697.00 1191.00,697.00 711.00,519.50 731.00,512.00 751.00,504.50 771.00,497.00 793.50,489.50 816.00,482.00 838.50,474.50 861.00,467.00 887.67,458.67 914.33,450.33 941.00,442.00 966.00,429.50 991.00,417.00 999.33,395.33 1007.67,373.67 1016.00,352.00 1011.00,412.00 1031.00,407.00 1051.00,404.50 1071.00,402.00 1091.00,402.00 1111.00,402.00 317.67,367.00 334.33,357.00 351.00,347.00 376.00,337.00 401.00,327.00 424.33,317.67 447.67,308.33 471.00,299.00 497.67,291.67 524.33,284.33 551.00,277.00 578.50,274.50 606.00,272.00 633.50,269.50 661.00,267.00 686.00,264.50 711.00,262.00 736.00,259.50 761.00,257.00 783.50,258.25 806.00,259.50 828.50,260.75 851.00,262.00 873.50,265.75 896.00,269.50 918.50,273.25 941.00,277.00 961.00,290.33 981.00,303.67 1001.00,317.00 1008.50,334.50 1039.75,344.50 1063.50,337.00 1087.25,329.50 1111.00,322.00 1137.67,313.67 1164.33,305.33 1191.00,297.00 1216.00,284.50 1241.00,272.00 473.50,283.00 476.00,267.00 475.00,248.75 500.00,229.00 901.00,270.00 903.75,256.00 906.50,242.00 906.50,223.00 915.00,214.00 1115.00,304.50 1119.00,287.00 1119.00,264.00 1119.00,241.00 1128.00,230.50</traffic>
+  <object id="2" type="hq" x="148.00" y="268.00"/>
+  <object id="3" type="worker" x="148.00" y="268.00"/>
+  <object id="4" type="worker" x="168.00" y="268.00"/>
+  <object id="20" type="broken-maintenance-panels" x="471.00" y="495.00"/>
+  <object id="21" type="fallen-yellow-support" x="751.00" y="642.00"/>
+  <object id="22" type="twisted-service-fence" x="391.00" y="331.00"/>
+  <object id="23" type="derailed-coaster-car" x="1031.00" y="407.00"/>
+  <object id="24" type="tangled-ride-cables" x="1111.00" y="637.00"/>
+  <object id="25" type="buckled-red-track" x="866.00" y="566.00"/>
+  <object id="26" type="detached-wheel-assembly" x="1001.00" y="334.00"/>
+  <object id="27" type="shattered-concrete-footing" x="851.00" y="262.00"/>
+  <object id="28" type="fallen-track-ties" x="291.00" y="659.00"/>
+  <object id="29" type="crushed-park-gate" x="1191.00" y="297.00"/>
+  <object id="30" type="cafe" x="500.00" y="229.00"/>
+  <object id="31" type="food-small" x="556.00" y="284.00" producer="30"/>
+  <object id="32" type="sawmill" x="915.00" y="214.00"/>
+  <object id="33" type="wood-small" x="941.00" y="293.00" producer="32"/>
+  <object id="34" type="house" x="1128.00" y="230.50"/>
+  <object id="35" type="money-small" x="1056.00" y="330.00" producer="34"/>
+  <object id="40" type="wood-large" x="431.00" y="313.00"/>
+  <object id="41" type="wood-large" x="611.00" y="272.00"/>
+  <object id="43" type="wood-large" x="741.00" y="260.00"/>
+  <object id="42" type="money-large" x="1241.00" y="272.00"/>
+  <object id="50" type="civilian" x="716.00" y="767.00"/>
+  <object id="51" type="civilian" x="741.00" y="760.00"/>
+  <object id="52" type="civilian" x="766.00" y="767.00"/>
+  <object id="54" type="civilian" x="1146.00" y="697.00"/>
+  <object id="55" type="civilian" x="1171.00" y="690.00"/>
+  <object id="56" type="civilian" x="1194.00" y="697.00"/>
+  <object id="57" type="civilian" x="1071.00" y="403.00"/>
+  <object id="58" type="civilian" x="1096.00" y="395.00"/>
+  <object id="59" type="civilian" x="1121.00" y="405.00"/>
+  <object id="53" type="worker" x="706.00" y="742.00"/>
+  <object id="60" type="cat" x="211.00" y="742.00"/>
+  <object id="61" type="dog" x="1151.00" y="667.00" variant="1"/>
+  <effect kind="sparkles" x="151.00" y="542.00" width="65" height="25" rate="4" opacity=".6"/>
+  <effect kind="sparkles" x="191.00" y="507.00" width="55" height="25" rate="4" opacity=".6"/>
+  <effect kind="foam" x="101.00" y="609.00" width="18" rate="14"/>
+  <effect kind="insects" x="261.00" y="447.00" width="50" height="25" speed=".7" count="2"/>
+  <effect kind="insects" x="781.00" y="297.00" width="45" height="30" speed=".8" count="2"/>
+  <effect kind="motes" x="801.00" y="587.00" width="65" height="40" speed=".5" opacity=".25" count="4"/>
 </mission>

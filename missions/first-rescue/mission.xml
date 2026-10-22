@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Two routes: clear the northern tree for wood, then repair the southern bridge. Coordinates use bottom-left origin. Reuses retail background 103; no artwork is embedded. -->
-<mission format="volcano-mission-1" title="First Rescue" retail-background="103">
+<mission width="1368" height="1026" format="volcano-mission-1" title="First Rescue" background="background.png">
   <settings rules="rescue" food="20" people="2"/>
-  <traffic>326,371 314,342 310,304 353,294 391,288 434,281 476,274 515,277 556,281 552,323 545,359 529,397 505,425 428,240 426,198 424,154 426,117 411,78 381,53 350,25</traffic>
-  <object id="2" type="hq" x="345" y="371"/>
-  <object id="3" type="worker" x="345" y="371"/>
-  <object id="4" type="tree" x="545" y="358"/>
-  <object id="5" type="bridge" x="426" y="196" sprite="bridge_wood01"/>
-  <object id="6" type="civilian" x="525" y="395"/>
-  <object id="7" type="civilian" x="368" y="40"/>
-  <object id="8" type="food-large" x="315" y="268"/>
+  <traffic>327.00,573.10 315.00,541.20 311.00,499.40 354.00,488.40 392.00,481.80 435.00,474.10 477.00,466.40 516.00,469.70 557.00,474.10 553.00,520.30 546.00,559.90 530.00,601.70 506.00,632.50 429.00,429.00 427.00,382.80 425.00,334.40 427.00,293.70 412.00,250.80 382.00,223.30 351.00,192.50</traffic>
+  <object id="2" type="hq" x="346.00" y="573.10"/>
+  <object id="3" type="worker" x="346.00" y="573.10"/>
+  <object id="4" type="tree" x="546.00" y="558.80"/>
+  <object id="5" type="bridge" x="427.00" y="380.60" sprite="bridge_wood01"/>
+  <object id="6" type="civilian" x="526.00" y="599.50"/>
+  <object id="7" type="civilian" x="369.00" y="209.00"/>
+  <object id="8" type="food-large" x="316.00" y="459.80"/>
 </mission>

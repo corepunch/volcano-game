@@ -42,7 +42,7 @@ deliverables the game loads: `mission.xml`, `background.png` and its exact
 
 ## Plan composition and rescue access
 
-Use a **1366 × 768 logical canvas**, with a high fixed camera and no horizon.
+Use a **1368 × 1026 logical canvas**, with a high fixed camera and no horizon.
 The saved images for these missions are 1672 × 941 and are mapped across that
 logical canvas. Keep actionable objects clear of the upper-left HUD region
 around x=0–446, y=0–100 and upper-right x=1010–1366, y=0–100. Check the bottom

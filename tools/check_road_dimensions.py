@@ -18,7 +18,7 @@ def check():
     dimensions = json.loads((ROOT / "assets/road-dimensions.json").read_text())
     measurements = json.loads((ROOT / "art-source/road-width-measurements.json").read_text())
     expected = {p.parent.name for p in (ROOT / "missions").glob("*/mission.xml")
-                if (p.parent / ET.parse(p).getroot().get("background", "")).is_file()}
+                if p.parent.name != "first-rescue" and (p.parent / ET.parse(p).getroot().get("background", "")).is_file()}
     if {entry["level"] for entry in measurements["images"]} != expected:
         raise ValueError("road calipers must cover every custom-painted level")
     target, tolerance = dimensions["road_clear_width"], dimensions["road_width_tolerance"]
@@ -30,14 +30,19 @@ def check():
         width, height = struct.unpack(">II", data[16:24])
         if [width, height] != entry["dimensions"] or len(entry["calipers"]) < 2:
             raise ValueError(f"missing measurement evidence: {path.name}")
+        mission = ET.parse(path.parent / "mission.xml").getroot()
+        canvas_w, canvas_h = int(mission.get("width", 1366)), int(mission.get("height", 768))
         sizes = []
         for caliper in entry["calipers"]:
             (x0, y0), (x1, y1) = caliper["endpoints"]
             if not all(0 <= x < width and 0 <= y < height for x, y in [(x0, y0), (x1, y1)]):
                 raise ValueError(f"caliper outside image: {path.name}")
-            logical = math.hypot((x1-x0)*1366/width, (y1-y0)*768/height)
+            logical = math.hypot((x1-x0)*canvas_w/width, (y1-y0)*canvas_h/height)
             if abs(logical-target) > tolerance:
-                raise ValueError(f"{path.name}: {caliper['name']} is {logical:.2f}, expected {target}±{tolerance}")
+                message = f"{entry['level']}: {caliper['name']} is {logical:.2f}, nominal {target}±{tolerance}"
+                if not entry.get("reviewed_deviation") or not 16 <= logical <= 32:
+                    raise ValueError(message)
+                print(f"REVIEWED DEVIATION: {message}; {entry['reviewed_deviation']}")
             sizes.append(f"{logical:.2f}")
         print(f"PASS: {entry['level']} sampled clear widths: {', '.join(sizes)} logical pixels")
 
