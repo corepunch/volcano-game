@@ -191,3 +191,12 @@ The retail Rescue Team folder supplies the original sprite names
 (`worker_run0`, `bar_tree00`, `base0`, …). Any pack can replace them by
 name. `assets/kenney-characters` replaces the worker and civilian sprites, and
 the HD pack replaces the static objects.
+
+## Mission canvas
+
+The `<mission>` root accepts integer `width` (1024–4096) and `height`
+(768–4096) in logical world units. Defaults remain 1366×768 for older files
+and retail imports. The iPad missions use `width="1368" height="1026"`.
+Backgrounds must have the same aspect ratio as their canvas. The desktop window
+uses uniform aspect-fit scaling; HUD panels anchor to the top edges and pause
+controls remain centered. Input uses the same bottom-left world transform.

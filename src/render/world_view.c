@@ -24,11 +24,11 @@ VisualPose game_visual_pose(const Game *g,const Entity *e)
 {
     VisualPose pose={e->p,0};
     if (e->type->ambient) {
-        float margin=e->type->ambient==AMBIENT_BIRD?96:180,span=GAME_WIDTH+2*margin;
+        float margin=e->type->ambient==AMBIENT_BIRD?96:180,span=render_width()+2*margin;
         double travel=g->time*e->travel_speed+hash_random(e->id+3)*span;
         uint32_t pass=(uint32_t)floor(travel/span);
         pose.p.x=(float)fmod(travel,span)-margin;
-        pose.p.y=70+hash_random(e->id+pass*747796405u+9)*(GAME_HEIGHT-200);
+        pose.p.y=70+hash_random(e->id+pass*747796405u+9)*(render_height()-200);
         if (e->type->ambient==AMBIENT_BIRD) pose.p.y+=5*sinf((float)g->time*1.2f+e->id);
     } else if (game_on_roof(e)) {
         const Entity *house=&g->objects[e->support];VisualPose parent=game_visual_pose(g,house);
@@ -140,7 +140,7 @@ static void draw_progress(const Game *g,const Entity *target,double fraction)
     VisualPose pose=game_visual_pose(g,target);float x=pose.p.x,y=pose.p.y-37;
     draw_sprite("progress",x,y,0,0,1);
     SDL_Rect previous;bool clipped=SDL_RenderIsClipEnabled(renderer);SDL_RenderGetClipRect(renderer,&previous);
-    SDL_Rect clip={(int)(x-33),(int)(GAME_HEIGHT-y-6),(int)(66*fmax(0,fmin(1,fraction))),12};
+    SDL_Rect clip={(int)(x-33),(int)(render_height()-y-6),(int)(66*fmax(0,fmin(1,fraction))),12};
     SDL_RenderSetClipRect(renderer,&clip);draw_sprite("progress",x,y,0,1,1);
     SDL_RenderSetClipRect(renderer,clipped?&previous:NULL);
 }
@@ -158,8 +158,8 @@ static void draw_selection(const Game *g,int selected)
 
 static void draw_background(const Game *g)
 {
-    if (g->spec.retail_background) draw_asset_image(g->spec.background,0,0,GAME_WIDTH,GAME_HEIGHT,g->spec.background_alpha);
-    else draw_image_file(g->spec.background,0,0,GAME_WIDTH,GAME_HEIGHT);
+    if (g->spec.retail_background) draw_asset_image(g->spec.background,0,0,render_width(),render_height(),g->spec.background_alpha);
+    else draw_image_file(g->spec.background,0,0,render_width(),render_height());
 }
 
 void game_render(Game *g)
@@ -175,7 +175,7 @@ void game_render(Game *g)
     if (g->debug) for (int i=0;i<g->traffic_count;i++) for (int k=g->link_start[i];k<g->link_start[i+1];k++) {
         int j=g->links[k];if (j<i) continue;
         Vec2 a=g->traffic[i],b=g->traffic[j];
-        draw_line(a.x,GAME_HEIGHT-a.y,b.x,GAME_HEIGHT-b.y,game_blocked(g,a,b,-1)?game_color(255,70,100,180):game_color(70,220,100,180));
+        draw_line(a.x,render_height()-a.y,b.x,render_height()-b.y,game_blocked(g,a,b,-1)?game_color(255,70,100,180):game_color(70,220,100,180));
     }
     int hover=game_hovered_object(g);
     if (!g->paused && (hover>=0 || g->build_menu>=0)) draw_selection(g,g->build_menu>=0?g->build_menu:hover);
@@ -196,7 +196,7 @@ void game_render(Game *g)
         if (w->phase==WORKING) { const Entity *t=&g->objects[w->target];draw_progress(g,t,w->work/t->type->duration); }
         if (g->debug && (w->phase==OUTBOUND || w->phase==RETURNING)) for (int j=w->step;j<w->count;j++) {
             Vec2 a=j==w->step?e->p:w->path[j-1],b=w->path[j];
-            draw_line(a.x,GAME_HEIGHT-a.y,b.x,GAME_HEIGHT-b.y,game_color(255,224,90,255));
+            draw_line(a.x,render_height()-a.y,b.x,render_height()-b.y,game_color(255,224,90,255));
         }
     }
     for (int i=0;i<g->object_count;i++) {

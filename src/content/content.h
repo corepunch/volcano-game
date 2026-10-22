@@ -135,6 +135,7 @@ typedef struct {
     Arena arena;
     char path[PATH_CAPACITY],title[128];
     char background[PATH_CAPACITY],background_alpha[PATH_CAPACITY];
+    int width,height;                  /* Logical canvas; zero means legacy 1366x768. */
     bool retail_background;             /* Background is a retail texture path, resolved through the VFS. */
     bool positions_are_pivots;          /* Placements give sprite pivots, not base centres (retail levels). */
     Mission mission;

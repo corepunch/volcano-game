@@ -69,10 +69,36 @@ static bool failed_load_check(void)
     return ok?true:game_fail("Failed candidate load did not preserve the active world");
 }
 
+/* Exercise a different canvas without modifying any shipping mission. */
+static bool canvas_check(const char *mission)
+{
+    char path[]="/tmp/volcano-canvas-XXXXXX";int fd=mkstemp(path);
+    if (fd<0) return false;
+    FILE *out=fdopen(fd,"w");
+    if (!out) { close(fd);unlink(path);return false; }
+    fputs("<mission format='volcano-mission-1' width='1368' height='1026' retail-background='103'>"
+          "<settings rules='rescue' food='20' people='1'/>"
+          "<traffic>200,250 230,250 260,250 290,250 320,250 350,250 380,250</traffic>"
+          "<object id='1' type='hq' x='200' y='250'/>"
+          "<object id='2' type='worker' x='200' y='250'/>"
+          "<object id='3' type='tree' x='290' y='250'/>"
+          "<object id='4' type='civilian' x='380' y='250'/></mission>",out);
+    fclose(out);bool ok=game_init_file(path);unlink(path);
+    if (!ok) return false;
+    ok=render_width()==1368 && render_height()==1026;
+    game_click(42,46);ok=ok && game_current()->paused;
+    game_click(684,427);ok=ok && !game_current()->paused;
+    test_click_entity(test_entity(3));ok=ok && game_current()->objects[test_entity(3)].assigned;
+    ok=ok && test_frame("ipad-canvas");
+    if (!game_init_file(mission)) return false;
+    ok=ok && render_width()==(game_current()->spec.width?game_current()->spec.width:GAME_WIDTH);
+    return ok?true:game_fail("Canvas dimensions, top HUD, centered pause or world picking failed");
+}
+
 bool game_architecture_selftest(const char *mission)
 {
     if (!game_init_file(mission) || !isolated_world_check(mission,true) || !isolated_world_check(mission,false) ||
-        !failed_load_check()) return false;
+        !failed_load_check() || !canvas_check(mission)) return false;
     puts("PASS: isolated worlds, callback work/returns, artwork-independent costs/cargo, and rollback after a failed load.");
     return true;
 }

@@ -12,7 +12,7 @@ static bool particle_test_pixels(const Entity *e,uint32_t *hash,bool *visible)
     int width,height;SDL_GetRendererOutputSize(renderer,&width,&height);
     SDL_Surface *pixels=SDL_CreateRGBSurfaceWithFormat(0,width,height,32,SDL_PIXELFORMAT_RGBA32);
     if (!pixels) return game_fail("Cannot allocate particle test frame");
-    bool ok=SDL_RenderReadPixels(renderer,NULL,SDL_PIXELFORMAT_RGBA32,pixels->pixels,pixels->pitch)==0;
+    bool ok=SDL_RenderReadPixels(renderer,&(SDL_Rect){0,0,render_width(),render_height()},SDL_PIXELFORMAT_RGBA32,pixels->pixels,pixels->pitch)==0;
     *hash=2166136261u;*visible=false;
     if (ok) for (int y=0;y<height;y++) for (int x=0;x<width;x++) {
         const Uint8 *p=(const Uint8 *)pixels->pixels+y*pixels->pitch+x*4;
@@ -129,7 +129,7 @@ static bool scenery_selftest(void)
     for (int tick=0;tick<10;tick++) game_update(.1);
     VisualPose b1=game_visual_pose(game_current(), &game.objects[bird]),c1=game_visual_pose(game_current(), &game.objects[cloud]);
     VisualPose h1=game_visual_pose(game_current(), &game.objects[house]),w1=game_visual_pose(game_current(), &game.objects[wood]);
-    float bird_span=GAME_WIDTH+192,cloud_span=GAME_WIDTH+360;
+    float bird_span=render_width()+192,cloud_span=render_width()+360;
     float bx=fmodf(b1.p.x-b0.p.x+bird_span,bird_span),cx=fmodf(c1.p.x-c0.p.x+cloud_span,cloud_span);
     if (fabsf(bx-game.objects[bird].travel_speed)>.01f || fabsf(cx-game.objects[cloud].travel_speed)>.01f)
         return game_fail("Birds/clouds failed to cross left to right");
@@ -148,7 +148,7 @@ static bool scenery_selftest(void)
             if (fabsf(cosf(a)*dx-sinf(a)*dy-(e->p.x-support->p.x))>.001f ||
                 fabsf(sinf(a)*dx+cosf(a)*dy-(e->p.y-support->p.y))>.001f || p.angle!=parent.angle)
                 return game_fail("Roof survivor slid relative to the house");
-            game_pointer(p.p.x,GAME_HEIGHT-p.p.y,false);
+            game_pointer(p.p.x,render_height()-p.p.y,false);
             if (game_hovered_object(game_current())!=i) return game_fail("Moving roof survivor lost its click target");
         }
         VisualPose p=game_visual_pose(game_current(), &game.objects[land]);
@@ -166,12 +166,12 @@ static bool scenery_selftest(void)
     double crossing=(bird_span-hash_random(e->id+3)*bird_span)/e->travel_speed;
     game.time=crossing-.01;VisualPose exit=game_visual_pose(game_current(), e);
     game.time=crossing+.01;VisualPose entry=game_visual_pose(game_current(), e);
-    if (exit.p.x<GAME_WIDTH+50 || entry.p.x>-50 || fabsf(entry.p.y-exit.p.y)<1)
+    if (exit.p.x<render_width()+50 || entry.p.x>-50 || fabsf(entry.p.y-exit.p.y)<1)
         return game_fail("Bird wrap was visible or failed to choose a new height");
     e=&game.objects[cloud];
     crossing=(cloud_span-hash_random(e->id+3)*cloud_span)/e->travel_speed;
     game.time=crossing-.01;exit=game_visual_pose(game_current(), e);game.time=crossing+.01;entry=game_visual_pose(game_current(), e);
-    if (exit.p.x<GAME_WIDTH+128 || entry.p.x>-128) return game_fail("Cloud wrapped while visible");
+    if (exit.p.x<render_width()+128 || entry.p.x>-128) return game_fail("Cloud wrapped while visible");
     /* Rescue releases the roof attachment before following a worker. */
     for (int i=0;i<game.object_count;i++) if (game.objects[i].roof) {
         e=&game.objects[i];e->done=true;e->follower=0;
@@ -198,23 +198,23 @@ static bool interaction_selftest(void)
     for (int i=0;i<game.object_count;i++) if (game.objects[i].kind==BUILD_LOT) { lot=i;break; }
     if (lot<0) return game_fail("No build lot restored");
     Entity *t=&game.objects[lot];Vec2 p=t->p;
-    game_pointer(p.x,GAME_HEIGHT-p.y,false);
+    game_pointer(p.x,render_height()-p.y,false);
     if (game_hovered_object(game_current())!=lot || !test_frame("hover-lot")) return game_fail("Build lot hover failed");
-    game_click(p.x,GAME_HEIGHT-p.y);
+    game_click(p.x,render_height()-p.y);
     if (game.build_menu!=lot) return game_fail("Build lot click did not open menu");
-    Vec2 button=game_build_button_position(game_current(), 0);game_click(button.x,GAME_HEIGHT-button.y);
+    Vec2 button=game_build_button_position(game_current(), 0);game_click(button.x,render_height()-button.y);
     if (game.build_menu!=lot || t->assigned || game.stock.wood) return game_fail("Unaffordable construction started");
     if (!test_frame("build-disabled")) return false;
     game_key(SDLK_ESCAPE);
     if (game.build_menu>=0 || game.paused) return game_fail("Escape failed to dismiss construction menu");
-    game_click(p.x,GAME_HEIGHT-p.y);game_click(1000,600);
+    game_click(p.x,render_height()-p.y);game_click(1000,600);
     if (game.build_menu>=0) return game_fail("Outside click failed to dismiss construction menu");
     /* Open the road to construction independently of the full-level test. */
     for (int i=0;i<game.object_count;i++) if (game.objects[i].kind==BARRIER) game.objects[i].done=true;
-    game.stock.wood=100;game_click(p.x,GAME_HEIGHT-p.y);
-    button=game_build_button_position(game_current(), 2);game_pointer(button.x,GAME_HEIGHT-button.y,true);
+    game.stock.wood=100;game_click(p.x,render_height()-p.y);
+    button=game_build_button_position(game_current(), 2);game_pointer(button.x,render_height()-button.y,true);
     if (game_build_button_at(game_current())!=2 || !test_frame("build-menu")) return game_fail("Building button hover failed");
-    game_click(button.x,GAME_HEIGHT-button.y);
+    game_click(button.x,render_height()-button.y);
     if (!t->assigned || game.stock.wood!=40 || game.build_menu>=0) return game_fail("Construction dispatch or wood cost failed");
     int builder=-1;
     for (int i=0;i<game.worker_count;i++) if (game.workers[i].target==lot) builder=i;
@@ -245,8 +245,8 @@ static bool interaction_selftest(void)
         }
         if (lot<0) return game_fail("Missing lot in construction variant test");
         t=&game.objects[lot];game.stock.wood=100;p=t->p;
-        game_click(p.x,GAME_HEIGHT-p.y);button=game_build_button_position(game_current(), option);
-        game_click(button.x,GAME_HEIGHT-button.y);
+        game_click(p.x,render_height()-p.y);button=game_build_button_position(game_current(), option);
+        game_click(button.x,render_height()-button.y);
         if (!t->assigned || game.stock.wood!=100-menu[option]->build_cost.wood) return game_fail("Building variant cost failed: %d",option);
         for (int tick=0;tick<600 && t->kind==BUILD_LOT;tick++) game_update(.1);
         if (t->kind!=BUILDING || strcmp(test_sprite(lot),menu[option]->sprite)) return game_fail("Building variant completion failed: %d",option);
@@ -273,11 +273,11 @@ static bool interaction_selftest(void)
     int queue=-1;
     for (int i=0;i<game.object_count;i++) if (game_job(game_current(), &game.objects[i]) && !game.objects[i].done && game_reachable(game_current(), i)) { queue=i;break; }
     if (queue<0) return game_fail("No queue regression target");
-    p=game.objects[queue].p;game_click(p.x,GAME_HEIGHT-p.y);
+    p=game.objects[queue].p;game_click(p.x,render_height()-p.y);
     if (!game.objects[queue].queued) return game_fail("Busy-worker click did not queue job");
-    game_click(p.x,GAME_HEIGHT-p.y);
+    game_click(p.x,render_height()-p.y);
     if (game.objects[queue].queued) return game_fail("Queued job could not be cancelled");
-    game_click(p.x,GAME_HEIGHT-p.y);
+    game_click(p.x,render_height()-p.y);
     for (int tick=0;tick<500 && !game.objects[queue].assigned;tick++) game_update(.1);
     if (!game.objects[queue].assigned || game.objects[queue].queued || game.completed!=2 || !(game.stock.food || game.stock.wood || game.stock.fuel))
         return game_fail("Queued job did not dispatch after cargo delivery");
@@ -349,7 +349,7 @@ static bool campaign_selftest(void)
                         game.objects[rock].done && !game_output_busy(game_current(), site)) {
                         test_click_entity(lot);
                         if (game.build_menu==lot) {
-                            Vec2 p=game_build_button_position(game_current(), 2);game_click(p.x,GAME_HEIGHT-p.y);
+                            Vec2 p=game_build_button_position(game_current(), 2);game_click(p.x,render_height()-p.y);
                             if (site->assigned && site->action==DEMOLISH) conversion=1;
                         }
                     }
@@ -396,7 +396,7 @@ static bool campaign_selftest(void)
         char shot[40];snprintf(shot,sizeof shot,"campaign-%d-complete",mission);
         if (!test_frame(shot)) return false;
         if (mission==1 && game.objects[test_entity(991)].done) return game_fail("Tutorial ignored its dynamite gate");
-        game_click(683,GAME_HEIGHT-470);
+        game_click(683,render_height()-470);
         if (game.spec.campaign!=mission+1 || game.won || game.time) return game_fail("Next level does not follow campaign order");
         if (!game_init(campaign_index(mission))) return false;
         game.stock.food=0;game_key(SDLK_r);
@@ -499,7 +499,7 @@ static bool missions_4_6_selftest(void)
         if (!test_frame(shot)) return false;
         printf("PASS: campaign level %d completes: %d people, %d animals, %d basins; %d vehicle trips, %d fishing deliveries.\n",
             mission,game.rescued,game.animals_rescued,game.purified,game.transport_trips,game.fishing_trips);
-        game_click(683,GAME_HEIGHT-470);
+        game_click(683,render_height()-470);
         if (game.spec.campaign!=mission+1 || game.won) return game_fail("Level %d progression failed",mission);
         if (!game_init(campaign_index(mission))) return false;
         game_key(SDLK_r);

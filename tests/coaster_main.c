@@ -23,7 +23,7 @@ static bool play(const char *path)
         bool seen=false;
         for (int j=0;j<unique;j++) if (!strcmp(variants[j],art)) seen=true;
         if (!seen) variants[unique++]=art;
-        game_pointer(e->p.x,GAME_HEIGHT-e->p.y,false);
+        game_pointer(e->p.x,render_height()-e->p.y,false);
         if (!require(game_hovered_object(game_current())==i,"natural obstacle center is clickable")) return false;
         jobs++;
     }
@@ -50,7 +50,7 @@ static bool play(const char *path)
     if (!test_frame("twisted-tracks-cleared-interior")) return false;
     for (int i=0;i<game.object_count;i++) {
         Entity *e=&game.objects[i];if (e->kind!=BARRIER || i==car) continue;
-        game_pointer(e->p.x,GAME_HEIGHT-e->p.y,false);
+        game_pointer(e->p.x,render_height()-e->p.y,false);
         if (!require(e->done && e->hidden && !e->queued && !e->assigned && game_hovered_object(game_current())!=i,
             "clearing removes art, job state and click target")) return false;
     }

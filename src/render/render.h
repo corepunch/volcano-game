@@ -9,6 +9,9 @@
 extern SDL_Renderer *renderer;
 
 void render_shutdown(void);
+void render_set_canvas(int width,int height);
+int render_width(void);
+int render_height(void);
 SDL_Color game_color(int r,int g,int b,int a);
 
 /* Primitives. World coordinates have a bottom-left origin. */
@@ -51,6 +54,7 @@ void game_render(Game *g);
 enum { BUILD_OPTION_DEMOLISH=4 };
 bool game_inside(const Game *g,float x,float y,float w,float h);
 int game_hud_button(const Game *g);
+bool game_over_hud(const Game *g);
 int game_hovered_object(const Game *g);
 Vec2 game_build_button_position(const Game *g,int option);
 int game_build_button_at(const Game *g);

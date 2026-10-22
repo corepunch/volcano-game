@@ -8,7 +8,7 @@ static SDL_Surface *surface;
 bool test_startup(const char *const *mounts,int count)
 {
     if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER)) return error_set("%s",SDL_GetError());
-    surface=SDL_CreateRGBSurfaceWithFormat(0,GAME_WIDTH,GAME_HEIGHT,32,SDL_PIXELFORMAT_RGBA32);
+    surface=SDL_CreateRGBSurfaceWithFormat(0,1368,1026,32,SDL_PIXELFORMAT_RGBA32);
     renderer=surface?SDL_CreateSoftwareRenderer(surface):NULL;
     if (!renderer) return error_set("Cannot create a software renderer: %s",SDL_GetError());
     SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_BLEND);
@@ -43,14 +43,14 @@ int test_entity(uint32_t id)
 
 void test_click_entity(int index)
 {
-    Vec2 p=game.objects[index].p;game_click(p.x,GAME_HEIGHT-p.y);
+    Vec2 p=game.objects[index].p;game_click(p.x,render_height()-p.y);
 }
 
 bool test_choose_building(int lot,int slot)
 {
     test_click_entity(lot);
     if (game.build_menu!=lot) return false;
-    Vec2 p=game_build_button_position(game_current(),slot);game_click(p.x,GAME_HEIGHT-p.y);
+    Vec2 p=game_build_button_position(game_current(),slot);game_click(p.x,render_height()-p.y);
     return game.objects[lot].assigned;
 }
 

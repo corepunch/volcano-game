@@ -198,7 +198,7 @@ bool mission_load(const char *path,LevelSpec *out)
     XmlDoc doc;
     if (!xml_load(&doc,path)) return false;
     Loader l={out,&doc,""};path_directory(l.folder,sizeof l.folder,path);
-    static const char *attributes[]={"format","title","background","retail-background",NULL};
+    static const char *attributes[]={"format","title","background","retail-background","width","height",NULL};
     static const char *children[]={"settings","pack","sprites","archetype","traffic","object","effect",NULL};
     static const char *settings_attributes[]={"rules","food","wood","money","fuel","people","basins","crew-at-hq","offroad","buildable",NULL};
     const XmlNode *root=doc.root;const char *format,*title,*text;
@@ -209,6 +209,8 @@ bool mission_load(const char *path,LevelSpec *out)
         text_copy(out->path,sizeof out->path,path);out->source_index=-1;
         xml_string(&doc,root,"title","Custom level",&title);snprintf(out->title,sizeof out->title,"%s",title);
     }
+    if (ok) ok=xml_int(&doc,root,"width",GAME_WIDTH,1024,4096,&out->width) &&
+        xml_int(&doc,root,"height",GAME_HEIGHT,768,4096,&out->height);
     const XmlNode *settings=ok?xml_next(root,"settings",NULL):NULL;
     if (ok && (!settings || xml_count(root,"settings")>1)) ok=xml_fail(&doc,root,"needs exactly one <settings>");
     if (ok) {

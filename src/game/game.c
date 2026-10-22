@@ -48,7 +48,10 @@ static bool start(LevelSpec *spec)
         if (current_game) load_level_art(&current_game->spec);else assets_clear_level();
         error_set("%s",reason);return false;
     }
-    game_destroy();current_game=candidate;return true;
+    game_destroy();current_game=candidate;
+    render_shutdown(); /* Release previous level textures before loading the next painting. */
+    render_set_canvas(candidate->spec.width?candidate->spec.width:GAME_WIDTH,candidate->spec.height?candidate->spec.height:GAME_HEIGHT);
+    return true;
 }
 
 bool game_init(int source_index)
@@ -88,3 +91,6 @@ void game_pointer(float x,float y,bool down) { game_set_pointer(current_game,x,y
 void game_click(float x,float y) { apply_command(game_handle_click(current_game,x,y)); }
 void game_key(SDL_Keycode key) { apply_command(game_handle_key(current_game,key)); }
 int game_level_index(void) { return current_game?current_game->spec.source_index:0; }
+
+int game_canvas_width(void) { return render_width(); }
+int game_canvas_height(void) { return render_height(); }

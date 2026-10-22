@@ -8,6 +8,10 @@
 
 typedef struct Texture { char path[PATH_CAPACITY],alpha[PATH_CAPACITY];SDL_Texture *handle;int w,h;struct Texture *next; } Texture;
 SDL_Renderer *renderer;
+static int canvas_width=GAME_WIDTH,canvas_height=GAME_HEIGHT;
+void render_set_canvas(int width,int height) { canvas_width=width;canvas_height=height; }
+int render_width(void) { return canvas_width; }
+int render_height(void) { return canvas_height; }
 static Texture *textures;
 static Texture *log_particles[2];
 
@@ -45,7 +49,7 @@ static bool sprite_color(const char *name,float x,float y,double time,int frame,
     const Sprite *a=sprite_find(name);if(!a || !a->frame_count)return false;
     const SpriteFrame *f=sprite_frame(a,time,frame);Texture *t=texture_load(a->texture,NULL);if(!t)return false;
     SDL_Rect src=frame_source(f,t);
-    SDL_FRect dest={x-f->dx,GAME_HEIGHT-y-f->h+f->dy,f->w,f->h};SDL_SetTextureAlphaMod(t->handle,(Uint8)(fminf(1,fmaxf(0,alpha))*255));
+    SDL_FRect dest={x-f->dx,render_height()-y-f->h+f->dy,f->w,f->h};SDL_SetTextureAlphaMod(t->handle,(Uint8)(fminf(1,fmaxf(0,alpha))*255));
     /* Rotate about the authored anchor, so attached roof occupants share the
      * house transform even when their trimmed animation frames change size. */
     SDL_FPoint pivot={f->dx,f->h-f->dy};
@@ -68,11 +72,11 @@ bool draw_asset_image(const char *relative,float x,float y,float w,float h,const
     if(!vfs_resolve(relative,path,sizeof path))return failure("Missing image",relative);
     if(alpha&&*alpha&&!vfs_resolve(alpha,mask,sizeof mask))return failure("Missing alpha mask",alpha);
     Texture *t=texture_load(path,mask);if(!t)return false;
-    SDL_FRect dest={x,GAME_HEIGHT-y-h,w,h};SDL_SetTextureAlphaMod(t->handle,255);return SDL_RenderCopyF(renderer,t->handle,NULL,&dest)==0;
+    SDL_FRect dest={x,render_height()-y-h,w,h};SDL_SetTextureAlphaMod(t->handle,255);return SDL_RenderCopyF(renderer,t->handle,NULL,&dest)==0;
 }
 bool draw_image_file(const char *path,float x,float y,float w,float h) {
     Texture *t=texture_load(path,NULL);if(!t)return false;
-    SDL_FRect dest={x,GAME_HEIGHT-y-h,w,h};SDL_SetTextureAlphaMod(t->handle,255);return SDL_RenderCopyF(renderer,t->handle,NULL,&dest)==0;
+    SDL_FRect dest={x,render_height()-y-h,w,h};SDL_SetTextureAlphaMod(t->handle,255);return SDL_RenderCopyF(renderer,t->handle,NULL,&dest)==0;
 }
 static bool draw_geometry(const char *path,SDL_Rect region,Vec2 pivot,Vec2 position,Vec2 scale,float bend,float angle,float opacity) {
     Texture *t=texture_load(path,NULL);if(!t)return false;
@@ -88,7 +92,7 @@ static bool draw_geometry(const char *path,SDL_Rect region,Vec2 pivot,Vec2 posit
         for(int side=0;side<2;side++) {
             float local_x=(side-pivot.x)*region.w*scale.x+bend*weight;
             vertices[row*2+side]=(SDL_Vertex){
-                .position={position.x+c*local_x-s*local_y,GAME_HEIGHT-position.y-s*local_x-c*local_y},
+                .position={position.x+c*local_x-s*local_y,render_height()-position.y-s*local_x-c*local_y},
                 .color={255,255,255,(Uint8)(fminf(1,fmaxf(0,opacity))*255)},
                 .tex_coord={(region.x+side*region.w)/(float)t->w,(region.y+fraction*region.h)/(float)t->h}};
         }
@@ -112,10 +116,10 @@ bool draw_map_sprite(const char *name,double time,Vec2 position,Vec2 scale,float
 }
 void draw_glint(float x,float y,float radius,float opacity) {
     SDL_Vertex vertices[9];int indices[24];
-    vertices[0]=(SDL_Vertex){.position={x,GAME_HEIGHT-y},.color={255,255,255,(Uint8)(fminf(1,fmaxf(0,opacity))*255)}};
+    vertices[0]=(SDL_Vertex){.position={x,render_height()-y},.color={255,255,255,(Uint8)(fminf(1,fmaxf(0,opacity))*255)}};
     for(int i=0;i<8;i++) {
         float angle=i*.7853981634f,r=i%2?radius*.17f:radius;
-        vertices[i+1]=(SDL_Vertex){.position={x+cosf(angle)*r,GAME_HEIGHT-y+sinf(angle)*r},.color={255,255,255,0}};
+        vertices[i+1]=(SDL_Vertex){.position={x+cosf(angle)*r,render_height()-y+sinf(angle)*r},.color={255,255,255,0}};
         indices[i*3]=0;indices[i*3+1]=i+1;indices[i*3+2]=(i+1)%8+1;
     }
     if(SDL_RenderGeometry(renderer,NULL,vertices,9,indices,24))failure("Glint render failed",SDL_GetError());
@@ -127,7 +131,7 @@ bool draw_atlas(const char *relative,SDL_FRect rect,SDL_FRect uv) {
         (int)lroundf(uv.w*t->w),(int)lroundf(uv.h*t->h)};
     if(src.w<=0||src.h<=0||rect.w<=0||rect.h<=0)return true;
     if(src.x<0||src.y<0||src.x+src.w>t->w||src.y+src.h>t->h)return failure("GUI region outside original atlas",relative);
-    rect.y=GAME_HEIGHT-rect.y-rect.h;
+    rect.y=render_height()-rect.y-rect.h;
     SDL_SetTextureAlphaMod(t->handle,255);SDL_SetTextureColorMod(t->handle,255,255,255);
     return SDL_RenderCopyF(renderer,t->handle,&src,&rect)==0;
 }
@@ -142,7 +146,7 @@ bool draw_particle_stretched(bool smoke,int frame,float x,float y,float w,float 
     frame=frame<0?0:frame>31?31:frame;
     SDL_Rect src=smoke?(SDL_Rect){0,0,t->w,t->h}:
         (SDL_Rect){(frame%8)*(t->w/8),(frame/8)*(t->h/4),t->w/8,t->h/4};
-    SDL_FRect dest={x-w*.5f,GAME_HEIGHT-y-h*.5f,w,h};
+    SDL_FRect dest={x-w*.5f,render_height()-y-h*.5f,w,h};
     SDL_SetTextureColorMod(t->handle,tint.r,tint.g,tint.b);SDL_SetTextureAlphaMod(t->handle,tint.a);
     int result=SDL_RenderCopyExF(renderer,t->handle,&src,&dest,angle,NULL,SDL_FLIP_NONE);
     SDL_SetTextureColorMod(t->handle,255,255,255);SDL_SetTextureAlphaMod(t->handle,255);
@@ -157,7 +161,7 @@ bool draw_particle_glow(float x,float y,float w,float h,SDL_Color tint) {
         for(int ring=0;ring<RINGS;ring++) {
             SDL_Color color=tint;color.a=(Uint8)(tint.a*alpha[ring]);
             vertices[i*RINGS+ring]=(SDL_Vertex){
-                .position={x+cosf(angle)*w*.5f*radius[ring],GAME_HEIGHT-y+sinf(angle)*h*.5f*radius[ring]},
+                .position={x+cosf(angle)*w*.5f*radius[ring],render_height()-y+sinf(angle)*h*.5f*radius[ring]},
                 .color=color,.tex_coord={0,0}};
         }
     }
@@ -193,7 +197,7 @@ bool draw_log_particle(bool smoke,int frame,float x,float y,float w,float h,floa
     for(int row=0;row<=STRIPS;row++) {
         float f=(float)row/STRIPS,lift=1-f;
         for(int side=0;side<2;side++) vertices[row*2+side]=(SDL_Vertex){
-            .position={x+(side-.5f)*w+bend*lift*lift,GAME_HEIGHT-y+(f-.5f)*h},
+            .position={x+(side-.5f)*w+bend*lift*lift,render_height()-y+(f-.5f)*h},
             .color=tint,.tex_coord={(src.x+side*src.w)/(float)t->w,(src.y+f*src.h)/(float)t->h}};
         if(row<STRIPS) {
             int a=row*2,b=a+2,k=row*6;
@@ -220,7 +224,7 @@ bool draw_foam_particle(float x,float y,float w,float h,float angle,Uint8 opacit
             float dx=cosf(theta)*w*.5f*radius,dy=sinf(theta)*h*.5f*radius;
             Uint8 alpha=band==2 || (ring && band==0)?0:opacity;
             vertices[i*BANDS+band]=(SDL_Vertex){
-                .position={x+c*dx-s*dy,GAME_HEIGHT-y-s*dx-c*dy},
+                .position={x+c*dx-s*dy,render_height()-y-s*dx-c*dy},
                 .color={255,255,255,alpha},.tex_coord={0,0}};
         }
     }
