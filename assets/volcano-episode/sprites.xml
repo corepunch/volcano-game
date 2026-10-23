@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<sprites image="props.png">
+  <sprite name="volcano/kitchen-damaged" rect="33,85,349,255" pivot="0.5,0.79" scale="0.30946" />
+  <sprite name="volcano/kitchen" rect="434,78,345,268" pivot="0.5,0.79" scale="0.31304" />
+  <sprite name="volcano/yard-damaged" rect="816,94,358,245" pivot="0.5,0.79" scale="0.30168" />
+  <sprite name="volcano/yard" rect="1215,95,360,230" pivot="0.5,0.79" scale="0.30000" />
+  <sprite name="volcano/office-damaged" rect="1622,67,336,280" pivot="0.5,0.79" scale="0.32143" />
+  <sprite name="volcano/office" rect="45,442,337,277" pivot="0.5,0.79" scale="0.32047" />
+  <sprite name="volcano/timber" rect="428,508,343,191" pivot="0.5,0.7" scale="0.19825" />
+  <sprite name="volcano/ash" rect="815,517,354,183" pivot="0.5,0.7" scale="0.19209" />
+  <sprite name="volcano/basalt" rect="1203,502,361,204" pivot="0.5,0.7" scale="0.23823" />
+  <sprite name="volcano/wall" rect="1597,472,365,252" pivot="0.5,0.7" scale="0.18630" />
+</sprites>

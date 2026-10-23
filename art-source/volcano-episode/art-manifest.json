@@ -1,0 +1,198 @@
+{
+  "generation": "built-in ImageGen",
+  "atlas": {
+    "path": "assets/volcano-episode/props.png",
+    "size": [
+      1983,
+      793
+    ],
+    "alpha_range": [
+      0,
+      255
+    ]
+  },
+  "sprites": [
+    {
+      "name": "kitchen-damaged",
+      "rect": [
+        33,
+        85,
+        349,
+        255
+      ],
+      "scale": 0.30946,
+      "pivot": [
+        0.5,
+        0.79
+      ]
+    },
+    {
+      "name": "kitchen",
+      "rect": [
+        434,
+        78,
+        345,
+        268
+      ],
+      "scale": 0.31304,
+      "pivot": [
+        0.5,
+        0.79
+      ]
+    },
+    {
+      "name": "yard-damaged",
+      "rect": [
+        816,
+        94,
+        358,
+        245
+      ],
+      "scale": 0.30168,
+      "pivot": [
+        0.5,
+        0.79
+      ]
+    },
+    {
+      "name": "yard",
+      "rect": [
+        1215,
+        95,
+        360,
+        230
+      ],
+      "scale": 0.3,
+      "pivot": [
+        0.5,
+        0.79
+      ]
+    },
+    {
+      "name": "office-damaged",
+      "rect": [
+        1622,
+        67,
+        336,
+        280
+      ],
+      "scale": 0.32143,
+      "pivot": [
+        0.5,
+        0.79
+      ]
+    },
+    {
+      "name": "office",
+      "rect": [
+        45,
+        442,
+        337,
+        277
+      ],
+      "scale": 0.32047,
+      "pivot": [
+        0.5,
+        0.79
+      ]
+    },
+    {
+      "name": "timber",
+      "rect": [
+        428,
+        508,
+        343,
+        191
+      ],
+      "scale": 0.19825,
+      "pivot": [
+        0.5,
+        0.7
+      ]
+    },
+    {
+      "name": "ash",
+      "rect": [
+        815,
+        517,
+        354,
+        183
+      ],
+      "scale": 0.19209,
+      "pivot": [
+        0.5,
+        0.7
+      ]
+    },
+    {
+      "name": "basalt",
+      "rect": [
+        1203,
+        502,
+        361,
+        204
+      ],
+      "scale": 0.23823,
+      "pivot": [
+        0.5,
+        0.7
+      ]
+    },
+    {
+      "name": "wall",
+      "rect": [
+        1597,
+        472,
+        365,
+        252
+      ],
+      "scale": 0.1863,
+      "pivot": [
+        0.5,
+        0.7
+      ]
+    }
+  ],
+  "backgrounds": [
+    {
+      "path": "missions/volcano-01-outskirts/background.png",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "sha256": "5d4f2c49a2b8a7f309419cf668cfe6c781283c01a4567988bcf3671a9798349f"
+    },
+    {
+      "path": "missions/volcano-02-suburbs/background.png",
+      "dimensions": [
+        1447,
+        1087
+      ],
+      "sha256": "a76d0dbdecde1db4674b3fc1b6be019af763ec96b8f91fbdc899351335b9053b"
+    },
+    {
+      "path": "missions/volcano-03-square/background.png",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "sha256": "0be70a07eeb3e29206f51fa9cd3b6cd6a2924c541ee48b92ebdb51b512823deb"
+    },
+    {
+      "path": "missions/volcano-04-district/background.png",
+      "dimensions": [
+        1447,
+        1087
+      ],
+      "sha256": "5bea0f98aa73d79d96adf44e7ac70e0e6d26a9f79f65bd5899315f8f9a37a044"
+    },
+    {
+      "path": "missions/volcano-05-centre/background.png",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "sha256": "c54da55e7b9732af0ccb9798ba0a88a3175dd6b746fbb5912f3e4ee3ecf46525"
+    }
+  ]
+}
