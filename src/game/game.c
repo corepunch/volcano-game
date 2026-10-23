@@ -80,6 +80,13 @@ static void apply_command(GameCommand command)
     if (!current_game || command==GAME_COMMAND_NONE) return;
     const LevelSpec *spec=&current_game->spec;
     if (command==GAME_COMMAND_NEXT && spec->source_index>=0) { game_init_campaign(spec->campaign+1);return; }
+    if (command==GAME_COMMAND_NEXT && spec->next_mission[0]) {
+        /* Copy before a successful load frees the old specification. A failed
+         * transition keeps the completed map drawable and lets the user retry. */
+        char next[PATH_CAPACITY];text_copy(next,sizeof next,spec->next_mission);
+        if (!game_init_file(next)) { game_announce(current_game,last_error);error_clear(); }
+        return;
+    }
     char path[PATH_CAPACITY];text_copy(path,sizeof path,spec->path);
     bool ok=spec->source_index<0?game_init_file(path):game_init(spec->source_index);
     if (!ok && command==GAME_COMMAND_RESTART) { game_announce(current_game,last_error);error_clear(); }

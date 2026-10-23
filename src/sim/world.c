@@ -149,7 +149,7 @@ Game *game_world_create(LevelSpec *spec)
     }
     if (!ok) { char reason[sizeof last_error];memcpy(reason,last_error,sizeof reason);game_world_free(g);error_set("%s",reason);return NULL; }
     g->ready=true;
-    game_announce(g,g->rules->auto_evacuation?"Collect supplies and clear routes. People return to headquarters when the path is safe.":
+    game_announce(g,g->spec.briefing[0]?g->spec.briefing:g->rules->auto_evacuation?"Collect supplies and clear routes. People return to headquarters when the path is safe.":
         "Click debris, supplies or survivors to dispatch a worker.");
     return g;
 }

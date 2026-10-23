@@ -152,7 +152,8 @@ static Game *start(const char *path)
 
 static void mission_tests(void)
 {
-    static const char *missions[]={"first-rescue","emerald-falls","forest-mayday","ancient-echoes","twisted-tracks","library-rescue"};
+    static const char *missions[]={"first-rescue","emerald-falls","forest-mayday","ancient-echoes","twisted-tracks","library-rescue",
+        "volcano-01-outskirts","volcano-02-suburbs","volcano-03-square","volcano-04-district","volcano-05-centre"};
     for (size_t i=0;i<sizeof missions/sizeof *missions;i++) {
         char path[256];snprintf(path,sizeof path,"missions/%s/mission.xml",missions[i]);
         Game *g=start(path);
@@ -176,6 +177,8 @@ static void mission_tests(void)
         "<mission format='volcano-mission-1' retail-background='103'><settings rules='rescue'/><object id='1' type='hq' colour='red'/></mission>",
         "<mission format='volcano-mission-1' width='0' retail-background='103'><settings rules='rescue'/></mission>",
         "<mission format='volcano-mission-1' height='99999' retail-background='103'><settings rules='rescue'/></mission>",
+        "<mission format='volcano-mission-1' next='/absolute.xml' retail-background='103'><settings rules='rescue'/></mission>",
+        "<mission format='volcano-mission-1' next='' retail-background='103'><settings rules='rescue'/></mission>",
         "<mission format='volcano-mission-2' retail-background='103'><settings rules='rescue'/></mission>",
     };
     for (size_t i=0;i<sizeof broken/sizeof *broken;i++) {

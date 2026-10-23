@@ -13,13 +13,13 @@ static const SDL_FRect resource_icons[RESOURCE_COUNT]={
     {.9551f,.5508f,.0430f,.0342f},{.9336f,.6221f,.0225f,.0342f}};
 static const float resource_icon_widths[RESOURCE_COUNT]={23,26,28,15};
 
-/* Missions loaded from files replay instead of advancing the campaign. */
+/* Standalone missions replay; linked native missions advance their episode. */
 static float hud_top(void) { return render_height()-GAME_HEIGHT; }
 static float hud_right(void) { return render_width()-GAME_WIDTH; }
 static float menu_x(void) { return hud_right()*.5f; }
 static float menu_y(void) { return hud_top()*.5f; }
 
-static bool mission_file(const Game *g) { return g->spec.source_index<0; }
+static bool replay_only(const Game *g) { return g->spec.source_index<0 && !g->spec.next_mission[0]; }
 
 bool game_inside(const Game *g,float x,float y,float w,float h)
 {
@@ -30,7 +30,7 @@ int game_hud_button(const Game *g)
 {
     if (g->paused || g->won) {
         if (game_inside(g, 508+menu_x(),429+menu_y(),350,83)) return 1;
-        if (!(g->won && mission_file(g)) && game_inside(g, 508+menu_x(),329+menu_y(),350,55)) return 2;
+        if (!(g->won && replay_only(g)) && game_inside(g, 508+menu_x(),329+menu_y(),350,55)) return 2;
     }
     return game_inside(g, 1,681+hud_top(),82,82)?0:-1;
 }
@@ -111,8 +111,8 @@ void game_draw_hud(Game *g)
         const char *title=g->won?"Level complete":"Pause";
         draw_font("CambriaBold30W",title,683+menu_x()-text_width("CambriaBold30W",title,30)*.5f,
             render_height()-554-menu_y()-45+7.5f,30,game_color(110,83,58,255));
-        game_menu_button(g, 1,g->won?(mission_file(g)?"Play again":"Next level"):"Continue",429,83,0,.9189f,.2676f,.0811f,45);
-        if (!(g->won && mission_file(g))) game_menu_button(g, 2,"Play again",329,55,.5059f,.9463f,.2363f,.0537f,32);
+        game_menu_button(g, 1,g->won?(replay_only(g)?"Play again":"Next level"):"Continue",429,83,0,.9189f,.2676f,.0811f,45);
+        if (!(g->won && replay_only(g))) game_menu_button(g, 2,"Play again",329,55,.5059f,.9463f,.2363f,.0537f,32);
     }
     /* Context feedback is transient; it does not cover the scene with a bar. */
     if (!g->paused && g->message_time>0) {

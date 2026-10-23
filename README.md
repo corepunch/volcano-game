@@ -85,6 +85,17 @@ Click a queued job again to cancel it.
 
 ## Missions
 
+**After the Eruption** is a five-map episode: outskirts, suburbs, town square,
+cut-off district and city centre. Run `make run-volcano-episode`, or build its
+self-contained macOS app with `make volcano-episode-app`. After victory, click
+**Next level** or press **Enter/N**; **Play again** and **R** replay the current
+map. The final map offers replay.
+
+The episode has 7/9/11/13/16 paid route jobs and **no loose or recurring resource
+pickups**. Repair field kitchens, timber yards and district offices for automatic
+income; salvaged roof beams yield wood. Difficulty comes from route dependencies
+and repair priorities. See [episode design and verification](docs/volcano-episode.md).
+
 | Mission | Theme |
 | --- | --- |
 | `first-rescue` | Two-route starter: earn wood from a tree, repair a bridge |
@@ -93,6 +104,11 @@ Click a queued job again to cancel it.
 | `ancient-echoes` | Collapsed temple; makeshift tracks through shattered colonnades |
 | `twisted-tracks` | Wrecked roller coaster; ten themed debris jobs |
 | `library-rescue` | Collapsed library; field kitchen, salvage and logistics stations; project-rendered characters |
+| `volcano-01-outskirts` | Episode 1/5: four residents, two stations and seven route jobs |
+| `volcano-02-suburbs` | Episode 2/5: district office, heavy basalt and a stranded recruit |
+| `volcano-03-square` | Episode 3/5: inner streets, two approaches and eleven route jobs |
+| `volcano-04-district` | Episode 4/5: reconnect roads around permanent cooled lava |
+| `volcano-05-centre` | Episode 5/5: sixteen route jobs, eleven people and two animals |
 
 Each mission is a folder under `missions/` with its `mission.xml`, background,
 art and provenance notes. Mission-specific objects are archetypes that extend
@@ -200,9 +216,10 @@ project:
   and ring. This pack is built from the retail declarations, so it needs
   `ASSETS`.
 
-All six missions use a 1368×1026 (4:3) playfield and background. `--hd` selects
-the 2736×2052 `background@2x.png` export without changing world coordinates.
-The current 2× exports are interpolated; see the [iPad comparison and checks](docs/ipad-levels.md).
+All eleven missions use a 1368×1026 (4:3) playfield. `--hd` selects a
+`background@2x.png` export when present, without changing world coordinates.
+The older missions' 2× exports are interpolated; the eruption episode uses its
+native ImageGen plates. See the [iPad comparison and checks](docs/ipad-levels.md).
 See the [background guide](docs/creating-backgrounds.md) for generation and
 placement.
 

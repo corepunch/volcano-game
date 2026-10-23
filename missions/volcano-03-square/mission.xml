@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<mission format="volcano-mission-1" title="After the Eruption 3/5: Town Square" background="background.png" width="1368" height="1026">
+<mission format="volcano-mission-1" title="After the Eruption 3/5: Town Square" background="background.png" width="1368" height="1026" briefing="Town Square: reopen the inner streets and rescue the repair crew. Stations supply resources automatically." next="../volcano-04-district/mission.xml">
   <settings rules="rescue" food="40" wood="20" people="8" clear-routes="true" />
   <pack path="../../assets/kenney-characters" />
   <sprites path="../../assets/volcano-episode/sprites.xml" />

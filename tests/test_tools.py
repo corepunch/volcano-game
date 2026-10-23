@@ -60,6 +60,24 @@ class MissionCheck(unittest.TestCase):
         self.assertEqual(self.classes["dog"], "animal")
         self.assertEqual(self.classes["boulder"], "obstacle")
 
+    def test_episode_links_are_relative_and_form_five_maps(self):
+        path = ROOT / "missions/volcano-01-outskirts/mission.xml"
+        seen = set()
+        while path:
+            path = path.resolve()
+            self.assertNotIn(path, seen, "episode must not cycle")
+            seen.add(path)
+            root = ET.parse(path).getroot()
+            self.assertTrue(root.get("briefing"))
+            self.assertFalse(any(self.classes.get(n.get("type")) == "pickup" for n in root.findall("object")))
+            following = root.get("next")
+            if following:
+                self.assertFalse(Path(following).is_absolute())
+                path = path.parent / following
+            else:
+                path = None
+        self.assertEqual(len(seen), 5)
+
     def check_text(self, text):
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / "mission.xml"

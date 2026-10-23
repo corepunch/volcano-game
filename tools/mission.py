@@ -63,6 +63,12 @@ def check(path, classes):
     if root.tag != "mission" or root.get("format") != FORMAT:
         return [f'root must be <mission format="{FORMAT}">'], []
     folder = path.parent
+    if root.get("next") is not None:
+        following = root.get("next")
+        if not following or Path(following).is_absolute():
+            errors.append("next must be a nonempty relative mission path")
+        elif not (folder / following).is_file():
+            errors.append(f"next mission not found: {following}")
     background = root.get("background")
     if bool(background) == bool(root.get("retail-background")):
         errors.append("needs exactly one of background or retail-background")

@@ -50,7 +50,7 @@ def main(argv=None):
     shutil.copytree(args.assets, resources / "resources", ignore=IGNORE)
     shutil.copytree(ROOT / "content", resources / "content", ignore=IGNORE)
     shutil.copytree(ROOT / "missions", resources / "missions", ignore=IGNORE)
-    for pack in ("particles", "kenney-characters"):
+    for pack in ("particles", "kenney-characters", "volcano-episode"):
         shutil.copytree(ROOT / "assets" / pack, resources / "assets" / pack,
                         ignore=shutil.ignore_patterns(".DS_Store", "source", "blender", "previews", "*.zip"))
     if mission:

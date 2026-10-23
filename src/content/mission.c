@@ -11,7 +11,7 @@
  * </mission>
  *
  * Paths are relative to the mission file. Coordinates are world units with a
- * bottom-left origin on the 1366x768 playfield. */
+ * bottom-left origin on the authored canvas (1366x768 when unspecified). */
 #include "content_internal.h"
 #include "../assets/assets.h"
 #include <stdio.h>
@@ -198,7 +198,7 @@ bool mission_load(const char *path,LevelSpec *out)
     XmlDoc doc;
     if (!xml_load(&doc,path)) return false;
     Loader l={out,&doc,""};path_directory(l.folder,sizeof l.folder,path);
-    static const char *attributes[]={"format","title","background","retail-background","width","height",NULL};
+    static const char *attributes[]={"format","title","background","retail-background","width","height","next","briefing",NULL};
     static const char *children[]={"settings","pack","sprites","archetype","traffic","object","effect",NULL};
     static const char *settings_attributes[]={"rules","food","wood","money","fuel","people","basins","clear-routes","crew-at-hq","offroad","buildable",NULL};
     const XmlNode *root=doc.root;const char *format,*title,*text;
@@ -211,6 +211,14 @@ bool mission_load(const char *path,LevelSpec *out)
     }
     if (ok) ok=xml_int(&doc,root,"width",GAME_WIDTH,1024,4096,&out->width) &&
         xml_int(&doc,root,"height",GAME_HEIGHT,768,4096,&out->height);
+    if (ok) {
+        xml_string(&doc,root,"briefing","",&text);
+        if (!text_copy(out->briefing,sizeof out->briefing,text)) ok=xml_fail(&doc,root,"briefing is too long (maximum 255 bytes)");
+    }
+    if (ok && xml_attr(root,"next")) {
+        const char *next=relative_path(&l,root,"next");
+        ok=next && text_copy(out->next_mission,sizeof out->next_mission,next);
+    }
     const XmlNode *settings=ok?xml_next(root,"settings",NULL):NULL;
     if (ok && (!settings || xml_count(root,"settings")>1)) ok=xml_fail(&doc,root,"needs exactly one <settings>");
     if (ok) {

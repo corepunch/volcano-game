@@ -69,6 +69,24 @@ It accepts several files, e.g. `python3 tools/mission.py check missions/*/missio
 | `background.prompt.txt`, `*.prompt.txt` | Exact image-generation prompts (provenance) |
 | `design.txt` | Optional design notes: measured layout, references, decisions |
 
+Native missions can form an episode with optional root attributes:
+
+```xml
+<mission format="volcano-mission-1" title="Episode 1/5" background="background.png"
+         next="../next-map/mission.xml" briefing="Restore production and reopen the roads.">
+```
+
+`next` is a nonempty path relative to the current mission folder. Winning offers
+Next level (also Enter/N) and a separate replay button. Omit `next` on the last
+map or a standalone mission. R always reloads the current map. A failed next
+load preserves the completed map and shows a recoverable error. `briefing`
+replaces the default opening feedback and accepts up to 255 UTF-8 bytes. Keep it
+short enough for the on-screen feedback bar.
+
+For production without collection chores, omit the producer's linked pickup
+object entirely. Automatic income still works; no bonus object is invented.
+The five `volcano-*` maps use this pattern, alongside salvage rewards.
+
 Concept art, rejected images and earlier background stages do not belong in the
 mission folder. Keep them under [`art-source/`](../art-source) (for example
 `art-source/background-history/` and `art-source/concepts/`). Screenshots,

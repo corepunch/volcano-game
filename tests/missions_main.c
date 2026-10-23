@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 
 static bool check(bool condition,const char *message)
@@ -491,6 +492,64 @@ static bool play_volcano(const char *path)
     return check(!game.paused && game.time==0 && game.stock.food==40 && game.stock.wood==20 && !game.rescued,
                  "episode restart restores starting stock and objectives");
 }
+static bool finish_volcano_map(void)
+{
+    for (int tick=0;tick<10000 && !game.won;tick++) {
+        if (tick%10==0) volcano_schedule(0);
+        game_update(.1);
+    }
+    return check(game.won,"linked episode map completes through ordinary clicks");
+}
+static bool volcano_episode(void)
+{
+    if (!game_init_file("missions/volcano-01-outskirts/mission.xml")) return false;
+    const char *names[]={"volcano-01-outskirts","volcano-02-suburbs","volcano-03-square","volcano-04-district","volcano-05-centre"};
+    for (int n=0;n<5;n++) {
+        if (!check(strstr(game.spec.path,names[n]) && game.time==0 && game.stock.food==40 &&
+                   !!game.spec.next_mission[0] == (n<4) && !strcmp(game.message,game.spec.briefing),
+                   "episode follows its authored link with fresh stock and the map briefing")) return false;
+        game_key(SDLK_r);
+        if (!check(strstr(game.spec.path,names[n]) && game.time==0,"restart stays in the current episode map")) return false;
+        if (!finish_volcano_map()) return false;
+        char shot[100];snprintf(shot,sizeof shot,"volcano-episode-%d-victory",n+1);
+        if (!test_frame(shot)) return false;
+        float x=683+(render_width()-GAME_WIDTH)*.5f;
+        float y=render_height()-470-(render_height()-GAME_HEIGHT)*.5f;
+        if (!n) {
+            /* The linked victory panel also offers a separate replay button. */
+            float replay=render_height()-356-(render_height()-GAME_HEIGHT)*.5f;
+            game_pointer(x,replay,false);
+            if (!check(game_hud_button(game_current())==2,"linked map offers replay as a second button")) return false;
+            game_click(x,replay);
+            if (!check(!game.won && game.time==0 && strstr(game.spec.path,names[n]),"replay button stays in its map")) return false;
+            if (!finish_volcano_map()) return false;
+        }
+        game_pointer(x,y,false);
+        if (!check(game_hud_button(game_current())==1,"victory primary button is clickable")) return false;
+        if (n%2) game_key(SDLK_RETURN);else game_click(x,y);
+        if (n==4 && !check(!game.won && game.time==0 && strstr(game.spec.path,names[n]) && !game.spec.next_mission[0],
+                          "final map primary button replays without a nonexistent sixth level")) return false;
+    }
+    /* A broken next file is recoverable without replacing the completed world
+     * or leaving the global error flag set (which would close the application). */
+    char fixture[]="/tmp/volcano-next-XXXXXX";int fd=mkstemp(fixture);
+    if (fd<0) return game_fail("Cannot create episode transition fixture");
+    FILE *file=fdopen(fd,"w");
+    if (!file) { close(fd);unlink(fixture);return false; }
+    fputs("<mission format='volcano-mission-1' retail-background='103' next='no-such-episode.xml'>"
+          "<settings rules='rescue' people='1'/><traffic>100,300 125,300 150,300</traffic>"
+          "<object id='10' type='hq' x='100' y='300'/><object id='11' type='worker' x='100' y='300'/>"
+          "<object id='60' type='civilian' x='150' y='300'/></mission>",file);
+    fclose(file);bool loaded=game_init_file(fixture);unlink(fixture);
+    if (!loaded) return false;
+    for (int i=0;i<100 && !game.won;i++) game_update(.1);
+    Game *previous=game_current();game_key(SDLK_RETURN);
+    if (!check(game_current()==previous && game.won && !last_error[0] && game.message[0],
+               "failed episode transition retains the completed world and reports a recoverable message")) return false;
+    if (!test_frame("volcano-episode-failed-transition")) return false;
+    puts("PASS: all five episode links, fresh inventories, briefings, UI replay/next, keyboard next, final replay and failed-next rollback.");
+    return true;
+}
 int main(int argc,char **argv)
 {
     static const char *flags[]={"--emerald","--mayday","--ancient","--coaster","--library-rescue","--volcano"};
@@ -504,6 +563,7 @@ int main(int argc,char **argv)
     bool ok=test_startup(mounts,1);
     if (ok) ok=flag==5?play_volcano(argv[2]):flag==2 || flag==3 || flag==4?play_disaster_mission(argv[2],flag==4?2:flag==3?1:0):
         flag==0 || flag==1?play_production_mission(argv[2],flag==1):play(argv[2]) && game_architecture_selftest(argv[2]);
+    if (ok && flag==5 && strstr(argv[2],"volcano-01-outskirts")) ok=volcano_episode();
     if (!ok) fprintf(stderr,"%s\n",last_error);
     else puts("PASS: mission, dependency gates, exact budget, automatic rescue, victory, pause and restart.");
     test_shutdown();

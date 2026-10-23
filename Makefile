@@ -141,6 +141,10 @@ sanitize:
 run: $(OUT)/volcano
 	./$(OUT)/volcano --assets "$(ASSETS)" --mission missions/$(MISSION)/mission.xml
 
+.PHONY: run-volcano-episode volcano-episode-app
+run-volcano-episode: run-volcano-01-outskirts
+volcano-episode-app: volcano-01-outskirts-app
+
 # Every folder in missions/ also gets NAME, run-NAME, run-NAME-hd and NAME-app,
 # e.g. `make run-twisted-tracks` or `make library-rescue-app`.
 RUN_MISSIONS := $(addprefix run-,$(MISSIONS))
