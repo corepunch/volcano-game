@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<mission format="volcano-mission-1" title="After the Eruption 1/5: Outskirts" background="background.png" width="1368" height="1026">
+  <settings rules="rescue" food="40" wood="20" people="4" clear-routes="true" />
+  <pack path="../../assets/kenney-characters" />
+  <sprites path="../../assets/volcano-episode/sprites.xml" />
+  <archetype id="eruption-kitchen" extends="cafe" title="Field kitchen" sprite="volcano/kitchen" damaged="volcano/kitchen-damaged" />
+  <archetype id="eruption-yard" extends="sawmill" title="Timber yard" sprite="volcano/yard" damaged="volcano/yard-damaged" />
+  <archetype id="eruption-office" extends="house" title="District office" sprite="volcano/office" damaged="volcano/office-damaged" income="10" />
+  <archetype id="eruption-timber" extends="tree" title="Salvage roof beams" sprite="volcano/timber" />
+  <archetype id="eruption-ash" extends="stone" title="Clear ash and rubble" sprite="volcano/ash" />
+  <archetype id="eruption-basalt" extends="boulder" title="Clear heavy basalt" sprite="volcano/basalt" />
+  <archetype id="eruption-wall" extends="stone" title="Dismantle collapsed wall" sprite="volcano/wall" />
+  <traffic>174.78,218.24 202.45,218.24 230.11,218.24 257.78,218.24 285.45,218.24 313.12,218.24 340.79,218.24 368.45,218.24 387.35,237.13 387.35,264.22 387.35,291.3 387.35,318.38 387.35,345.46 387.35,372.55 387.35,399.63 387.35,426.71 387.35,453.8 387.35,480.88 387.35,507.96 387.35,535.04 387.35,562.13 387.35,589.21 387.35,616.29 387.35,643.38 368.45,662.27 343.06,662.27 317.67,662.27 292.28,662.27 266.89,662.27 241.5,662.27 216.11,662.27 190.72,662.27 165.33,662.27</traffic>
+  <traffic>387.35,443.09 414.7,443.09 442.06,443.09 469.41,443.09 496.77,443.09 524.12,443.09 551.48,443.09 578.83,443.09 606.19,443.09 633.54,443.09 660.9,443.09 688.25,443.09 715.61,443.09 742.96,443.09 770.32,443.09 797.67,443.09 825.03,443.09 852.38,443.09 879.74,443.09 907.09,443.09 934.45,443.09 961.8,443.09 989.15,443.09 1006.16,426.08 1006.16,399.09 1006.16,372.1 1006.16,345.1 1006.16,318.11 1006.16,291.12 1006.16,264.13 1006.16,237.13 1023.17,218.24 1049.09,218.24 1075.02,218.24 1100.95,218.24 1126.88,218.24 1152.81,218.24 1178.73,218.24 1204.66,218.24 1230.59,218.24 1256.52,218.24</traffic>
+  <traffic>663.22,443.09 663.22,469.9 663.22,496.72 663.22,523.54 663.22,550.35 663.22,577.17 663.22,603.99 663.22,630.8 663.22,657.62 663.22,684.44 663.22,711.25 663.22,738.07 663.22,764.89 663.22,791.7 680.22,808.71 708.14,808.71 736.07,808.71 763.99,808.71 791.91,808.71 819.83,808.71 847.76,808.71 875.68,808.71 903.6,808.71 931.52,808.71</traffic>
+  <traffic>663.22,619.76 691.04,619.76 718.87,619.76 746.7,619.76 774.52,619.76 802.35,619.76 830.18,619.76 858.01,619.76 885.83,619.76 913.66,619.76 941.49,619.76 969.31,619.76 997.14,619.76 1024.97,619.76 1052.8,619.76 1080.62,619.76 1108.45,619.76 1136.28,619.76 1164.11,619.76 1191.93,619.76 1219.76,619.76 1247.59,619.76 1275.41,619.76</traffic>
+  <traffic>387.35,357.12 364.86,357.12 342.38,357.12 319.89,357.12 297.41,357.12 274.92,357.12</traffic>
+  <traffic>813.43,443.09 813.43,420.23 813.43,397.36 813.43,374.5 813.43,351.64 813.43,328.77</traffic>
+  <object id="10" type="hq" x="174.78" y="218.24" />
+  <object id="11" type="worker" x="174.78" y="218.24" />
+  <object id="12" type="worker" x="182.34" y="218.24" />
+  <object id="20" type="eruption-timber" x="387.35" y="534.73" />
+  <object id="21" type="eruption-wall" x="663.22" y="525.28" />
+  <object id="22" type="eruption-ash" x="897.51" y="619.76" />
+  <object id="23" type="road" x="1152.6" y="619.76" />
+  <object id="24" type="eruption-timber" x="897.51" y="443.09" />
+  <object id="25" type="eruption-ash" x="1006.16" y="326.88" />
+  <object id="26" type="road" x="663.22" y="714.23" />
+  <object id="40" type="eruption-kitchen" x="274.92" y="357.12" />
+  <object id="41" type="eruption-yard" x="813.43" y="328.77" />
+  <object id="60" type="civilian" x="165.33" y="662.27" />
+  <object id="61" type="civilian" x="1275.41" y="619.76" />
+  <object id="62" type="civilian" x="931.52" y="808.71" />
+  <object id="63" type="civilian" x="1256.52" y="218.24" />
+</mission>

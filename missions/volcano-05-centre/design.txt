@@ -1,0 +1,10 @@
+AFTER THE ERUPTION — 5/5: City Centre
+Classic Rescue Team route restoration. 16 paid route jobs, 3 production repairs, 10 civilians, 1 recruit, 2 animals.
+Two starting workers; 40 food and 20 wood carried by the team.
+NO pickup objects, including recurring producer pickups. Existing automatic income supplies stock. Roof beams grant 20 wood on completion.
+Field kitchen and timber yard: 5 every 5 seconds. District office: 10 money every 5 seconds (keeps the heavy-basalt budget from becoming a long idle wait).
+All route jobs are objectives; this prevents an alternate route from making restoration irrelevant. Clearing gates can open two-way loops intentionally.
+ImageGen produced a 1448x1086 plate. Roads, bare station pads and rescue endpoints were measured on the actual painting; see art-source/volcano-episode/measured-layouts.json for source-pixel centerlines. World conversion is x*1368/1448, 1026-y*1026/1086.
+ID contract: HQ10, crew11/12, route jobs20..35, producers40..42, civilians60..69, recruit79 when present, animals80/81 when present.
+Art: built-in ImageGen, exact background.prompt.txt; shared authored atlas assets/volcano-episode/props.png and props.prompt.txt. No runtime actors or clearable jobs painted into the background.
+Road QA: actual samples are recorded in art-source/road-width-measurements.json, including reviewed deviations from the 24-pixel target. These are sampled measurements, not whole-map compliance.

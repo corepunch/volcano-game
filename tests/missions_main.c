@@ -397,18 +397,112 @@ static bool play_disaster_mission(const char *path,int variant)
     return check(!game.paused && !game.won && game.time==0 && game.stock.food==40 && game.stock.wood==0 && game.rescued==0,
                  "disaster mission restart restores all initial settings");
 }
+/* The episode deliberately has no RESOURCE entities, even at producers. It
+ * must remain solvable on automatic income and the timber earned by clearing. */
+static void volcano_schedule(int order)
+{
+    const uint32_t priority[3][3]={{40,41,42},{41,42,40},{42,40,41}};
+    for (int j=0;j<3;j++) {
+        int i=test_entity(priority[order][j]);
+        if (i>=0 && !game.objects[i].operational && !game.objects[i].assigned && !game.objects[i].queued)
+            test_click_entity(i);
+    }
+    for (int j=0;j<game.object_count;j++) {
+        int i=order==1?game.object_count-j-1:j;Entity *e=&game.objects[i];
+        if ((e->kind==BARRIER || e->kind==ANIMAL) && !e->done && !e->hidden && !e->assigned && !e->queued)
+            test_click_entity(i);
+    }
+}
+static bool play_volcano(const char *path)
+{
+    if (!game_init_file(path)) return false;
+    int number=0;
+    const char *prefix=strstr(path,"volcano-0");
+    if (prefix) number=prefix[9]-'0';
+    if (!check(number>=1 && number<=5,"volcano episode map number")) return false;
+    const int jobs[]={7,9,11,13,16},people[]={4,6,8,9,11},animals[]={0,1,1,2,2};
+    char slug[80],shot[110];snprintf(slug,sizeof slug,"volcano-0%d",number);
+    for (int order=0;order<3;order++) {
+        if (!game_init_file(path)) return false;
+        if (!check(game.barriers==jobs[number-1] && game.goal==people[number-1] && game.animals==animals[number-1] &&
+                   game.worker_count==(number==1?2:3) && game.objects[test_entity(11)].kind==WORKER &&
+                   game.objects[test_entity(12)].kind==WORKER && game.stock.food==40 && game.stock.wood==20 && game.spec.mission.clear_routes,
+                   "episode density, crew, rescue goals and starting stock")) return false;
+        for (int i=0;i<game.object_count;i++) {
+            Entity *e=&game.objects[i];
+            if (!check(e->kind!=RESOURCE,"episode has zero pickups or recurring output objects")) return false;
+            if (e->kind==SURVIVOR || (e->id==79)) {
+                Vec2 points[TEST_PATH];int count;float length;
+                if (!check(!game_route_to(game_current(),&game.workers[0],e->p,-1,points,&count,&length),
+                           "every person initially needs route work")) return false;
+            }
+        }
+        if (!order) {
+            snprintf(shot,sizeof shot,"%s-start",slug);if (!test_frame(shot)) return false;
+            /* Spend the entire initial food before repairing anything. Only
+             * ordinary clicks and elapsed simulation time are used. */
+            for (int j=0;j<2;j++) {
+                int id=test_entity(20+j);test_click_entity(id);
+                for (int tick=0;tick<1500 && !game.objects[id].done;tick++) game_update(.1);
+                if (!check(game.objects[id].done,"human opening clears its two first gates")) return false;
+            }
+            if (!check(game.stock.food==0 && game.stock.wood>=20,"zero-food opening retains kitchen repair budget")) return false;
+            for (int i=0;i<game.object_count;i++) {
+                Entity *e=&game.objects[i];
+                if (e->kind==BARRIER && !e->done && e->type->cost.food>0) test_click_entity(i);
+            }
+            test_click_entity(test_entity(40));
+            for (int tick=0;tick<1500 && !game.objects[test_entity(40)].operational;tick++) game_update(.1);
+            if (!check(game.objects[test_entity(40)].operational,"kitchen repair works past food-blocked queued jobs")) return false;
+        }
+        bool repaired=false;
+        for (int tick=0;tick<12000 && !game.won;tick++) {
+            if (tick%10==0) volcano_schedule(order);
+            game_update(.1);
+            if (!check(game.stock.food>=0 && game.stock.wood>=0 && game.stock.money>=0,"episode never overspends stock")) return false;
+            bool all=true;
+            for (int j=40;j<=42;j++) {
+                int i=test_entity((uint32_t)j);if (i>=0 && !game.objects[i].operational) all=false;
+            }
+            if (!order && !repaired && all) {
+                snprintf(shot,sizeof shot,"%s-repaired",slug);if (!test_frame(shot)) return false;
+                repaired=true;
+            }
+        }
+        if (!check(game.won && game.cleared==jobs[number-1] && game.rescued==people[number-1] &&
+                   game.animals_rescued==animals[number-1] && game.worker_count==(number==1?2:3),
+                   "episode completes all jobs and rescues without pickups")) {
+            fprintf(stderr,"map=%d order=%d jobs=%d/%d people=%d/%d animals=%d food=%d wood=%d money=%d time=%.1f\n",
+                    number,order,game.cleared,game.barriers,game.rescued,game.goal,game.animals_rescued,
+                    game.stock.food,game.stock.wood,game.stock.money,game.time);
+            for (int i=0;i<game.object_count;i++) if (!game.objects[i].done && game.objects[i].kind==BARRIER)
+                fprintf(stderr,"  uncleared %u queued=%d assigned=%d\n",game.objects[i].id,game.objects[i].queued,game.objects[i].assigned);
+            return false;
+        }
+        if (!order) {
+            snprintf(shot,sizeof shot,"%s-complete",slug);if (!test_frame(shot)) return false;
+        }
+        printf("PASS: volcanic town map %d repair order %d; %d jobs, %d people, %d animals, zero pickups, %.1fs.\n",
+               number,order+1,game.cleared,game.rescued,game.animals_rescued,game.time);
+    }
+    game_key(SDLK_r);game_key(SDLK_p);game_update(1);
+    if (!check(game.time==0 && game.paused,"episode pause")) return false;
+    game_key(SDLK_r);
+    return check(!game.paused && game.time==0 && game.stock.food==40 && game.stock.wood==20 && !game.rescued,
+                 "episode restart restores starting stock and objectives");
+}
 int main(int argc,char **argv)
 {
-    static const char *flags[]={"--emerald","--mayday","--ancient","--coaster","--library-rescue"};
+    static const char *flags[]={"--emerald","--mayday","--ancient","--coaster","--library-rescue","--volcano"};
     int flag=-1;
-    if (argc==4) for (int i=0;i<5;i++) if (!strcmp(argv[3],flags[i])) flag=i;
+    if (argc==4) for (int i=0;i<6;i++) if (!strcmp(argv[3],flags[i])) flag=i;
     if ((argc!=3 && argc!=4) || (argc==4 && flag<0)) {
-        fprintf(stderr,"Usage: %s ASSET_FOLDER MISSION.xml [--emerald|--mayday|--ancient|--coaster|--library-rescue]\n",argv[0]);
+        fprintf(stderr,"Usage: %s ASSET_FOLDER MISSION.xml [--emerald|--mayday|--ancient|--coaster|--library-rescue|--volcano]\n",argv[0]);
         return 2;
     }
     const char *mounts[]={argv[1]};
     bool ok=test_startup(mounts,1);
-    if (ok) ok=flag==2 || flag==3 || flag==4?play_disaster_mission(argv[2],flag==4?2:flag==3?1:0):
+    if (ok) ok=flag==5?play_volcano(argv[2]):flag==2 || flag==3 || flag==4?play_disaster_mission(argv[2],flag==4?2:flag==3?1:0):
         flag==0 || flag==1?play_production_mission(argv[2],flag==1):play(argv[2]) && game_architecture_selftest(argv[2]);
     if (!ok) fprintf(stderr,"%s\n",last_error);
     else puts("PASS: mission, dependency gates, exact budget, automatic rescue, victory, pause and restart.");

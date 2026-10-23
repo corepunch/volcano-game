@@ -183,6 +183,191 @@
           ]
         }
       ]
+    },
+    {
+      "level": "volcano-01-outskirts",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "sha256": "5d4f2c49a2b8a7f309419cf668cfe6c781283c01a4567988bcf3671a9798349f",
+      "calipers": [
+        {
+          "name": "horizontal street",
+          "endpoints": [
+            [
+              900,
+              419
+            ],
+            [
+              900,
+              440
+            ]
+          ]
+        },
+        {
+          "name": "vertical street",
+          "endpoints": [
+            [
+              693,
+              500
+            ],
+            [
+              714,
+              500
+            ]
+          ]
+        }
+      ],
+      "reviewed_deviation": "Actual clear pavement between curbs was reviewed in source crops and gameplay renders; painterly paths vary from the 24-pixel target. Retain measured values rather than treating the prompt as evidence. No bridge crossings in this map."
+    },
+    {
+      "level": "volcano-02-suburbs",
+      "dimensions": [
+        1447,
+        1087
+      ],
+      "sha256": "a76d0dbdecde1db4674b3fc1b6be019af763ec96b8f91fbdc899351335b9053b",
+      "calipers": [
+        {
+          "name": "horizontal street",
+          "endpoints": [
+            [
+              802,
+              450
+            ],
+            [
+              830,
+              450
+            ]
+          ]
+        },
+        {
+          "name": "vertical street",
+          "endpoints": [
+            [
+              900,
+              596
+            ],
+            [
+              900,
+              621
+            ]
+          ]
+        }
+      ],
+      "reviewed_deviation": "Actual clear pavement between curbs was reviewed in source crops and gameplay renders; painterly paths vary from the 24-pixel target. Retain measured values rather than treating the prompt as evidence. No bridge crossings in this map."
+    },
+    {
+      "level": "volcano-03-square",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "sha256": "0be70a07eeb3e29206f51fa9cd3b6cd6a2924c541ee48b92ebdb51b512823deb",
+      "calipers": [
+        {
+          "name": "horizontal street",
+          "endpoints": [
+            [
+              1100,
+              381
+            ],
+            [
+              1100,
+              404
+            ]
+          ]
+        },
+        {
+          "name": "vertical street",
+          "endpoints": [
+            [
+              742,
+              500
+            ],
+            [
+              771,
+              500
+            ]
+          ]
+        }
+      ],
+      "reviewed_deviation": "Actual clear pavement between curbs was reviewed in source crops and gameplay renders; painterly paths vary from the 24-pixel target. Retain measured values rather than treating the prompt as evidence. No bridge crossings in this map."
+    },
+    {
+      "level": "volcano-04-district",
+      "dimensions": [
+        1447,
+        1087
+      ],
+      "sha256": "5bea0f98aa73d79d96adf44e7ac70e0e6d26a9f79f65bd5899315f8f9a37a044",
+      "calipers": [
+        {
+          "name": "horizontal street",
+          "endpoints": [
+            [
+              900,
+              386
+            ],
+            [
+              900,
+              404
+            ]
+          ]
+        },
+        {
+          "name": "vertical street",
+          "endpoints": [
+            [
+              744,
+              500
+            ],
+            [
+              764,
+              500
+            ]
+          ]
+        }
+      ],
+      "reviewed_deviation": "Actual clear pavement between curbs was reviewed in source crops and gameplay renders; painterly paths vary from the 24-pixel target. Retain measured values rather than treating the prompt as evidence. No bridge crossings in this map."
+    },
+    {
+      "level": "volcano-05-centre",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "sha256": "c54da55e7b9732af0ccb9798ba0a88a3175dd6b746fbb5912f3e4ee3ecf46525",
+      "calipers": [
+        {
+          "name": "horizontal street",
+          "endpoints": [
+            [
+              900,
+              144
+            ],
+            [
+              900,
+              162
+            ]
+          ]
+        },
+        {
+          "name": "vertical street",
+          "endpoints": [
+            [
+              776,
+              500
+            ],
+            [
+              798,
+              500
+            ]
+          ]
+        }
+      ],
+      "reviewed_deviation": "Actual clear pavement between curbs was reviewed in source crops and gameplay renders; painterly paths vary from the 24-pixel target. Retain measured values rather than treating the prompt as evidence. No bridge crossings in this map."
     }
   ]
 }

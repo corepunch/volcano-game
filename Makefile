@@ -112,6 +112,7 @@ MISSION_TEST_forest-mayday := --mayday
 MISSION_TEST_ancient-echoes := --ancient
 MISSION_TEST_twisted-tracks := --coaster
 MISSION_TEST_library-rescue := --library-rescue
+$(foreach m,$(filter volcano-%,$(MISSIONS)),$(eval MISSION_TEST_$(m) := --volcano))
 MISSION_TESTS := $(addprefix test-,$(MISSIONS))
 
 test-missions: $(MISSION_TESTS)

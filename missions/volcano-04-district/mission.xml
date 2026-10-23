@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<mission format="volcano-mission-1" title="After the Eruption 4/5: Cut-off District" background="background.png" width="1368" height="1026">
+  <settings rules="rescue" food="40" wood="20" people="9" clear-routes="true" />
+  <pack path="../../assets/kenney-characters" />
+  <sprites path="../../assets/volcano-episode/sprites.xml" />
+  <archetype id="eruption-kitchen" extends="cafe" title="Field kitchen" sprite="volcano/kitchen" damaged="volcano/kitchen-damaged" />
+  <archetype id="eruption-yard" extends="sawmill" title="Timber yard" sprite="volcano/yard" damaged="volcano/yard-damaged" />
+  <archetype id="eruption-office" extends="house" title="District office" sprite="volcano/office" damaged="volcano/office-damaged" income="10" />
+  <archetype id="eruption-timber" extends="tree" title="Salvage roof beams" sprite="volcano/timber" />
+  <archetype id="eruption-ash" extends="stone" title="Clear ash and rubble" sprite="volcano/ash" />
+  <archetype id="eruption-basalt" extends="boulder" title="Clear heavy basalt" sprite="volcano/basalt" />
+  <archetype id="eruption-wall" extends="stone" title="Dismantle collapsed wall" sprite="volcano/wall" />
+  <traffic>167.34,157.63 194.23,157.63 221.12,157.63 248.01,157.63 274.9,157.63 301.79,157.63 328.69,157.63 355.58,157.63 382.47,157.63 409.36,157.63 420.23,167.07 431.1,176.51 431.1,203.64 431.1,230.78 431.1,257.92 431.1,285.05 431.1,312.19 431.1,339.33 431.1,366.46 431.1,393.6 450.01,412.48 477.83,412.48 505.66,412.48 533.48,412.48 561.3,412.48 589.12,412.48 616.94,412.48 644.77,412.48 672.59,412.48 700.41,412.48 728.23,412.48 756.05,412.48 783.88,412.48 811.7,412.48 839.52,412.48 867.34,412.48 895.16,412.48 922.98,412.48 950.81,412.48 978.63,412.48 1006.45,412.48 1034.27,412.48 1062.09,412.48 1089.92,412.48 1117.74,412.48 1145.56,412.48 1173.38,412.48 1201.2,412.48 1229.03,412.48 1247.93,431.35 1247.93,456.31 1247.93,481.28 1247.93,506.24 1247.93,531.2 1247.93,556.16 1247.93,581.12 1247.93,606.08 1247.93,631.04 1247.93,656.0</traffic>
+  <traffic>431.1,412.48 405.58,412.48 380.05,412.48 354.53,412.48 329.0,412.48 303.47,412.48 277.95,412.48 259.04,431.35 259.04,456.01 259.04,480.67 259.04,505.33 259.04,529.99 259.04,554.65 259.04,579.31 259.04,603.97 259.04,628.63 268.97,638.54 278.89,648.45 305.96,648.45 333.02,648.45 360.08,648.45 387.14,648.45 414.21,648.45 441.27,648.45 468.33,648.45 495.39,648.45</traffic>
+  <traffic>717.56,412.48 717.56,439.44 717.56,466.4 717.56,493.36 717.56,520.32 717.56,547.27 717.56,574.23 717.56,601.19 717.56,628.15 717.56,655.11 717.56,682.07 717.56,709.03 717.56,735.99 717.56,762.95 717.56,789.91 717.56,816.87 717.56,843.83 737.42,862.71 763.89,862.71 790.36,862.71 816.83,862.71 843.3,862.71 869.77,862.71 896.24,862.71 922.71,862.71 949.19,862.71 975.66,862.71 1002.13,862.71</traffic>
+  <traffic>717.56,656.0 745.48,656.0 773.39,656.0 801.3,656.0 829.22,656.0 857.13,656.0 885.05,656.0 912.96,656.0 940.88,656.0 968.79,656.0 996.7,656.0 1024.62,656.0 1052.53,656.0 1080.45,656.0 1108.36,656.0 1136.28,656.0 1164.19,656.0 1192.11,656.0 1220.02,656.0</traffic>
+  <traffic>983.22,412.48 983.22,386.26 983.22,360.04 983.22,333.82 983.22,307.6 983.22,281.38 983.22,255.16 983.22,228.94 983.22,202.72 983.22,176.51 1002.13,157.63 1029.97,157.63 1057.8,157.63 1085.64,157.63 1113.48,157.63 1141.31,157.63 1169.15,157.63 1196.99,157.63 1224.82,157.63 1252.66,157.63</traffic>
+  <traffic>431.1,242.58 407.47,242.58 383.83,242.58 360.2,242.58 336.56,242.58 312.93,242.58</traffic>
+  <traffic>579.53,412.48 579.53,388.88 579.53,365.28 579.53,341.69 579.53,318.09 579.53,294.49</traffic>
+  <traffic>495.39,623.67 495.39,598.89 495.39,574.12 495.39,549.34</traffic>
+  <object id="10" type="hq" x="167.34" y="157.63" />
+  <object id="11" type="worker" x="167.34" y="157.63" />
+  <object id="12" type="worker" x="174.9" y="157.63" />
+  <object id="20" type="eruption-timber" x="431.1" y="327.53" />
+  <object id="21" type="eruption-ash" x="259.04" y="535.18" />
+  <object id="22" type="road" x="378.16" y="648.45" />
+  <object id="23" type="eruption-timber" x="642.87" y="412.48" />
+  <object id="24" type="eruption-wall" x="717.56" y="525.74" />
+  <object id="25" type="eruption-ash" x="898.13" y="656.0" />
+  <object id="26" type="eruption-basalt" x="1134.49" y="656.0" />
+  <object id="27" type="road" x="717.56" y="771.15" />
+  <object id="28" type="eruption-timber" x="860.32" y="412.48" />
+  <object id="29" type="eruption-ash" x="983.22" y="289.77" />
+  <object id="30" type="road" x="1125.03" y="157.63" />
+  <object id="31" type="eruption-wall" x="1247.93" y="535.18" />
+  <object id="32" type="eruption-ash" x="1096.67" y="412.48" />
+  <object id="40" type="eruption-kitchen" x="312.93" y="242.58" />
+  <object id="41" type="eruption-yard" x="579.53" y="294.49" />
+  <object id="42" type="eruption-office" x="495.39" y="549.34" />
+  <object id="60" type="civilian" x="321.44" y="648.45" />
+  <object id="61" type="civilian" x="345.07" y="648.45" />
+  <object id="62" type="civilian" x="1002.13" y="862.71" />
+  <object id="63" type="civilian" x="1021.04" y="860.82" />
+  <object id="64" type="civilian" x="1247.93" y="656.0" />
+  <object id="65" type="civilian" x="1243.21" y="620.13" />
+  <object id="66" type="civilian" x="1252.66" y="157.63" />
+  <object id="67" type="civilian" x="1229.03" y="157.63" />
+  <object id="79" type="worker" x="495.39" y="648.45" />
+  <object id="80" type="cat" x="973.77" y="862.71" variant="0" />
+  <object id="81" type="dog" x="1233.75" y="185.94" variant="1" />
+</mission>
